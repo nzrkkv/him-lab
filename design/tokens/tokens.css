@@ -1,0 +1,341 @@
+/* Хим лаба — дизайн-токены. СГЕНЕРИРОВАНО из tokens.json (node design/tools/build-tokens.mjs). Не править руками. */
+
+/* Шрифты: Unbounded (заголовки) и Golos Text (текст), лицензия OFL 1.1.
+   В продакшене подключайте с Google Fonts:
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400..800&family=Unbounded:wght@500..800&display=swap" rel="stylesheet">
+   Либо самостоятельно хостите файлы из design/fonts/ (подмножество кириллица + латиница). Ниже — локальный вариант. */
+@font-face {
+  font-family: 'Unbounded';
+  src: url('../fonts/Unbounded-var.woff') format('woff');
+  font-weight: 500 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Golos Text';
+  src: url('../fonts/GolosText-var.woff') format('woff');
+  font-weight: 400 900;
+  font-display: swap;
+}
+
+:root {
+  /* color */
+  --color-ink-100: #E6E9F2;
+  --color-ink-200: #CDD3E4;
+  --color-ink-300: #A7B0CA;
+  --color-ink-500: #56628A;
+  --color-ink-700: #33406A;
+  --color-ink-900: #16213F;
+  --color-paper: #FFFFFF;
+  --color-tile-50: #F3F9F7;
+  --color-tile-100: #E4F1EC;
+  --color-tile-200: #CFE5DE;
+  --color-tile-300: #B2D5CA;
+  --color-wood-100: #F7E9CC;
+  --color-wood-200: #ECD5A9;
+  --color-wood-400: #CDA266;
+  --color-wood-700: #6F4A18;
+  --color-bench-top: #D5E0E7;
+  --color-bench-edge: #A9BCCA;
+  --color-bench-shadow: #8BA1B3;
+  --color-bench-slot: #C3D1DB;
+  --color-copper-50: #EEF4FE;
+  --color-copper-100: #D9E6FC;
+  --color-copper-300: #86AEF0;
+  --color-copper-500: #3B78E3;
+  --color-copper-600: #1F5FCC;
+  --color-copper-700: #1A4FAB;
+  --color-copper-800: #143F8A;
+  --color-lamp-100: #FFF5D6;
+  --color-lamp-300: #FFE28F;
+  --color-lamp-400: #FFC93C;
+  --color-lamp-600: #E0A100;
+  --color-lamp-800: #6E4D00;
+  --color-deep-50: #E8F6F4;
+  --color-deep-100: #CDEDE8;
+  --color-deep-500: #14918A;
+  --color-deep-600: #0F766E;
+  --color-deep-800: #0A4F4A;
+  --color-grape-50: #F6EEFD;
+  --color-grape-100: #EBDAFA;
+  --color-grape-400: #A86AE3;
+  --color-grape-600: #8B2FC9;
+  --color-grape-800: #5E1F8A;
+  --color-oksi-body: #8A6CF0;
+  --color-oksi-shade: #6A4FD6;
+  --color-oksi-light: #BCA9FF;
+  --color-oksi-cheek: #FF9DBB;
+  --color-oksi-goggles: #FFC93C;
+  --color-oksi-lens: #CDEBFF;
+  --color-feedback-success-100: #DDF3E6;
+  --color-feedback-success-300: #8FD3AE;
+  --color-feedback-success-600: #1A7046;
+  --color-feedback-info-100: var(--color-copper-50);
+  --color-feedback-info-300: var(--color-copper-300);
+  --color-feedback-info-600: var(--color-copper-600);
+  --color-feedback-neutral-100: #EDF0F6;
+  --color-feedback-neutral-300: #B9C1D6;
+  --color-feedback-neutral-600: #56628A;
+  --color-feedback-caution-100: #FFF0D9;
+  --color-feedback-caution-300: #F5B860;
+  --color-feedback-caution-500: #C97100;
+  --color-feedback-caution-700: #A34A05;
+  --color-feedback-danger-100: #FDE7E4;
+  --color-feedback-danger-600: #C0352B;
+  --color-lab-outline: var(--color-ink-900);
+  --color-lab-glass: #EAF6FF;
+  --color-lab-glass-shine: #FFFFFF;
+  --color-lab-metal: #C9D3DD;
+  --color-lab-metal-dark: #8E9DAE;
+  --color-lab-rubber: #3E4A6B;
+  --color-lab-flame-outer: #FF8A1F;
+  --color-lab-flame-inner: #FFD23F;
+  --color-lab-flame-base: #4FA3FF;
+  --color-lab-heat-glow: #FF6B3D;
+  --color-lab-ice: #D4F1FF;
+  --color-lab-cold: #7CC4FF;
+  --color-lab-steam: #FFFFFF;
+  --color-lab-foam: #FFFFFF;
+  --color-lab-filter-paper: #F8F5EE;
+  --color-lab-magnet: #E2483D;
+  --color-lab-thermo: #E2483D;
+  --color-lab-ph-paper: #F2C66D;
+  --color-lab-bulb: #F07A5A;
+  --color-substance-water: #CDE9FB;
+  --color-substance-water-surface: #8CC8EE;
+  --color-substance-cloudy-white: #EEF1F0;
+  --color-substance-powder-salt: #FFFFFF;
+  --color-substance-powder-sugar: #FFFDF4;
+  --color-substance-powder-soda: #FAFBFF;
+  --color-substance-powder-starch: #FFFFFF;
+  --color-substance-powder-chalk: #F3F1EA;
+  --color-substance-iodine: #B5651D;
+  --color-substance-iodine-starch: #1F2570;
+  --color-substance-copper-sulfate: #3A8EDB;
+  --color-substance-permanganate: #8E1B8E;
+  --color-substance-peroxide: #E3F3FB;
+  --color-substance-milk: #FBFAF4;
+  --color-substance-oil: #F2D166;
+  --color-substance-caramel: #A0611C;
+  --color-substance-lime-water: #E2F0F5;
+  --color-substance-lime-water-cloudy: #E9ECEE;
+  --color-substance-sand: #D9B779;
+  --color-substance-iron: #5B616B;
+  --color-substance-ice: #E1F5FF;
+  --color-substance-cabbage: #7B4FB5;
+  --color-substance-litmus: #7C5AA6;
+  --color-substance-phenolphthalein-base: #E2408B;
+  --color-substance-bleach: #F1F7D8;
+  --color-ph-1: #E3262A;
+  --color-ph-2: #EC4A2C;
+  --color-ph-3: #F2752B;
+  --color-ph-4: #F7A22C;
+  --color-ph-5: #F6CB2F;
+  --color-ph-6: #D2D832;
+  --color-ph-7: #8CC63F;
+  --color-ph-8: #3DAA5C;
+  --color-ph-9: #1E9C8C;
+  --color-ph-10: #2A80C2;
+  --color-ph-11: #3B57A6;
+  --color-ph-12: #4A3D93;
+  --color-ph-13: #5D2B85;
+  --color-ph-14: #4A1F6B;
+  --color-ph-cabbage-2: #D8344F;
+  --color-ph-cabbage-4: #C2458A;
+  --color-ph-cabbage-6: #8A4FB0;
+  --color-ph-cabbage-7: #7B4FB5;
+  --color-ph-cabbage-8: #4F63C8;
+  --color-ph-cabbage-10: #2C9C8A;
+  --color-ph-cabbage-12: #6FB83C;
+  --color-ph-cabbage-13: #E3D23A;
+  --color-semantic-bg: var(--color-tile-100);
+  --color-semantic-bg-subtle: var(--color-tile-50);
+  --color-semantic-surface: var(--color-paper);
+  --color-semantic-surface-sunken: var(--color-ink-100);
+  --color-semantic-text: var(--color-ink-900);
+  --color-semantic-text-secondary: var(--color-ink-700);
+  --color-semantic-text-muted: var(--color-ink-500);
+  --color-semantic-text-disabled: var(--color-ink-300);
+  --color-semantic-border: var(--color-ink-200);
+  --color-semantic-border-strong: var(--color-ink-900);
+  --color-semantic-primary: var(--color-copper-600);
+  --color-semantic-primary-hover: var(--color-copper-700);
+  --color-semantic-primary-active: var(--color-copper-800);
+  --color-semantic-primary-soft: var(--color-copper-50);
+  --color-semantic-on-primary: var(--color-paper);
+  --color-semantic-focus: var(--color-ink-900);
+  --color-semantic-focus-halo: var(--color-lamp-400);
+  --color-semantic-selected: var(--color-lamp-400);
+  --color-semantic-selected-soft: var(--color-lamp-100);
+  --color-semantic-deeper: var(--color-deep-600);
+  --color-semantic-discovery: var(--color-grape-600);
+
+  /* font */
+  --font-family-display: 'Unbounded', 'Golos Text', system-ui, sans-serif;
+  --font-family-text: 'Golos Text', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-black: 800;
+
+  /* text */
+  --text-display-size: 3.5rem;
+  --text-display-line: 3.75rem;
+  --text-display-weight: 700;
+  --text-display-family: var(--font-family-display);
+  --text-display-tracking: -0.02em;
+  --text-h1-size: 2.25rem;
+  --text-h1-line: 2.75rem;
+  --text-h1-weight: 700;
+  --text-h1-family: var(--font-family-display);
+  --text-h1-tracking: -0.015em;
+  --text-h2-size: 1.75rem;
+  --text-h2-line: 2.25rem;
+  --text-h2-weight: 600;
+  --text-h2-family: var(--font-family-display);
+  --text-h2-tracking: -0.01em;
+  --text-h3-size: 1.3125rem;
+  --text-h3-line: 1.75rem;
+  --text-h3-weight: 600;
+  --text-h3-family: var(--font-family-display);
+  --text-h3-tracking: 0;
+  --text-title-size: 1.25rem;
+  --text-title-line: 1.625rem;
+  --text-title-weight: 700;
+  --text-title-family: var(--font-family-text);
+  --text-title-tracking: 0;
+  --text-lg-size: 1.25rem;
+  --text-lg-line: 1.875rem;
+  --text-lg-weight: 400;
+  --text-lg-family: var(--font-family-text);
+  --text-lg-tracking: 0;
+  --text-md-size: 1.125rem;
+  --text-md-line: 1.6875rem;
+  --text-md-weight: 400;
+  --text-md-family: var(--font-family-text);
+  --text-md-tracking: 0;
+  --text-sm-size: 1rem;
+  --text-sm-line: 1.4375rem;
+  --text-sm-weight: 400;
+  --text-sm-family: var(--font-family-text);
+  --text-sm-tracking: 0;
+  --text-xs-size: 0.9375rem;
+  --text-xs-line: 1.25rem;
+  --text-xs-weight: 500;
+  --text-xs-family: var(--font-family-text);
+  --text-xs-tracking: 0.005em;
+  --text-readout-size: 1.75rem;
+  --text-readout-line: 2rem;
+  --text-readout-weight: 700;
+  --text-readout-family: var(--font-family-text);
+  --text-readout-tracking: 0;
+
+  /* space */
+  --space-0: 0rem;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+
+  /* radius */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+
+  /* border */
+  --border-thin: 1.5px;
+  --border-base: 2px;
+  --border-thick: 3px;
+
+  /* shadow */
+  --shadow-lip: 0 3px 0 0 rgba(22, 33, 63, 0.18);
+  --shadow-lip-primary: 0 3px 0 0 #143F8A;
+  --shadow-float: 0 12px 32px -8px rgba(22, 33, 63, 0.28);
+  --shadow-inset: inset 0 2px 0 0 rgba(22, 33, 63, 0.10);
+
+  /* motion */
+  --motion-duration-instant: 100ms;
+  --motion-duration-fast: 160ms;
+  --motion-duration-base: 240ms;
+  --motion-duration-slow: 400ms;
+  --motion-duration-pour: 900ms;
+  --motion-duration-effect: 1600ms;
+  --motion-duration-effect-long: 3200ms;
+  --motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --motion-easing-enter: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --motion-easing-exit: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --motion-easing-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --motion-easing-liquid: cubic-bezier(0.45, 0.05, 0.25, 1);
+  --motion-easing-settle: cubic-bezier(0.55, 0, 0.9, 0.5);
+  --motion-easing-linear: linear;
+
+  /* z */
+  --z-base: 0;
+  --z-bench: 1;
+  --z-vessel: 2;
+  --z-effects: 3;
+  --z-sticky: 10;
+  --z-drawer: 20;
+  --z-character: 25;
+  --z-drag: 30;
+  --z-popover: 40;
+  --z-toast: 50;
+  --z-dialog: 60;
+
+  /* size */
+  --size-touch-min: 44px;
+  --size-touch: 48px;
+  --size-touch-lg: 56px;
+  --size-action: 80px;
+  --size-icon-sm: 20px;
+  --size-icon: 24px;
+  --size-icon-lg: 32px;
+  --size-topbar: 64px;
+  --size-shelf: 264px;
+  --size-shelf-compact: 200px;
+  --size-journal: 344px;
+  --size-content-max: 1280px;
+  --size-measure: 38em;
+
+  /* breakpoint */
+  /* --breakpoint-tablet-portrait: 768px; — только для справки, в @media пишите литерал */
+  /* --breakpoint-tablet-landscape: 1024px; — только для справки, в @media пишите литерал */
+  /* --breakpoint-desktop: 1280px; — только для справки, в @media пишите литерал */
+  /* --breakpoint-wide: 1440px; — только для справки, в @media пишите литерал */
+
+  /* lab */
+  --lab-liquid-opacity: 0.85;
+  --lab-glass-opacity: 0.55;
+  --lab-stroke: 4;
+  --lab-icon-stroke: 2.5;
+
+  /* производные */
+  --focus-ring: 0 0 0 3px var(--color-semantic-focus-halo), 0 0 0 6px var(--color-semantic-focus);
+  --liquid-color: var(--color-substance-water);
+}
+
+/* Сниженное движение: длительности эффектов сжимаются, но события остаются видимыми.
+   Компоненты дополнительно отключают частицы и колебания (см. 05-effects.md). */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-duration-fast: 1ms;
+    --motion-duration-base: 1ms;
+    --motion-duration-slow: 120ms;
+    --motion-duration-pour: 200ms;
+    --motion-duration-effect: 400ms;
+    --motion-duration-effect-long: 600ms;
+    --motion-easing-pop: var(--motion-easing-standard);
+  }
+}
