@@ -1,0 +1,277 @@
+# Химические частицы, с которыми работает движок. Все числа — черновик для проверки химиком.
+# Растворимость — г на 100 г воды; источник урока 1 (раздел 4.6) и справочники.
+
+- id: water
+  formula: H2O
+  molarMass: 18.015
+  classes: [water]
+  stateAt20C: liquid
+  density: 1.0
+  names: { scientific: { ru: "вода" } }
+  color: { solution: color.substance.water }
+  specificHeat: 4.18
+  hazard: none
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: sodium_chloride
+  formula: NaCl
+  molarMass: 58.44
+  classes: [salt, soluble, heat_stable, powder]
+  stateAt20C: solid
+  names: { scientific: { ru: "хлорид натрия" } }
+  solubility: { table: [[0, 35.7], [20, 36.0], [100, 39.2]], stirsToDissolve: 1, noStirFractionPerMin: 0.3 }
+  color: { powder: color.substance.powder-salt }
+  magnifierView: cubes
+  specificHeat: 0.88
+  hazard: none
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: sucrose
+  formula: C12H22O11
+  molarMass: 342.3
+  classes: [sugar, soluble, powder]
+  stateAt20C: solid
+  names: { scientific: { ru: "сахароза" } }
+  solubility: { table: [[0, 179], [20, 204], [100, 487]], stirsToDissolve: 1, noStirFractionPerMin: 0.3 }
+  color: { powder: color.substance.powder-sugar }
+  magnifierView: crystals
+  specificHeat: 1.25
+  hazard: none
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: sodium_bicarbonate
+  formula: NaHCO3
+  molarMass: 84.01
+  classes: [bicarbonate, salt, weak_base, soluble, powder]
+  stateAt20C: solid
+  names: { scientific: { ru: "гидрокарбонат натрия" } }
+  solubility: { table: [[0, 6.9], [20, 9.6], [40, 12.7], [60, 16.4]], stirsToDissolve: 3, noStirFractionPerMin: 0.1 }
+  color: { powder: color.substance.powder-soda }
+  magnifierView: fine_powder
+  specificHeat: 1.0
+  acidBase: { role: amphiprotic, pKa1: 6.35, pKa2: 10.33 }
+  hazard: none
+  sources: [lesson01, sciencemadness_nahco3]
+  review: { status: self_checked, notes: "Порог заметного разложения сухой соды над горелкой" }
+
+- id: sodium_carbonate
+  formula: Na2CO3
+  molarMass: 105.99
+  classes: [carbonate, salt, weak_base, soluble, powder]
+  stateAt20C: solid
+  names: { scientific: { ru: "карбонат натрия" } }
+  solubility: { table: [[0, 7.0], [20, 21.5], [35, 49.7], [100, 45.5]], stirsToDissolve: 2, noStirFractionPerMin: 0.2 }
+  color: { powder: color.substance.powder-soda }
+  magnifierView: fine_powder
+  specificHeat: 1.04
+  acidBase: { role: weak_base, pKb: 3.67 }
+  hazard: low
+  discoverable:
+    name: { ru: "Кальцинированная сода" }
+    text: { ru: "Сода от жара превратилась в новое вещество. На вид оно такое же белое!" }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: acetic_acid
+  formula: CH3COOH
+  molarMass: 60.05
+  classes: [acid, weak_acid, volatile]
+  stateAt20C: liquid
+  density: 1.05
+  names: { scientific: { ru: "уксусная кислота" } }
+  odor: { kind: sharp_sour, text: { ru: "Резкий кислый запах. Так пахнет уксус." } }
+  specificHeat: 2.0
+  acidBase: { role: weak_acid, pKa: 4.76 }
+  hazard: low
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: sodium_acetate
+  formula: CH3COONa
+  molarMass: 82.03
+  classes: [salt, soluble]
+  stateAt20C: solid
+  names: { scientific: { ru: "ацетат натрия" } }
+  solubility: { table: [[0, 119], [20, 123.3], [100, 170]], stirsToDissolve: 1, noStirFractionPerMin: 0.5 }
+  color: { powder: color.substance.powder-salt }
+  specificHeat: 1.2
+  acidBase: { role: conjugate_base, of: acetic_acid, perMol: 1 }
+  hazard: none
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: calcium_acetate
+  formula: Ca(CH3COO)2
+  molarMass: 158.17
+  classes: [salt, soluble]
+  stateAt20C: solid
+  names: { scientific: { ru: "ацетат кальция" } }
+  solubility: { table: [[0, 37.4], [20, 34.7], [100, 29.7]], stirsToDissolve: 1, noStirFractionPerMin: 0.5 }
+  color: { powder: color.substance.powder-salt }
+  specificHeat: 1.2
+  acidBase: { role: conjugate_base, of: acetic_acid, perMol: 2 }
+  hazard: none
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: carbon_dioxide
+  formula: CO2
+  molarMass: 44.01
+  classes: []
+  stateAt20C: gas
+  names: { scientific: { ru: "углекислый газ" } }
+  hazard: none
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: calcium_carbonate
+  formula: CaCO3
+  molarMass: 100.09
+  classes: [carbonate, insoluble, heat_stable, powder]
+  stateAt20C: solid
+  names: { scientific: { ru: "карбонат кальция" } }
+  insoluble: { form: suspension, settleTimeS: 40, turbidity: 1.6 }
+  color: { powder: color.substance.powder-chalk }
+  magnifierView: fine_powder
+  specificHeat: 0.84
+  hazard: none
+  sources: [lesson01]
+  review: { status: self_checked, notes: "Природный мел — 90–98 % CaCO3; школьные мелки бывают из гипса" }
+
+- id: starch
+  formula: (C6H10O5)n
+  molarMass: null
+  classes: [starch, insoluble, powder]
+  stateAt20C: solid
+  names: { scientific: { ru: "крахмал" } }
+  insoluble: { form: suspension, settleTimeS: 60, turbidity: 2.0 }
+  color: { powder: color.substance.powder-starch }
+  magnifierView: ultrafine_powder
+  specificHeat: 1.2
+  hazard: none
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: starch_iodine_complex
+  formula: (C6H10O5)n
+  molarMass: null
+  classes: [starch_iodine, insoluble]
+  stateAt20C: solid
+  names: { scientific: { ru: "комплекс крахмала с йодом" } }
+  insoluble: { form: suspension, settleTimeS: 60, turbidity: 2.5 }
+  color: { powder: color.substance.iodine-starch }
+  magnifierView: ultrafine_powder
+  specificHeat: 1.2
+  hazard: none
+  sources: [lesson01, microbenotes_iodine_test]
+  review: { status: self_checked, notes: "Порог температуры исчезновения окраски" }
+
+- id: dextrin
+  formula: (C6H10O5)n
+  molarMass: null
+  classes: [chars, insoluble]
+  stateAt20C: solid
+  names: { scientific: { ru: "декстрины (поджаренный крахмал)" } }
+  insoluble: { form: suspension, settleTimeS: 60, turbidity: 1.5 }
+  color: { powder: color.wood.200 }
+  odor: { kind: toasted, text: { ru: "Пахнет поджаренным хлебом." } }
+  specificHeat: 1.2
+  hazard: none
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: caramel
+  formula: mixture
+  molarMass: null
+  classes: [chars]
+  stateAt20C: solid
+  names: { scientific: { ru: "карамель (продукты разложения сахара)" } }
+  color: { powder: color.substance.caramel }
+  odor: { kind: caramel, text: { ru: "Пахнет карамелью." } }
+  specificHeat: 1.25
+  hazard: none
+  discoverable:
+    name: { ru: "Карамель" }
+    text: { ru: "Сахар от жара превратился в карамель. Это уже новые вещества!" }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: carbon
+  formula: C
+  molarMass: 12.011
+  classes: [heat_stable]
+  stateAt20C: solid
+  names: { scientific: { ru: "углерод (уголь)" } }
+  color: { powder: color.ink.900 }
+  odor: { kind: burnt, text: { ru: "Пахнет горелым." } }
+  specificHeat: 0.71
+  hazard: none
+  discoverable:
+    name: { ru: "Уголь" }
+    text: { ru: "Если долго греть сахар или крахмал, получится чёрный уголь." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: iodine
+  formula: I2
+  molarMass: 253.81
+  classes: [iodine]
+  stateAt20C: solid
+  names: { scientific: { ru: "йод" } }
+  color: { solution: color.substance.iodine, tint: 4000 }
+  specificHeat: 0.22
+  hazard: caution
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: potassium_iodide
+  formula: KI
+  molarMass: 166.0
+  classes: [salt, soluble]
+  stateAt20C: solid
+  names: { scientific: { ru: "иодид калия" } }
+  solubility: { table: [[0, 128], [20, 144], [100, 206]], stirsToDissolve: 1, noStirFractionPerMin: 0.5 }
+  color: { powder: color.substance.powder-salt }
+  specificHeat: 0.31
+  hazard: low
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: cabbage_anthocyanins
+  formula: mixture
+  molarMass: null
+  classes: [indicator]
+  stateAt20C: solid
+  names: { scientific: { ru: "антоцианы краснокочанной капусты" } }
+  color: { solution: color.substance.cabbage, tint: 1500 }
+  indicator:
+    colors:
+      - { phMax: 3.5, color: color.ph-cabbage.2, name: { ru: "красно-розовым" } }
+      - { phMax: 5.5, color: color.ph-cabbage.4, name: { ru: "розово-фиолетовым" } }
+      - { phMax: 6.5, color: color.ph-cabbage.6, name: { ru: "фиолетовым" } }
+      - { phMax: 7.5, color: color.ph-cabbage.7, name: { ru: "лиловым" } }
+      - { phMax: 9.5, color: color.ph-cabbage.8, name: { ru: "синим" } }
+      - { phMax: 11.5, color: color.ph-cabbage.10, name: { ru: "сине-зелёным" } }
+      - { phMax: 12.5, color: color.ph-cabbage.12, name: { ru: "зелёным" } }
+      - { phMax: 14.1, color: color.ph-cabbage.13, name: { ru: "жёлтым" } }
+  specificHeat: 1.0
+  hazard: none
+  sources: [flinn_cabbage]
+  review: { status: self_checked }
+
+- id: silicon_dioxide
+  formula: SiO2
+  molarMass: 60.08
+  classes: [insoluble, sinks, heat_stable, powder]
+  stateAt20C: solid
+  names: { scientific: { ru: "кварц (диоксид кремния)" } }
+  insoluble: { form: sediment, settleTimeS: 2, turbidity: 0.3 }
+  color: { powder: color.substance.sand }
+  magnifierView: crystals
+  specificHeat: 0.74
+  hazard: none
+  sources: [lesson01]
+  review: { status: self_checked }

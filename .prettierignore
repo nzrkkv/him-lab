@@ -1,0 +1,11 @@
+design/
+docs/
+dist/
+src/generated/
+node_modules/
+content/
+*.md
+test-results/
+playwright-report/
+screenshots/
+dist-dev/

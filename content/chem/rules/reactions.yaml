@@ -1,0 +1,231 @@
+# Химические реакции прототипа. Числа — черновик для проверки химиком.
+- id: acid_carbonate_gas
+  kind: reaction
+  priority: 100
+  when:
+    reactants:
+      - { bind: acid, match: { class: acid }, phases: [dissolved, liquid] }
+      - { bind: carbonate, match: { class: carbonate_like }, phases: [solid, dissolved, suspended, sediment] }
+  effect: { type: react }
+  observe: [{ kind: gas, intensity: from_variant }]
+  variants:
+    - id: acetic_bicarbonate
+      bind: { acid: acetic_acid, carbonate: sodium_bicarbonate }
+      reactants: [{ bind: acid, coeff: 1 }, { bind: carbonate, coeff: 1 }]
+      products:
+        - { species: sodium_acetate, coeff: 1, phase: dissolved }
+        - { species: water, coeff: 1, phase: liquid }
+        - { species: carbon_dioxide, coeff: 1, phase: gas }
+      kinetics: { mode: instant }
+      intensity: strong
+      heatJPerMol: 25000
+      foamMlPerMlGas: 0.15
+      equation: "NaHCO3 + CH3COOH -> CH3COONa + H2O + CO2^"
+    - id: acetic_calcium_carbonate
+      bind: { acid: acetic_acid, carbonate: calcium_carbonate }
+      reactants: [{ bind: acid, coeff: 2 }, { bind: carbonate, coeff: 1 }]
+      products:
+        - { species: calcium_acetate, coeff: 1, phase: dissolved }
+        - { species: water, coeff: 1, phase: liquid }
+        - { species: carbon_dioxide, coeff: 1, phase: gas }
+      kinetics: { mode: over_time, durationS: 30 }
+      intensity: weak
+      foamMlPerMlGas: 0
+      equation: "CaCO3 + 2CH3COOH -> Ca(CH3COO)2 + H2O + CO2^"
+      text:
+        what: { ru: "Шипит, но спокойнее: мелкие пузырьки, дольше" }
+        why: { ru: "Мел тоже шипит! Выходит тот же газ, что у соды. Мел и сода — химические родственники." }
+    - id: acetic_sodium_carbonate
+      bind: { acid: acetic_acid, carbonate: sodium_carbonate }
+      reactants: [{ bind: acid, coeff: 2 }, { bind: carbonate, coeff: 1 }]
+      products:
+        - { species: sodium_acetate, coeff: 2, phase: dissolved }
+        - { species: water, coeff: 1, phase: liquid }
+        - { species: carbon_dioxide, coeff: 1, phase: gas }
+      kinetics: { mode: instant }
+      intensity: strong
+      foamMlPerMlGas: 0.1
+      equation: "Na2CO3 + 2CH3COOH -> 2CH3COONa + H2O + CO2^"
+  text:
+    what: { ru: "Шипение, пузырьки газа" }
+    why: { ru: "Вещества превратились в новые. Одно из них — газ, он и надувает пузырьки. Это химическая реакция!" }
+    deeper: { ru: "В соде и в меле есть одинаковая «деталь». Из неё и получается углекислый газ, когда приходит уксус. Такие вещества называют карбонатами." }
+    adult: { ru: "Кислота вытесняет угольную кислоту из карбоната, та распадается на воду и CO₂. Мел нерастворим и реагирует с поверхности, поэтому медленнее." }
+  line: { ru: "Опять шипит?! Но сода у нас одна… Значит, шипят двое. Как их различить?" }
+  sources: [lesson01, frostburg_vinegar_soda]
+  review: { status: self_checked, notes: "Охлаждение на 2–4 °C, калибровка пены" }
+
+- id: starch_iodine_complex
+  kind: reaction
+  priority: 50
+  when:
+    reactants:
+      - { bind: starch, match: { class: starch }, phases: [solid, suspended, sediment, gel] }
+      - { bind: iodine, match: { class: iodine }, phases: [dissolved] }
+    temperature: { maxC: 60 }
+  effect: { type: transform, bind: starch, to: starch_iodine_complex }
+  observe: [{ kind: color, intensity: strong }]
+  text:
+    what: { ru: "Стало тёмно-синим, почти чёрным" }
+    why: { ru: "Йод нашёл крахмал! Только крахмал так синеет. Это его главная примета." }
+    deeper: { ru: "Йод прячется внутрь длинных цепочек крахмала — и от этого появляется синий цвет." }
+    adult: { ru: "Полииодид-ионы входят в спираль амилозы и дают синюю окраску; при нагревании окраска исчезает, при охлаждении возвращается." }
+  sources: [lesson01, microbenotes_iodine_test]
+  review: { status: self_checked, notes: "Порог 60 °C — уточнить" }
+
+- id: starch_iodine_fade
+  kind: reaction
+  priority: 50
+  when:
+    reactants: [{ bind: c, match: { species: starch_iodine_complex } }]
+    temperature: { minC: 60 }
+  effect: { type: transform, bind: c, to: starch }
+  observe: [{ kind: color, detail: fade }]
+  text:
+    what: { ru: "Синий цвет побледнел и пропал" }
+    why: { ru: "Горячо — и йод отпускает крахмал. Остынет — синий цвет вернётся." }
+    adult: { ru: "Комплекс амилозы с йодом при нагревании распадается; процесс обратим." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: bicarbonate_dry_decomposition
+  kind: reaction
+  priority: 40
+  when:
+    reactants: [{ bind: s, match: { species: sodium_bicarbonate }, phases: [solid] }]
+    medium: dry
+    heating: true
+    temperature: { minC: 100 }
+  effect: { type: react }
+  observe: [{ kind: steam, detail: droplets_on_walls }]
+  variants:
+    - id: dry
+      bind: { s: sodium_bicarbonate }
+      reactants: [{ bind: s, coeff: 2 }]
+      products:
+        - { species: sodium_carbonate, coeff: 1, phase: solid }
+        - { species: water, coeff: 1, phase: gas }
+        - { species: carbon_dioxide, coeff: 1, phase: gas }
+      kinetics: { mode: over_time, durationS: 12 }
+      intensity: weak
+      equation: "2NaHCO3 -> Na2CO3 + H2O + CO2^"
+  text:
+    what: { ru: "На холодных стенках появились капельки воды. Порошок остался белым" }
+    why: { ru: "Сода от жара распадается: выходят пар и газ. А в пробирке остаётся другой белый порошок — глазом от соды не отличить!" }
+    adult: { ru: "2NaHCO₃ → Na₂CO₃ + H₂O + CO₂. Заметно примерно от 80–100 °C, быстро около 200 °C." }
+  sources: [lesson01, sciencemadness_nahco3]
+  review: { status: self_checked }
+
+- id: bicarbonate_solution_decomposition
+  kind: reaction
+  priority: 40
+  when:
+    reactants: [{ bind: s, match: { species: sodium_bicarbonate }, phases: [dissolved] }]
+    medium: aqueous
+    heating: true
+    temperature: { minC: 80 }
+  effect: { type: react }
+  observe: [{ kind: gas, intensity: from_variant }]
+  variants:
+    - id: solution
+      bind: { s: sodium_bicarbonate }
+      reactants: [{ bind: s, coeff: 2 }]
+      products:
+        - { species: sodium_carbonate, coeff: 1, phase: dissolved }
+        - { species: water, coeff: 1, phase: liquid }
+        - { species: carbon_dioxide, coeff: 1, phase: gas }
+      kinetics: { mode: over_time, durationS: 60 }
+      intensity: weak
+      equation: "2NaHCO3 -> Na2CO3 + H2O + CO2^"
+  text:
+    what: { ru: "Ещё до кипения появились мелкие пузырьки" }
+    why: { ru: "Горячая сода в воде понемногу выпускает газ." }
+    adult: { ru: "При нагревании раствора гидрокарбонат переходит в карбонат с выделением CO₂." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: sugar_melt
+  kind: physical
+  priority: 40
+  when:
+    reactants: [{ bind: s, match: { species: sucrose }, phases: [solid] }]
+    medium: dry
+    heating: true
+    temperature: { minC: 160 }
+  effect: { type: phase_change, bind: s, to: melt }
+  observe: [{ kind: melt }]
+  text:
+    what: { ru: "Сахар расплавился в прозрачную жидкость" }
+    why: { ru: "От сильного жара сахар плавится." }
+    adult: { ru: "Сахароза плавится с разложением примерно при 160–190 °C. Расплав очень горячий и липкий — дома с детьми не повторять." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: sugar_caramelize
+  kind: reaction
+  priority: 45
+  when:
+    reactants: [{ bind: s, match: { species: sucrose }, phases: [melt] }]
+    heating: true
+    temperature: { minC: 170 }
+    holdS: 3
+  effect: { type: transform, bind: s, to: caramel }
+  observe: [{ kind: color, detail: caramel }, { kind: smell }]
+  text:
+    what: { ru: "Расплав пожелтел, потом побурел. Пахнет карамелью" }
+    why: { ru: "Сахар начал превращаться в карамель — это уже новые вещества." }
+    deeper: { ru: "Карамель — не растаявший сахар. Это много новых веществ сразу." }
+    adult: { ru: "Карамелизация — набор реакций разложения и конденсации сахарозы." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: starch_toast
+  kind: reaction
+  priority: 40
+  when:
+    reactants: [{ bind: s, match: { species: starch }, phases: [solid] }]
+    medium: dry
+    heating: true
+    temperature: { minC: 150 }
+    holdS: 3
+  effect: { type: transform, bind: s, to: dextrin }
+  observe: [{ kind: color, detail: toasted }, { kind: smell }]
+  text:
+    what: { ru: "Крахмал пожелтел и подрумянился. Пахнет поджаренным хлебом" }
+    why: { ru: "Крахмал не плавится, а подрумянивается — как хлеб в тостере." }
+    adult: { ru: "Декстринизация при сухом нагреве (примерно 150–220 °C)." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: char_organic
+  kind: reaction
+  priority: 46
+  when:
+    reactants: [{ bind: s, match: { class: chars }, phases: [solid, melt] }]
+    heating: true
+    temperature: { minC: 220 }
+    holdS: 6
+  effect: { type: transform, bind: s, to: carbon, toPhase: solid, fumeHood: true }
+  observe: [{ kind: color, detail: char }, { kind: smell }]
+  text:
+    what: { ru: "Почернело, идёт дымок. Включилась вытяжка" }
+    why: { ru: "Сгорело — получился уголь. Это уже другое вещество. Возьми новую порцию." }
+    adult: { ru: "При перегреве органика обугливается; упрощённо C₁₂H₂₂O₁₁ → 12C + 11H₂O. Дома так не делаем." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: cabbage_indicator
+  kind: indicator
+  priority: 60
+  when:
+    reactants: [{ bind: i, match: { class: indicator }, phases: [dissolved] }]
+    medium: aqueous
+  effect: { type: indicator, bind: i }
+  observe: [{ kind: color }]
+  text:
+    what: { ru: "Цвет отвара изменился" }
+    why: { ru: "Отвар капусты — индикатор. В кислом он краснеет, в щелочном синеет и зеленеет." }
+    deeper: { ru: "Кислое или щелочное учёные измеряют числом pH. Вода — 7, уксус — около 3." }
+    adult: { ru: "Антоцианы меняют окраску в зависимости от pH: красные в кислой среде, синие и зелёные в щелочной." }
+  sources: [flinn_cabbage]
+  review: { status: self_checked }

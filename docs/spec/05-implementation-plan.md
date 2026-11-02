@@ -14,7 +14,7 @@
 
 | Веха | Цель | Результат | Зависит от |
 | --- | --- | --- | --- |
-| M0 | Репозиторий, инструменты, CI, деплой, подключение дизайна | Пустое приложение с токенами и шрифтами дизайна собирается, проходит CI и публикуется на Pages | решение Q-01 по Pages для приватного репозитория |
+| M0 | Репозиторий, инструменты, CI, деплой, подключение дизайна | Пустое приложение с токенами и шрифтами дизайна собирается, проходит CI и публикуется на Pages | — (Q-01 решён) |
 | M1 | Схемы контента и движок реакций | Движок проходит табличные тесты прототипа (T01–T30) и свойства-тесты; контент прототипа валиден | M0 |
 | M2 | Интерфейс лабы по дизайну | Песочница с веществами прототипа играбельна мышью, пальцем и клавиатурой; эффекты, результат, «ничего», «стоп» | M1, дизайн v1 |
 | M3 | Миссии и песочница | Миссия «Загадка белых порошков» проходится от начала до конца; песочница с открытиями; прогресс сохраняется; сборка для плейтеста | M2 |
@@ -34,7 +34,7 @@
 | M0-02 | Линтеры: ESLint (typescript-eslint strict), Prettier, Stylelint; правила: нет `any`, нет кириллицы в `src/` вне тестов, чистота `src/core/` (запрет `Date`, `Math.random`, DOM), границы слоёв | `npm run lint` проходит; намеренное нарушение каждого правила ловится (проверено вручную, описано в PR) | M0-01 | S | `eslint.config.js`, `.prettierrc`, `.stylelintrc.json` |
 | M0-03 | Тесты: Vitest с покрытием и порогами, Testing Library для Preact, Playwright (Chromium, WebKit, Firefox; локально — Chrome из `/usr/bin/google-chrome`), axe-core | `npm test` и `npm run test:e2e` проходят на тестах-заглушках; отчёты сохраняются | M0-01 | M | `vitest.config.ts`, `playwright.config.ts`, `tests/e2e/smoke.spec.ts` |
 | M0-04 | CI: `ci.yml` — линт, типы, тесты, сборка, e2e (Chromium в PR, все браузеры на `main`), артефакты отчётов; действия закреплены по SHA; минимальные `permissions` | Workflow зелёный на ветке; падение любого шага валит запуск | M0-02, M0-03 | S | `.github/workflows/ci.yml` |
-| M0-05 | Деплой: `deploy.yml` — сборка и публикация на GitHub Pages через Actions (`upload-pages-artifact` + `deploy-pages`); относительный `base`, канал хранилища `prod` [A] | Сайт открывается по адресу Pages после пуша в `main` (после включения Pages автором) | M0-04, Q-01 | S | `.github/workflows/deploy.yml`, `vite.config.ts` |
+| M0-05 | Деплой: `deploy.yml` — сборка с `BASE_PATH=/him-lab/` и публикация на GitHub Pages через Actions (`configure-pages` + `upload-pages-artifact` + `deploy-pages`) на пуш в `main`; канал хранилища `prod`. Превью PR не делаем (Q-05) | Сайт открывается по адресу https://nzrkkv.github.io/him-lab/ после слияния в `main` | M0-04 | S | `.github/workflows/deploy.yml`, `scripts/build.ts` |
 | M0-06 | Подключение дизайна [D]: `tokens.css`, `components.css`, `lab.css`, `effects.css` из `design/` без изменений; шрифты из `design/fonts/` копируются в сборку и подключаются локально; генерация индекса ассетов из `manifest.json`; `npm run assets:check` по контракту `design/assets/README.md` | Страница-образец показывает кнопку `hl-btn--primary` и пробирку с `--level` по токенам; нет запросов к сторонним адресам; `assets:check` ловит удалённый слой | M0-01 | M | `src/styles/`, `scripts/assets/`, `vite.config.ts` |
 | M0-07 | Процесс: `README.md`, ADR 0001–0005 (стек, формат контента, маршруты, хранилище и каналы, превью), шаблоны PR и задач, `CODEOWNERS`, `dependabot.yml` | Файлы есть; шаблон PR содержит чек-лист из раздела «Процесс» | — | S | `README.md`, `docs/adr/`, `.github/` |
 

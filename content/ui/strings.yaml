@@ -1,0 +1,173 @@
+# Строки интерфейса. Ключ → текст. Подстановки: {name}.
+app.title: { ru: "Хим лаба" }
+app.tagline: { ru: "Лаборатория, где можно всё: смешивай, нагревай и узнавай, почему так вышло" }
+app.prototype: { ru: "Прототип для проверки" }
+home.mission: { ru: "Миссия: Загадка белых порошков" }
+home.mission.sub: { ru: "Подпиши пять банок — каждую надпись докажи опытом" }
+home.sandbox: { ru: "Песочница" }
+home.sandbox.sub: { ru: "Свободные опыты: смешивай, нагревай, наблюдай" }
+home.continue: { ru: "Продолжить миссию" }
+home.parents: { ru: "Для родителей" }
+home.parents.text: { ru: "Безопасная химическая лаборатория: опыты без реактивов, с понятными объяснениями. Без рекламы, без регистрации, без сбора данных. Прогресс хранится только в этом браузере." }
+narrow.title: { ru: "Хим лаба пока работает на компьютере и планшете" }
+narrow.open: { ru: "Всё равно открыть" }
+error.title: { ru: "Что-то сломалось" }
+error.home: { ru: "На главную" }
+
+top.back: { ru: "На главную" }
+top.mode.sandbox: { ru: "Песочница" }
+top.mode.mission: { ru: "Миссия" }
+top.sandbox.title: { ru: "Свободные опыты" }
+top.hints: { ru: "Подсказки" }
+top.deeper: { ru: "Копнуть глубже" }
+top.deeper.short: { ru: "Глубже" }
+top.calm: { ru: "Спокойные эффекты" }
+top.sound.on: { ru: "Звук включён" }
+top.sound.off: { ru: "Звук выключен" }
+top.journal: { ru: "Журнал" }
+
+shelf.title: { ru: "Вещества" }
+shelf.count: { ru: "Открыто: {count}" }
+shelf.liquids: { ru: "Жидкости" }
+shelf.powders: { ru: "Порошки" }
+shelf.mission.title: { ru: "Загадка" }
+shelf.mission.count: { ru: "5 банок без надписей" }
+shelf.reagents: { ru: "Реагенты" }
+shelf.home: { ru: "есть дома" }
+shelf.lab: { ru: "только в лабе" }
+shelf.home.long: { ru: "есть дома" }
+shelf.lab.long: { ru: "только в виртуальной лабе" }
+shelf.jar: { ru: "Банка {jar}" }
+shelf.jar.nolabel: { ru: "без надписи" }
+shelf.jar.label: { ru: "надпись: {label}" }
+
+rail.title: { ru: "Посуда и приборы" }
+rail.place: { ru: "{name}: нажми, чтобы поставить на стол" }
+bench.empty: { ru: "Поставь на стол стакан или пробирку — и начинай опыт" }
+bench.slot: { ru: "Свободное место" }
+bench.vessel: { ru: "{name} {no}" }
+bench.empty.vessel: { ru: "пусто" }
+bench.hint.select: { ru: "Выбери сосуд на столе — и вещество попадёт в него" }
+
+dock.label: { ru: "Действия с выбранным сосудом" }
+dock.do: { ru: "Сделать" }
+dock.observe: { ru: "Наблюдать" }
+dock.none: { ru: "Выбери сосуд на столе" }
+act.stir: { ru: "Перемешать" }
+act.heat: { ru: "Нагреть" }
+act.heat.stop: { ru: "Погасить" }
+act.cool: { ru: "Охладить" }
+act.cool.stop: { ru: "Из бани" }
+act.wait: { ru: "Подождать" }
+act.holder: { ru: "Держатель" }
+act.smell: { ru: "Понюхать" }
+act.magnify: { ru: "Лупа" }
+act.temperature: { ru: "Термометр" }
+act.ph: { ru: "pH" }
+act.weigh: { ru: "Весы" }
+act.undo: { ru: "Отменить" }
+act.clear: { ru: "Помыть" }
+act.remove: { ru: "Убрать" }
+
+qty.title: { ru: "Сколько добавить?" }
+qty.add: { ru: "Добавить" }
+qty.cancel: { ru: "Отмена" }
+unit.portion.one: { ru: "порция" }
+unit.portion.few: { ru: "порции" }
+unit.portion.many: { ru: "порций" }
+unit.drop.one: { ru: "капля" }
+unit.drop.few: { ru: "капли" }
+unit.drop.many: { ru: "капель" }
+
+result.why: { ru: "Почему так?" }
+result.deeper: { ru: "Копнуть глубже" }
+result.sci: { ru: "по-научному" }
+result.close: { ru: "Понятно" }
+result.nothing.title: { ru: "Ничего не произошло" }
+result.nothing.sub: { ru: "Это тоже результат" }
+result.indicator: { ru: "Отвар стал {color}" }
+result.temp: { ru: "Температура: {value} °C" }
+result.ph: { ru: "pH около {value}: {word}" }
+result.ph.acid: { ru: "кислое" }
+result.ph.neutral: { ru: "нейтральное" }
+result.ph.base: { ru: "щелочное" }
+result.mass: { ru: "Масса: {value} г" }
+result.smell.none: { ru: "Почти без запаха. Нюх тут не поможет." }
+result.smell.hint: { ru: "Нюхаем веером: машем ладонью от сосуда к носу." }
+result.lens.title: { ru: "В лупе" }
+result.lens.cubes: { ru: "Прозрачные крупинки-кубики с ровными гранями" }
+result.lens.crystals: { ru: "Блестящие кристаллы, грани скошенные — не кубики" }
+result.lens.fine_powder: { ru: "Мелкий белый порошок, крупинок не разглядеть" }
+result.lens.ultrafine_powder: { ru: "Очень мелкий белоснежный порошок, бывают комочки" }
+result.lens.liquid: { ru: "Жидкость. Крупинок в ней не видно" }
+result.lens.mixed: { ru: "Тут много всего сразу" }
+result.discovery: { ru: "Открытие! {name}" }
+
+stop.title: { ru: "Стоп!" }
+stop.ok: { ru: "Понятно" }
+blocked.needs_holder: { ru: "Горячую пробирку держим только держателем. Нажми «Держатель»." }
+blocked.capacity: { ru: "Больше не поместится. Возьми сосуд побольше." }
+blocked.no_return_to_jar: { ru: "Обратно в банку ничего не возвращаем. Так можно испортить всё вещество в банке." }
+blocked.not_available: { ru: "Этого пока нет на полке." }
+blocked.empty_vessel: { ru: "Сосуд пустой. Положи в него что-нибудь для опыта." }
+blocked.needs_liquid: { ru: "Тут нет жидкости. pH меряют в растворе." }
+blocked.station_busy: { ru: "Горелка уже занята. Сначала погаси её." }
+
+nothing.generic.add: { ru: "Ничего нового не появилось." }
+nothing.generic.pour: { ru: "Ничего нового не появилось." }
+nothing.generic.stir: { ru: "Перемешали — ничего нового." }
+nothing.generic.heat_stop: { ru: "Нагрели — ничего не изменилось." }
+nothing.generic.cool_stop: { ru: "Охладили — ничего не изменилось." }
+nothing.generic.wait: { ru: "Подождали — ничего не изменилось." }
+
+journal.title: { ru: "Журнал" }
+journal.count: { ru: "Записей: {count}" }
+journal.empty: { ru: "Сделай опыт — и он появится здесь." }
+journal.done: { ru: "Что было" }
+journal.ideas: { ru: "Попробуй" }
+journal.discoveries: { ru: "Открытия: {count}" }
+board.title: { ru: "Детективная доска" }
+board.caption: { ru: "Что показала каждая проверка для банок" }
+board.untested: { ru: "не проверено" }
+board.test: { ru: "Проверка" }
+board.howto: { ru: "Сделай опыт с банкой — результат появится в таблице сам." }
+
+mission.help: { ru: "Пипа, помоги" }
+mission.check: { ru: "Проверить" }
+mission.start: { ru: "Начинаем!" }
+mission.hint.level: { ru: "Подсказка {level} из 3" }
+mission.hint.more: { ru: "Ещё подсказку" }
+mission.hint.close: { ru: "Пока не надо" }
+mission.label.title: { ru: "Надпись для банки {jar}" }
+mission.label.none: { ru: "Снять надпись" }
+mission.label.button: { ru: "Надпись" }
+mission.wash: { ru: "Помыть руки" }
+mission.done.title: { ru: "Твои доказательства" }
+mission.again: { ru: "Пройти заново" }
+mission.home: { ru: "На главную" }
+mission.sandbox: { ru: "В песочницу" }
+mission.mix: { ru: "Смесь" }
+mission.progress: { ru: "Подписано банок: {count} из {total}" }
+
+guide.name: { ru: "Пипа" }
+guide.welcome.sandbox: { ru: "Это песочница. Поставь на стол сосуд, выбери вещество — и пробуй!" }
+vessel.temp: { ru: "{value} °C" }
+vessel.heating: { ru: "греется" }
+vessel.cooling: { ru: "в ледяной бане" }
+a11y.selected: { ru: "выбран" }
+a11y.contains: { ru: "внутри: {list}" }
+mission.resume: { ru: "С возвращением! Стол убрали, а журнал и надписи на месте." }
+mission.check.title: { ru: "Смотрим надписи:" }
+bench.full: { ru: "На столе нет места. Убери или помой сосуд." }
+bench.title: { ru: "Рабочий стол" }
+station.burner: { ru: "Горелка" }
+station.burner.on: { ru: "Горелка горит" }
+station.burner.off: { ru: "Горелка не горит" }
+station.ice: { ru: "Ледяная баня" }
+stop.kicker: { ru: "Лаба остановила опыт" }
+qty.less: { ru: "Меньше" }
+qty.more: { ru: "Больше" }
+mission.badge: { ru: "Значок «Сыщик порошков»" }
+readout.temperature: { ru: "{value} °C" }
+readout.ph: { ru: "pH {value}" }
+readout.mass: { ru: "{value} г" }

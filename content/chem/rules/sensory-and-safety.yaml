@@ -1,0 +1,66 @@
+# Наблюдения при нагреве и стоп-правила безопасности.
+- id: salt_crackle
+  kind: sensory
+  priority: 30
+  when:
+    reactants: [{ bind: s, match: { species: sodium_chloride }, phases: [solid] }]
+    medium: dry
+    heating: true
+    temperature: { minC: 150 }
+  effect: { type: observe_only, once: heat_session }
+  observe: [{ kind: nothing, detail: crackle }]
+  text:
+    what: { ru: "Ничего не меняется. Крупинки потрескивают и подпрыгивают" }
+    why: { ru: "Соль очень стойкая. Чтобы её расплавить, нужно 800 градусов. А кипяток — всего 100." }
+    adult: { ru: "Т пл. NaCl 801 °C. Потрескивание — вода, запертая в кристаллах, превращается в пар и разрывает их." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: acid_vapor_on_heat
+  kind: sensory
+  priority: 30
+  when:
+    reactants: [{ bind: a, match: { class: volatile }, phases: [dissolved, liquid] }]
+    heating: true
+    temperature: { minC: 40 }
+  effect: { type: observe_only, once: heat_session, fumeHood: true }
+  observe: [{ kind: smell }]
+  text:
+    what: { ru: "Запах стал резче. Включилась вытяжка" }
+    why: { ru: "Уксус испаряется, запах стал резче. Так греют только под вытяжкой." }
+    adult: { ru: "Пары уксусной кислоты раздражают слизистые." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: hz_iodine_heat_dry
+  kind: hazard_stop
+  priority: 1000
+  when:
+    trigger: [heat_start, tick, add, pour]
+    reactants: [{ bind: i, match: { class: iodine } }]
+    medium: dry
+    heating: true
+  effect: { type: stop }
+  text:
+    what: { ru: "Стоп!" }
+    why: { ru: "Йод так не нагреваем: его пары вредны для глаз и горла. Лаба остановила опыт." }
+    deeper: { ru: "Йод можно греть только в воде — когда он сильно разбавлен." }
+    adult: { ru: "Йод возгоняется при нагревании, пары раздражают слизистые; спиртовой раствор огнеопасен. Разбавленная водная смесь (1 капля на 2 и больше порций воды) разрешена." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: hz_chlorine_with_acid
+  kind: hazard_stop
+  priority: 1000
+  when:
+    trigger: [add, pour]
+    reactants:
+      - { bind: c, match: { class: chlorine_cleaner } }
+      - { bind: a, match: { class: acid } }
+  effect: { type: stop }
+  text:
+    what: { ru: "Стоп!" }
+    why: { ru: "Средства с хлором никогда не смешивают с другими средствами и с кислотами, даже с уксусом. Это опасно для дыхания. Лаба остановила опыт." }
+    adult: { ru: "Только предупреждение; на полке MVP таких веществ нет (модуль 8)." }
+  sources: [context]
+  review: { status: self_checked }

@@ -1,0 +1,215 @@
+# Вещества на полке. Тексты карточек — по уроку 1 (docs/content/lesson-01.md, раздел 4.4).
+
+- id: water
+  name: { ru: "Вода" }
+  shortName: { ru: "Вода" }
+  scientificName: { ru: "вода" }
+  availability: home
+  safeForHome: true
+  container: bottle
+  lidColor: color.copper.500
+  form: liquid
+  composition: [{ species: water, phase: liquid, massFraction: 1 }]
+  density: 1.0
+  dosing: portion_liquid
+  group: liquids
+  card:
+    looks: { ru: "Прозрачная жидкость без цвета и запаха." }
+    properties: [{ ru: "Растворяет соль, сахар и соду." }]
+    foundAt: { ru: "В кране, в реке, в облаках." }
+    adult: { ru: "H₂O." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: vinegar
+  name: { ru: "Столовый уксус" }
+  shortName: { ru: "Уксус" }
+  scientificName: { ru: "раствор уксусной кислоты" }
+  availability: home
+  safeForHome: true
+  container: bottle
+  lidColor: color.feedback.caution.500
+  form: solution
+  composition:
+    - { species: acetic_acid, phase: dissolved, massFraction: 0.09 }
+    - { species: water, phase: liquid, massFraction: 0.91 }
+  density: 1.01
+  dosing: portion_liquid
+  group: liquids
+  card:
+    looks: { ru: "Прозрачная жидкость с резким кислым запахом." }
+    properties: [{ ru: "С содой и мелом шипит." }]
+    foundAt: { ru: "На кухне." }
+    warning: { ru: "Уксусная эссенция — не столовый уксус. Она обжигает, детям её брать нельзя." }
+    adult: { ru: "Столовый уксус 6–9 % CH₃COOH. В лабе — 9 %." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: iodine_solution
+  name: { ru: "Раствор йода" }
+  shortName: { ru: "Раствор йода" }
+  scientificName: { ru: "раствор йода" }
+  availability: lab_only
+  safeForHome: false
+  container: bottle
+  lidColor: color.substance.iodine
+  form: solution
+  composition:
+    - { species: iodine, phase: dissolved, massFraction: 0.005 }
+    - { species: potassium_iodide, phase: dissolved, massFraction: 0.01 }
+    - { species: water, phase: liquid, massFraction: 0.985 }
+  density: 1.0
+  dosing: drop
+  group: liquids
+  card:
+    looks: { ru: "Жёлто-бурая жидкость." }
+    properties: [{ ru: "Детектор крахмала: с крахмалом становится тёмно-синим." }]
+    foundAt: { ru: "Только в виртуальной лабе." }
+    warning: { ru: "Йод пачкает кожу и опасен, если попадёт в рот или глаза. Дома его не трогаем." }
+    adult: { ru: "Водный раствор I₂ с иодидом калия (как раствор Люголя), черновые доли — уточнить. Аптечный йод — спиртовой 5 %, он огнеопасен." }
+  sources: [lesson01]
+  review: { status: self_checked, notes: "Доли I2 и KI" }
+
+- id: red_cabbage
+  name: { ru: "Отвар краснокочанной капусты" }
+  shortName: { ru: "Отвар капусты" }
+  scientificName: { ru: "раствор антоцианов" }
+  availability: home
+  safeForHome: true
+  container: bottle
+  lidColor: color.substance.cabbage
+  form: solution
+  composition:
+    - { species: cabbage_anthocyanins, phase: dissolved, massFraction: 0.001 }
+    - { species: water, phase: liquid, massFraction: 0.999 }
+  density: 1.0
+  dosing: portion_liquid
+  group: liquids
+  card:
+    looks: { ru: "Фиолетовая жидкость." }
+    properties: [{ ru: "Индикатор: краснеет в кислом, синеет и зеленеет в щелочном." }]
+    foundAt: { ru: "Его варит взрослый из капустных листьев." }
+    adult: { ru: "Антоцианы меняют окраску в зависимости от pH." }
+  sources: [flinn_cabbage]
+  review: { status: self_checked }
+
+- id: table_salt
+  name: { ru: "Соль поваренная" }
+  shortName: { ru: "Соль" }
+  scientificName: { ru: "хлорид натрия" }
+  availability: home
+  safeForHome: true
+  container: jar
+  lidColor: color.copper.600
+  form: crystals
+  composition: [{ species: sodium_chloride, phase: solid, massFraction: 1 }]
+  dosing: portion_solid
+  group: powders
+  card:
+    looks: { ru: "Белые или прозрачные крупинки, блестят. В лупу — кубики." }
+    properties: [{ ru: "Хорошо растворяется в воде." }, { ru: "Не реагирует с уксусом." }, { ru: "Не меняется на горелке." }]
+    foundAt: { ru: "На кухне, в морской воде, под землёй — пласты каменной соли." }
+    adult: { ru: "NaCl. Растворимость около 36 г на 100 г воды при 20 °C. Т пл. 801 °C." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: sugar
+  name: { ru: "Сахар" }
+  shortName: { ru: "Сахар" }
+  scientificName: { ru: "сахароза" }
+  availability: home
+  safeForHome: true
+  container: jar
+  lidColor: color.lamp.400
+  form: crystals
+  composition: [{ species: sucrose, phase: solid, massFraction: 1 }]
+  dosing: portion_solid
+  group: powders
+  card:
+    looks: { ru: "Прозрачные блестящие кристаллы. В лупу — не кубики." }
+    properties: [{ ru: "Растворяется в воде очень хорошо." }, { ru: "При нагреве плавится и пахнет карамелью." }]
+    foundAt: { ru: "Его делают из сахарной свёклы и тростника." }
+    adult: { ru: "C₁₂H₂₂O₁₁. Около 200 г на 100 г воды при 20 °C. Плавится с разложением около 160–190 °C." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: baking_soda
+  name: { ru: "Пищевая сода" }
+  shortName: { ru: "Сода" }
+  scientificName: { ru: "гидрокарбонат натрия" }
+  availability: home
+  safeForHome: true
+  container: jar
+  lidColor: color.deep.500
+  form: powder
+  composition: [{ species: sodium_bicarbonate, phase: solid, massFraction: 1 }]
+  dosing: portion_solid
+  group: powders
+  card:
+    looks: { ru: "Мелкий белый матовый порошок." }
+    properties: [{ ru: "Растворяется в воде, но медленнее — надо перемешать." }, { ru: "С уксусом бурно шипит." }]
+    foundAt: { ru: "На кухне — чтобы тесто было пышным." }
+    adult: { ru: "NaHCO₃. Около 9,6 г на 100 г воды при 20 °C. Раствор слабощелочной, pH около 8,3." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: starch
+  name: { ru: "Крахмал" }
+  shortName: { ru: "Крахмал" }
+  scientificName: { ru: "крахмал" }
+  availability: home
+  safeForHome: true
+  container: jar
+  lidColor: color.grape.400
+  form: powder
+  composition: [{ species: starch, phase: solid, massFraction: 1 }]
+  dosing: portion_solid
+  group: powders
+  card:
+    looks: { ru: "Самый мелкий и белоснежный порошок." }
+    properties: [{ ru: "Не растворяется в холодной воде: вода мутнеет." }, { ru: "От йода становится тёмно-синим." }]
+    foundAt: { ru: "В картошке, рисе, хлебе. Из крахмала варят кисель." }
+    adult: { ru: "(C₆H₁₀O₅)ₙ, смесь амилозы и амилопектина. Картофельный крахмал клейстеризуется около 56–68 °C." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: chalk
+  name: { ru: "Мел" }
+  shortName: { ru: "Мел" }
+  scientificName: { ru: "карбонат кальция" }
+  availability: home
+  safeForHome: true
+  container: jar
+  lidColor: color.wood.400
+  form: powder
+  composition: [{ species: calcium_carbonate, phase: solid, massFraction: 1 }]
+  dosing: portion_solid
+  group: powders
+  card:
+    looks: { ru: "Мелкий белый матовый порошок, похож на соду." }
+    properties: [{ ru: "Не растворяется в воде: вода мутнеет." }, { ru: "С уксусом шипит, но спокойнее соды." }]
+    foundAt: { ru: "Меловые горы, ракушки, яичная скорлупа." }
+    warning: { ru: "Школьные мелки часто делают из гипса — он с уксусом не шипит. В лабе у нас природный мел." }
+    adult: { ru: "CaCO₃. Растворимость около 13 мг/л. Разлагается примерно при 840–900 °C." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: sand
+  name: { ru: "Песок" }
+  shortName: { ru: "Песок" }
+  scientificName: { ru: "кварц" }
+  availability: home
+  safeForHome: true
+  container: jar
+  lidColor: color.wood.700
+  form: crystals
+  composition: [{ species: silicon_dioxide, phase: solid, massFraction: 1 }]
+  dosing: portion_solid
+  group: powders
+  card:
+    looks: { ru: "Жёлтые крупинки." }
+    properties: [{ ru: "Не растворяется в воде, сразу ложится на дно." }]
+    foundAt: { ru: "Во дворе, в песочнице, на пляже." }
+    adult: { ru: "SiO₂." }
+  sources: [lesson01]
+  review: { status: self_checked }

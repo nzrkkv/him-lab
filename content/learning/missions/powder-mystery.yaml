@@ -1,0 +1,127 @@
+# Миссия «Загадка белых порошков» (docs/content/lesson-01.md, раздел 4).
+id: powder_mystery
+title: { ru: "Загадка белых порошков" }
+goalTitle: { ru: "Подпиши все 5 банок" }
+goalLabel: { ru: "Каждую надпись докажи опытом" }
+intro:
+  - { ru: "Вот мои пять банок: А, Б, В, Г, Д." }
+  - { ru: "В них соль, сахар, пищевая сода, крахмал и мел." }
+  - { ru: "Наклей на каждую правильную надпись. Но не наугад! Каждую надпись докажи опытом." }
+  - { ru: "Раствор йода — детектор крахмала. Йод — только в виртуальной лабе." }
+  - { ru: "Пробирку над горелкой держим только держателем." }
+jars: ["А", "Б", "В", "Г", "Д"]
+unknowns: [table_salt, sugar, baking_soda, starch, chalk]
+helpers: [water, vinegar, iodine_solution]
+equipment: [test_tube, test_tube_rack, tube_holder, burner, stirrer, magnifier]
+
+tests:
+  - id: magnify
+    label: { ru: "Лупа" }
+    action: magnify
+    chips:
+      - { id: cubes, label: { ru: "кубики" }, icon: result-crystals, match: [{ event: magnified, view: cubes }] }
+      - { id: crystals, label: { ru: "кристаллы, не кубики" }, icon: result-crystals, match: [{ event: magnified, view: crystals }] }
+      - { id: fine, label: { ru: "мелкий порошок" }, icon: result-precipitate, match: [{ event: magnified, view: fine_powder }] }
+      - { id: ultrafine, label: { ru: "очень мелкий порошок" }, icon: result-precipitate, match: [{ event: magnified, view: ultrafine_powder }] }
+  - id: water
+    label: { ru: "Вода" }
+    reagent: water
+    chips:
+      - { id: dissolved, label: { ru: "растворилось" }, icon: result-dissolve, match: [{ event: observation, kind: dissolve }] }
+      - { id: partly, label: { ru: "растворилось не всё" }, icon: result-dissolve, match: [{ event: observation, kind: dissolve, detail: saturated }] }
+      - { id: cloudy, label: { ru: "мутно" }, icon: result-turbid, match: [{ event: observation, kind: turbid }, { event: observation, kind: turbid, detail: settled }] }
+  - id: vinegar
+    label: { ru: "Уксус" }
+    reagent: vinegar
+    chips:
+      - { id: fizz_strong, label: { ru: "бурно шипит" }, icon: result-gas, match: [{ event: observation, kind: gas, intensity: strong }] }
+      - { id: fizz_weak, label: { ru: "шипит спокойно" }, icon: result-gas, match: [{ event: observation, kind: gas, intensity: weak }] }
+      - { id: nothing, label: { ru: "ничего" }, icon: result-nothing, match: [{ event: nothing_happened, reasonIds: [nr_salt_acid, nr_sugar_acid, nr_starch_acid] }] }
+  - id: iodine
+    label: { ru: "Йод" }
+    reagent: iodine_solution
+    chips:
+      - { id: blue, label: { ru: "посинело" }, icon: result-color, match: [{ event: observation, kind: color, ruleId: starch_iodine_complex }] }
+      - { id: no_blue, label: { ru: "не посинело" }, icon: result-nothing, match: [{ event: nothing_happened, reasonIds: [nr_iodine_no_starch] }] }
+  - id: heat
+    label: { ru: "Нагрев" }
+    action: heat
+    chips:
+      - { id: caramel, label: { ru: "плавится, карамель" }, icon: result-melt, match: [{ event: observation, kind: melt }, { event: observation, kind: color, detail: caramel }] }
+      - { id: droplets, label: { ru: "капельки на стенках" }, icon: result-steam, match: [{ event: observation, kind: steam, detail: droplets_on_walls }] }
+      - { id: toasted, label: { ru: "желтеет, пахнет хлебом" }, icon: result-color, match: [{ event: observation, kind: color, detail: toasted }] }
+      - { id: nothing, label: { ru: "ничего не меняется" }, icon: result-nothing, match: [{ event: observation, kind: nothing, detail: crackle }, { event: nothing_happened, reasonIds: [nr_heat_stable] }] }
+
+signatures:
+  table_salt: { magnify: cubes, water: dissolved, vinegar: nothing, iodine: no_blue, heat: nothing }
+  sugar: { magnify: crystals, water: dissolved, vinegar: nothing, iodine: no_blue, heat: caramel }
+  baking_soda: { magnify: fine, water: dissolved, vinegar: fizz_strong, iodine: no_blue, heat: droplets }
+  starch: { magnify: ultrafine, water: cloudy, vinegar: nothing, iodine: blue, heat: toasted }
+  chalk: { magnify: fine, water: cloudy, vinegar: fizz_weak, iodine: no_blue, heat: nothing }
+
+hints:
+  - situation: labels_wrong
+    when: { all: [{ labelsAllPlaced: true }, { labelsWrong: { gte: 1 } }] }
+    levels:
+      - { ru: "Посмотри в журнал: всё ли совпадает с надписями?" }
+      - { ru: "Найди банку, где надпись спорит с опытом." }
+      - { ru: "Нажми «Проверить» — я подсвечу банку, где надпись спорит с опытом." }
+  - situation: salt_sugar_left
+    when: { jarsWith: { where: { water: [dissolved], vinegar: [nothing] }, gte: 2 } }
+    levels:
+      - { ru: "Соль и сахар похожи. Но у них разная форма крупинок и разный характер в огне." }
+      - { ru: "Рассмотри обе в лупу. Или нагрей каждую в своей пробирке." }
+      - { ru: "Кубики и «ничего на горелке» — соль. Не кубики и запах карамели — сахар." }
+  - situation: two_fizz
+    when:
+      all:
+        - { jarsWith: { where: { vinegar: [fizz_strong, fizz_weak] }, gte: 2 } }
+        - { not: { jarsWith: { where: { vinegar: [fizz_strong, fizz_weak], water: [dissolved, cloudy, partly] }, gte: 2 } } }
+    levels:
+      - { ru: "Мел и сода шипят оба. А что они делают в воде?" }
+      - { ru: "Проверь обе банки водой." }
+      - { ru: "Сода растворится, мел — нет: вода станет мутной." }
+  - situation: two_insoluble
+    when:
+      all:
+        - { jarsWith: { where: { water: [cloudy] }, gte: 2 } }
+        - { not: { jarsWith: { where: { water: [cloudy], iodine: [blue, no_blue] }, gte: 2 } } }
+    levels:
+      - { ru: "Две банки не растворились. Среди них есть крахмал. Каким детектором его найти?" }
+      - { ru: "Капни йод на оба порошка." }
+      - { ru: "Кто посинеет — крахмал. Второй — мел. Проверь мел уксусом: он должен зашипеть." }
+  - situation: three_soluble
+    when:
+      all:
+        - { jarsWith: { where: { water: [dissolved, partly] }, gte: 3 } }
+        - { not: { jarsWith: { where: { water: [dissolved, partly], vinegar: [fizz_strong, nothing] }, gte: 3 } } }
+    levels:
+      - { ru: "Среди растворившихся есть сода. Помнишь, что сода делает с уксусом?" }
+      - { ru: "Капни уксус в каждую." }
+      - { ru: "Зашипит сода. Останутся соль и сахар." }
+  - situation: start
+    when: { experimentsDone: { gte: 0 } }
+    levels:
+      - { ru: "Начни с опыта, который можно сделать для всех банок. Помнишь, что было с солью и песком в воде?" }
+      - { ru: "Насыпь порошок из каждой банки в свою пробирку с водой и перемешай. Получится две группы." }
+      - { ru: "Растворятся соль, сахар и сода. Не растворятся крахмал и мел. Проверь, в каких банках кто." }
+
+twists:
+  - id: two_fizz
+    when: { jarsWith: { where: { vinegar: [fizz_strong, fizz_weak] }, gte: 2 } }
+    line: { ru: "Опять шипит?! Но сода у нас одна… Значит, шипят двое. Как их различить?" }
+
+check:
+  correct: { ru: "Банка {jar}: верно! Это {label}." }
+  contradiction: { ru: "Банка {jar}: опыт «{test}» показал «{observed}». С веществом «{label}» так не бывает." }
+  noData: { ru: "Про банку {jar} мы пока ничего не знаем. Проведи опыт — и узнаешь!" }
+  sameAgain: { ru: "Надписи те же — и ответ тот же. Попробуй новый опыт." }
+  allCorrect: { ru: "Ура! Все банки подписаны. Лаборатория снова в порядке!" }
+  washHands: { ru: "А теперь главное правило после опыта: моем руки." }
+finale:
+  - { ru: "Загадка разгадана! Каждая надпись доказана опытом." }
+  - { ru: "В песочнице открылись все вещества этой миссии." }
+mixWarning: { ru: "Тут два порошка сразу. Кто что сделал — не понять. Детективы проверяют каждый порошок в своей пробирке." }
+solutionPaths:
+  - { id: water_first, order: [water, iodine, vinegar, magnify] }
+  - { id: vinegar_first, order: [vinegar, water, iodine, heat] }

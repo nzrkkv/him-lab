@@ -1,0 +1,22 @@
+# Классы и теги веществ. Правила находят частицы по классам (docs/spec/04-engine-and-content.md, 2.1).
+- { id: water }
+- { id: acid }
+- { id: weak_acid }
+- { id: weak_base }
+- { id: carbonate }
+- { id: bicarbonate }
+- { id: carbonate_like, includes: [carbonate, bicarbonate] }
+- { id: salt }
+- { id: sugar }
+- { id: starch }
+- { id: starch_iodine, note: "комплекс крахмала с йодом" }
+- { id: iodine }
+- { id: indicator }
+- { id: soluble }
+- { id: insoluble }
+- { id: sinks, note: "тяжёлые крупинки, сразу оседают (песок)" }
+- { id: powder, note: "порошки и кристаллы с полки" }
+- { id: volatile }
+- { id: heat_stable }
+- { id: chars, note: "обугливается при перегреве" }
+- { id: chlorine_cleaner, note: "только для стоп-правил модуля 8, на полке MVP нет" }

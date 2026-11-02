@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package.json
+      # package-lock.json появится, когда будет доступ к реестру npm при генерации (см. docs/adr/0001-stack.md).
+      - run: npm install --no-audit --no-fund
+      - name: Линт
+        run: npm run lint
+      - name: Типы
+        run: npm run typecheck
+      - name: Контент
+        run: npm run content:check
+      - name: Контракт ассетов дизайна
+        run: npm run assets:check
+      - name: Тесты
+        run: npm test
+      - name: Сборка
+        run: npm run build
+      - name: e2e (Chromium)
+        run: |
+          npx playwright install --with-deps chromium
+          npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+          if-no-files-found: ignore

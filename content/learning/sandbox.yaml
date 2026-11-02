@@ -1,0 +1,7 @@
+# Песочница прототипа: все вещества и оборудование прототипа открыты сразу (вопрос Q-09, рабочее решение).
+substances: [water, vinegar, iodine_solution, red_cabbage, table_salt, sugar, baking_soda, starch, chalk, sand]
+equipment: [beaker, test_tube, evaporating_dish, tube_holder, burner, ice_bath, stirrer, magnifier, thermometer, ph_strip, scales]
+ideas:
+  - { ru: "Смешай крахмал с водой и нагрей. Что получится?" }
+  - { ru: "Выпари солёную воду. Вернётся ли соль?" }
+  - { ru: "Налей отвар капусты и капни уксус. А если насыпать соду?" }
