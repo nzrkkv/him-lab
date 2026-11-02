@@ -97,7 +97,8 @@ export function deriveVisual(v: VesselState, ix: ContentIndex): VesselVisual {
   const crystalsG = v.equipmentId === 'evaporating_dish' && !hasLiquid ? bottomG : 0;
   const boiling = v.heat === 'burner' && hasLiquid && v.temperatureC >= 99.5;
   return {
-    level: Math.min(1, ml / v.capacityMl),
+    // Небольшой объём в большом сосуде всё равно должен быть заметен глазу.
+    level: hasLiquid ? Math.min(1, Math.max(0.1, ml / v.capacityMl)) : 0,
     liquidColor,
     turbidity,
     turbidityColor,

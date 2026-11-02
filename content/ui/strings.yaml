@@ -156,3 +156,18 @@ vessel.heating: { ru: "греется" }
 vessel.cooling: { ru: "в ледяной бане" }
 a11y.selected: { ru: "выбран" }
 a11y.contains: { ru: "внутри: {list}" }
+mission.resume: { ru: "С возвращением! Стол убрали, а журнал и надписи на месте." }
+mission.check.title: { ru: "Смотрим надписи:" }
+bench.full: { ru: "На столе нет места. Убери или помой сосуд." }
+bench.title: { ru: "Рабочий стол" }
+station.burner: { ru: "Горелка" }
+station.burner.on: { ru: "Горелка горит" }
+station.burner.off: { ru: "Горелка не горит" }
+station.ice: { ru: "Ледяная баня" }
+stop.kicker: { ru: "Лаба остановила опыт" }
+qty.less: { ru: "Меньше" }
+qty.more: { ru: "Больше" }
+mission.badge: { ru: "Значок «Сыщик порошков»" }
+readout.temperature: { ru: "{value} °C" }
+readout.ph: { ru: "pH {value}" }
+readout.mass: { ru: "{value} г" }

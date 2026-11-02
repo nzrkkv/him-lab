@@ -88,7 +88,7 @@ for (const file of readdirSync(DIR)
           }
           for (const [sp, phases] of Object.entries(exp.phases ?? {})) {
             for (const [phase, m] of Object.entries(phases)) {
-              const g = v.contents[sp]?.[phase as never] ?? 0;
+              const g: number = (v.contents[sp] as Record<string, number> | undefined)?.[phase] ?? 0;
               assert.ok(matchValue(g, m), `${vid}.${sp}.${phase}: ${g} не подходит под ${JSON.stringify(m)}`);
             }
           }

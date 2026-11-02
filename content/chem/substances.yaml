@@ -47,7 +47,7 @@
 
 - id: iodine_solution
   name: { ru: "Раствор йода" }
-  shortName: { ru: "Йод" }
+  shortName: { ru: "Раствор йода" }
   scientificName: { ru: "раствор йода" }
   availability: lab_only
   safeForHome: false

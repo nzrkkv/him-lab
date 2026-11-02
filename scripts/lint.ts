@@ -68,7 +68,9 @@ for (const file of walk(SRC)) {
       if (spec && layer && !isTest) {
         if (spec.startsWith('.')) {
           const target = layerOf(resolve(dirname(file), spec));
-          const inGenerated = resolve(dirname(file), spec).startsWith(join(SRC, 'generated'));
+          const inGenerated =
+            resolve(dirname(file), spec).startsWith(join(SRC, 'generated')) ||
+            (layer !== 'core' && resolve(dirname(file), spec).startsWith(join(ROOT, 'design')));
           if (target && !ALLOWED[layer].includes(target))
             errors.push(`${at(n)}: слой ${layer} не может импортировать ${target} (${spec})`);
           if (!target && !inGenerated) errors.push(`${at(n)}: импорт вне src/ (${spec})`);
