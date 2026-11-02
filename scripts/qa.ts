@@ -66,10 +66,16 @@ for (const [w, hgt] of [
       await check(page, `${sz} журнал`, `sandbox-journal-${w}`);
       await page.keyboard.press('Escape');
     }
-    await page.getByRole('button', { name: /^Раствор йода/ }).click();
+    await page.getByRole('button', { name: /^Молоко/ }).click();
     await page.getByRole('button', { name: 'Добавить' }).click();
     await page.keyboard.press('h');
     await check(page, `${sz} нагрев`, `sandbox-heat-${w}`);
+    await page.keyboard.press('h');
+    // Новые действия: фильтр — в новый стакан, выпаривание фильтрата.
+    await page.keyboard.press('f');
+    await check(page, `${sz} фильтр`, `sandbox-filter-${w}`);
+    await page.keyboard.press('e');
+    await check(page, `${sz} выпаривание`, `sandbox-evaporate-${w}`);
   });
 
   await runScenario('mission', async () => {

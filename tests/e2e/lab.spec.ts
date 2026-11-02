@@ -172,3 +172,39 @@ test('недоступное действие объясняет, почему',
   await stir.click({ force: true });
   await expect(page.getByRole('status').filter({ hasText: 'Сначала выбери сосуд' })).toBeVisible();
 });
+
+test('песочница: смесь песка и соли разделяется фильтром и выпариванием', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await page.goto('/#/lab');
+  await page.getByRole('listitem', { name: /Стакан/ }).click();
+  for (const name of [/^Песок/, /^Соль/, /^Вода/]) {
+    await page.getByRole('button', { name }).first().click();
+    await page.getByRole('button', { name: 'Добавить' }).click();
+  }
+  await page.keyboard.press('m');
+  await page.keyboard.press('Escape');
+  await page.getByRole('button', { name: 'Профильтровать через воронку' }).click();
+  await expect(page.getByRole('heading', { name: 'Профильтровали' })).toBeVisible();
+  await expect(page.locator('.hl-result__text')).toContainText('песок');
+  expect(await page.evaluate(LAYER_CHECK)).toEqual([]);
+  await page.keyboard.press('Escape');
+  // Фильтрат выбран автоматически — выпариваем его.
+  await page.getByRole('button', { name: 'Выпарить в чашке на горелке' }).click();
+  await expect(page.getByRole('heading', { name: 'Выпарили досуха' })).toBeVisible();
+  await expect(page.locator('.hl-result__text')).toContainText('соль');
+  expect(errors).toEqual([]);
+});
+
+test('песочница: новые действия без жидкости объясняют, почему недоступны', async ({ page }) => {
+  await page.goto('/#/lab');
+  await page.getByRole('listitem', { name: /Пробирка/ }).click();
+  await page.getByRole('button', { name: /^Песок/ }).click();
+  await page.getByRole('button', { name: 'Добавить' }).click();
+  const filter = page.getByRole('button', { name: 'Профильтровать через воронку' });
+  await expect(filter).toHaveAttribute('aria-disabled', 'true');
+  await filter.click({ force: true });
+  await expect(page.getByRole('status').filter({ hasText: 'Тут нет жидкости' })).toBeVisible();
+  await page.getByRole('button', { name: 'Поднести магнит' }).click();
+  await expect(page.locator('.hl-result__text')).toContainText('Магнит ничего не притянул');
+});

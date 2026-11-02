@@ -598,6 +598,30 @@ export class LabController {
           lines.push({ icon: 'result-smell', title: why, tone: odor ? 'change' : 'nothing' });
           break;
         }
+        case 'separated': {
+          // Разделение смеси перекрывает наблюдения по пути (кипение при выпаривании и т. п.).
+          vesselId = e.vesselId;
+          const names = e.speciesIds.map((sp) => this.speciesName(sp)).join(', ');
+          const m = e.method;
+          title = t(`result.sep.${m}.title`);
+          why =
+            m === 'filter'
+              ? names
+                ? t('result.sep.filter.kept', {
+                    names,
+                    to: this.vesselName(e.toVesselId ?? '').toLowerCase(),
+                  })
+                : t('result.sep.filter.none')
+              : m === 'magnet'
+                ? t('result.sep.magnet.why', { names })
+                : names
+                  ? t('result.sep.evaporate.why', { names })
+                  : t('result.sep.evaporate.empty');
+          deeper = t(`result.sep.${m}.deeper`);
+          lines.unshift({ icon: m, title: t(`result.sep.${m}.line`), tone: 'change' });
+          if (m === 'filter' && e.toVesselId) this.state.selected = { kind: 'vessel', id: e.toVesselId };
+          break;
+        }
         case 'discovery': {
           const sp = ix.species.get(e.speciesId);
           const name = sp?.discoverable?.name ?? e.speciesId;
@@ -653,6 +677,13 @@ export class LabController {
     });
     if (list.length > 50) list.splice(0, list.length - 50);
     this.save();
+  }
+
+  /** Имя частицы для ребёнка: имя вещества с полки, если оно из одной частицы, иначе научное. */
+  speciesName(sp: string): string {
+    for (const sub of ix.substances.values())
+      if (sub.composition[0]?.species === sp && sub.composition.length === 1) return this.originName(sub.id);
+    return ix.species.get(sp)?.names.scientific ?? sp;
   }
 
   /** pH для шкалы показаний. */

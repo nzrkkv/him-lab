@@ -49,9 +49,35 @@ export class VesselView {
     for (const a of this.active)
       for (const [k, x] of Object.entries(a.def.vars)) vars[k] = Math.max(Number(vars[k] ?? 0), x);
     for (const [k, x] of Object.entries(vars)) this.svg.style.setProperty(k, String(x));
+    this.paintOil(v);
     if (v.bubbles > 0) this.svg.classList.add('fx-fizz');
     else if (!this.active.some((a) => a.def.fxClasses.includes('fx-fizz')))
       this.svg.classList.remove('fx-fizz');
+  }
+
+  /** Слой масла: прямоугольник у поверхности внутри слоя жидкости (масло легче воды). */
+  private paintOil(v: VesselVisual): void {
+    const liquid = this.svg.querySelector('[data-layer="liquid"]');
+    if (!liquid) return;
+    let rect = liquid.querySelector<SVGRectElement>('[data-layer="oil"]');
+    if (v.oil <= 0) {
+      rect?.remove();
+      return;
+    }
+    const top = Number(this.svg.dataset['fillTop'] ?? 0);
+    const bottom = Number(this.svg.dataset['fillBottom'] ?? 0);
+    const width = this.svg.viewBox.baseVal?.width || 200;
+    if (!rect) {
+      rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      rect.dataset['layer'] = 'oil';
+      const body = liquid.querySelector('[data-layer="liquid-body"]');
+      body?.after(rect);
+    }
+    rect.setAttribute('x', '0');
+    rect.setAttribute('y', String(top));
+    rect.setAttribute('width', String(width));
+    rect.setAttribute('height', ((bottom - top) * v.level * v.oil).toFixed(2));
+    rect.setAttribute('style', `fill:${v.oilColor};fill-opacity:0.9`);
   }
 
   play(def: EffectDef): void {

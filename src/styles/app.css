@@ -874,3 +874,25 @@ body {
   height: auto;
   flex: none;
 }
+
+/* Действия разделения смеси (фильтр, выпаривание, магнит) — свой цвет иконки. */
+.hl-act--sep {
+  --act-icon: var(--color-copper-600);
+}
+
+/* Док песочницы на 8 колонок: компактнее подписи, буквы клавиш скрыты (горячие клавиши работают). */
+.hl-dock.app-dock--wide {
+  gap: 6px;
+}
+.app-dock--wide .hl-act {
+  font-size: 13px;
+  letter-spacing: -0.01em;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+.app-dock--wide .hl-act > span {
+  white-space: nowrap;
+}
+.app-dock--wide .hl-act__key {
+  display: none;
+}

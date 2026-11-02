@@ -393,6 +393,12 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
   // ---------- стол ----------
   function wareFor(v: VesselState): WareRef {
     let w = wares.get(v.id);
+    // Выпаривание переливает содержимое в чашку: тот же сосуд, но другая посуда — рисуем заново.
+    if (w && w.equipmentId !== v.equipmentId) {
+      w.el.remove();
+      wares.delete(v.id);
+      w = undefined;
+    }
     if (!w) {
       const svg = asset(ASSET[v.equipmentId] ?? 'equipment/beaker', { label: '' });
       const el = h('button', {
@@ -434,7 +440,13 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
       Math.abs(temp - 20) >= 2
         ? h('span', { class: 'hl-ware__chip' }, icon('temperature'), t('vessel.temp', { value: temp }))
         : null;
-    w.el.append(h('span', { class: 'hl-ware__tag' }, isMission ? String(v.no) : name, chip));
+    // Когда сосудов много, подпись — только номер (полное имя — в доке и для чтеца), иначе подписи наезжают.
+    const crowded = isMission || c.state.lab.order.length >= 4;
+    const short =
+      v.equipmentId === 'evaporating_dish'
+        ? t('bench.vessel', { name: t('bench.short.dish'), no: v.no })
+        : name;
+    w.el.append(h('span', { class: 'hl-ware__tag' }, crowded ? String(v.no) : short, chip));
     const r = c.state.readout;
     if (r?.vesselId === v.id) {
       const scale =
@@ -626,95 +638,124 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
       if (v) void c.act({ type: 'magnify', vesselId: v.id });
       else if (jarSel) void c.act({ type: 'magnify', substanceId: c.jarSubstance(jarSel) ?? jarSel });
     };
-    const doRow = [
-      act(t('act.stir'), 'stir', 'M', run({ type: 'stir', vesselId: v?.id ?? '' }), { why: whyEmpty }),
-      act(
-        heating ? t('act.heat.stop') : t('act.heat'),
-        'heat',
-        'H',
-        run(
-          heating
-            ? { type: 'heat_stop', vesselId: v?.id ?? '' }
-            : { type: 'heat_start', vesselId: v?.id ?? '' },
-        ),
-        { cls: 'hl-act--heat', why: whyNone, pressed: heating },
+    const stir = act(t('act.stir'), 'stir', 'M', run({ type: 'stir', vesselId: v?.id ?? '' }), {
+      why: whyEmpty,
+    });
+    const heat = act(
+      heating ? t('act.heat.stop') : t('act.heat'),
+      'heat',
+      'H',
+      run(
+        heating
+          ? { type: 'heat_stop', vesselId: v?.id ?? '' }
+          : { type: 'heat_start', vesselId: v?.id ?? '' },
       ),
-      ...(isMission
-        ? []
-        : [
-            act(
-              cooling ? t('act.cool.stop') : t('act.cool'),
-              'cool',
-              'C',
-              run(
-                cooling
-                  ? { type: 'cool_stop', vesselId: v?.id ?? '' }
-                  : { type: 'cool_start', vesselId: v?.id ?? '' },
-              ),
-              { cls: 'hl-act--cool', why: whyNone ?? whyHot, pressed: cooling },
-            ),
-          ]),
-      act(t('act.wait'), 'wait', 'W', run({ type: 'wait' }), {
-        why: anyContents ? null : t('dock.why.wait'),
-      }),
-      act(
-        t('act.holder'),
-        'hand',
-        'D',
-        run(
-          v?.inHolder
-            ? { type: 'detach_holder', vesselId: v.id }
-            : { type: 'attach_holder', vesselId: v?.id ?? '' },
-        ),
-        { why: whyNone ?? (isTube ? null : t('dock.why.holder')), pressed: Boolean(v?.inHolder) },
+      { cls: 'hl-act--heat', why: whyNone, pressed: heating },
+    );
+    const wait = act(t('act.wait'), 'wait', 'W', run({ type: 'wait' }), {
+      why: anyContents ? null : t('dock.why.wait'),
+    });
+    const holder = act(
+      t('act.holder'),
+      'hand',
+      'D',
+      run(
+        v?.inHolder
+          ? { type: 'detach_holder', vesselId: v.id }
+          : { type: 'attach_holder', vesselId: v?.id ?? '' },
       ),
-      ...(isMission
-        ? []
-        : [
-            act(
-              t('act.remove'),
-              'close',
-              'R',
-              () => v && (c.set('selected', null), void c.act({ type: 'remove', vesselId: v.id })),
-              { cls: 'hl-act--quiet', why: whyNone ?? whyHot },
-            ),
-          ]),
-    ];
-    const observeRow = [
-      act(t('act.smell'), 'smell', 'S', run({ type: 'smell', vesselId: v?.id ?? '' }), {
-        cls: 'hl-act--observe',
-        why: whyEmpty,
-      }),
-      act(t('act.magnify'), 'magnify', 'L', magnify, {
-        cls: 'hl-act--observe',
-        why: empty && !jarSel ? (none ? t('dock.why.magnify') : t('dock.why.empty')) : null,
-      }),
-      ...(isMission
-        ? []
-        : [
-            act(
-              t('act.temperature'),
-              'temperature',
-              'T',
-              run({ type: 'measure_temperature', vesselId: v?.id ?? '' }),
-              { cls: 'hl-act--observe', why: whyNone },
-            ),
-            act(t('act.ph'), 'ph', 'P', run({ type: 'measure_ph', vesselId: v?.id ?? '' }), {
-              cls: 'hl-act--observe',
-              why: whyEmpty,
-            }),
-          ]),
-      act(t('act.undo'), 'undo', 'Z', () => c.undo(), {
-        cls: 'hl-act--quiet hl-dock__split',
-        why: c.state.history.length === 0 ? t('dock.why.undo') : null,
-      }),
-      act(t('act.clear'), 'clear', 'X', run({ type: 'clear', vesselId: v?.id ?? '' }), {
-        cls: 'hl-act--quiet',
-        why: whyEmpty ?? whyHot,
-      }),
-    ];
+      { why: whyNone ?? (isTube ? null : t('dock.why.holder')), pressed: Boolean(v?.inHolder) },
+    );
+    const smell = act(t('act.smell'), 'smell', 'S', run({ type: 'smell', vesselId: v?.id ?? '' }), {
+      cls: 'hl-act--observe',
+      why: whyEmpty,
+    });
+    const lens = act(t('act.magnify'), 'magnify', 'L', magnify, {
+      cls: 'hl-act--observe',
+      why: empty && !jarSel ? (none ? t('dock.why.magnify') : t('dock.why.empty')) : null,
+    });
+    const undo = act(t('act.undo'), 'undo', 'Z', () => c.undo(), {
+      cls: 'hl-act--quiet hl-dock__split',
+      why: c.state.history.length === 0 ? t('dock.why.undo') : null,
+    });
+    const clear = act(t('act.clear'), 'clear', 'X', run({ type: 'clear', vesselId: v?.id ?? '' }), {
+      cls: 'hl-act--quiet',
+      why: whyEmpty ?? whyHot,
+    });
+    let doRow: HTMLButtonElement[];
+    let observeRow: HTMLButtonElement[];
+    if (isMission) {
+      // В миссии — только то, что нужно для загадки (docs/spec/04-lab-ux.md).
+      doRow = [stir, heat, wait, holder];
+      observeRow = [smell, lens, undo, clear];
+    } else {
+      const hasLiquid = Boolean(v && c.visual(v.id)?.hasLiquid);
+      const whyLiquid = whyEmpty ?? (hasLiquid ? null : t('dock.why.liquid'));
+      const sep = (
+        type: 'filter' | 'evaporate' | 'magnet' | 'blow',
+        iconName: string,
+        key: string,
+        why: string | null,
+      ): HTMLButtonElement => {
+        const b = act(t(`act.${type}`), iconName, key, run({ type, vesselId: v?.id ?? '' }), {
+          cls: type === 'blow' ? '' : 'hl-act--sep',
+          why,
+        });
+        b.setAttribute('aria-label', t(`act.${type}.long`));
+        return b;
+      };
+      doRow = [
+        stir,
+        heat,
+        act(
+          cooling ? t('act.cool.stop') : t('act.cool'),
+          'cool',
+          'C',
+          run(
+            cooling
+              ? { type: 'cool_stop', vesselId: v?.id ?? '' }
+              : { type: 'cool_start', vesselId: v?.id ?? '' },
+          ),
+          { cls: 'hl-act--cool', why: whyNone ?? whyHot, pressed: cooling },
+        ),
+        wait,
+        sep('blow', 'blow', 'B', whyLiquid ?? whyHot),
+        sep('filter', 'filter', 'F', whyLiquid ?? whyHot),
+        sep('evaporate', 'evaporate', 'E', whyLiquid ?? whyHot),
+        sep('magnet', 'magnet', 'G', whyEmpty ?? whyHot),
+      ];
+      observeRow = [
+        smell,
+        lens,
+        act(
+          t('act.temperature'),
+          'temperature',
+          'T',
+          run({ type: 'measure_temperature', vesselId: v?.id ?? '' }),
+          {
+            cls: 'hl-act--observe',
+            why: whyNone,
+          },
+        ),
+        act(t('act.ph'), 'ph', 'P', run({ type: 'measure_ph', vesselId: v?.id ?? '' }), {
+          cls: 'hl-act--observe',
+          why: whyEmpty,
+        }),
+        holder,
+        undo,
+        clear,
+        act(
+          t('act.remove'),
+          'close',
+          'R',
+          () => v && (c.set('selected', null), void c.act({ type: 'remove', vesselId: v.id })),
+          { cls: 'hl-act--quiet', why: whyNone ?? whyHot },
+        ),
+      ];
+    }
     const cols = Math.max(doRow.length, observeRow.length);
     dock.style.setProperty('--cols', String(cols));
+    dock.classList.toggle('app-dock--wide', cols > 6);
     replaceChildren(
       dock,
       h('div', { class: 'hl-dock__context' }, context),
