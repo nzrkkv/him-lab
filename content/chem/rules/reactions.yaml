@@ -205,7 +205,7 @@
     heating: true
     temperature: { minC: 220 }
     holdS: 6
-  effect: { type: transform, bind: s, to: carbon, fumeHood: true }
+  effect: { type: transform, bind: s, to: carbon, toPhase: solid, fumeHood: true }
   observe: [{ kind: color, detail: char }, { kind: smell }]
   text:
     what: { ru: "Почернело, идёт дымок. Включилась вытяжка" }

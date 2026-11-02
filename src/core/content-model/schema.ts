@@ -9,59 +9,15 @@ export const LocalizedTextSchema = z
   .object({ ru: z.string().min(1), en: z.string().min(1).optional() })
   .strict();
 
-export const PHASES = ['solid', 'dissolved', 'suspended', 'sediment', 'liquid', 'melt', 'gel'] as const;
-export const OBSERVATION_KINDS = [
-  'gas',
-  'precipitate',
-  'color',
-  'dissolve',
-  'warm',
-  'cold',
-  'foam',
-  'steam',
-  'smell',
-  'crystals',
-  'melt',
-  'turbid',
-  'nothing',
-] as const;
-export const OBSERVATION_DETAILS = [
-  'saturated',
-  'settled',
-  'boiling',
-  'droplets_on_walls',
-  'crackle',
-  'char',
-  'thicken',
-  'fade',
-  'overflow',
-  'caramel',
-  'clearing',
-  'toasted',
-] as const;
-export const ACTION_TYPES = [
-  'place',
-  'remove',
-  'add',
-  'pour',
-  'stir',
-  'attach_holder',
-  'detach_holder',
-  'heat_start',
-  'heat_stop',
-  'cool_start',
-  'cool_stop',
-  'tick',
-  'wait',
-  'smell',
-  'magnify',
-  'measure_temperature',
-  'measure_ph',
-  'weigh',
-  'clear',
-  'return_to_jar',
-] as const;
-export const MAGNIFIER_VIEWS = ['cubes', 'crystals', 'fine_powder', 'ultrafine_powder'] as const;
+import {
+  ACTION_TYPES,
+  MAGNIFIER_VIEWS,
+  OBSERVATION_DETAILS,
+  OBSERVATION_KINDS,
+  PHASES,
+} from './constants.ts';
+
+export { ACTION_TYPES, MAGNIFIER_VIEWS, OBSERVATION_DETAILS, OBSERVATION_KINDS, PHASES };
 
 const Id = z.string().regex(/^[a-z][a-z0-9_]*$/, 'id: только a-z, 0-9 и _');
 const TokenRef = z.string().regex(/^color\.[a-z0-9.-]+$/, 'ссылка на токен цвета: color.…');
@@ -77,7 +33,9 @@ const ReviewSchema = z
   .strict();
 
 export function makeSchemas<T extends z.ZodTypeAny>(Text: T) {
-  const ClassDef = z.object({ id: Id, includes: z.array(Id).default([]), note: z.string().optional() }).strict();
+  const ClassDef = z
+    .object({ id: Id, includes: z.array(Id).default([]), note: z.string().optional() })
+    .strict();
 
   const AcidBase = z.discriminatedUnion('role', [
     z.object({ role: z.literal('weak_acid'), pKa: z.number() }).strict(),
@@ -124,7 +82,9 @@ export function makeSchemas<T extends z.ZodTypeAny>(Text: T) {
       specificHeat: z.number().positive().default(1),
       acidBase: AcidBase.optional(),
       indicator: z
-        .object({ colors: z.array(z.object({ phMax: z.number(), color: TokenRef, name: Text }).strict()).min(2) })
+        .object({
+          colors: z.array(z.object({ phMax: z.number(), color: TokenRef, name: Text }).strict()).min(2),
+        })
         .strict()
         .optional(),
       hazard: z.enum(['none', 'low', 'caution', 'high']),
@@ -145,7 +105,9 @@ export function makeSchemas<T extends z.ZodTypeAny>(Text: T) {
       container: z.enum(['jar', 'bottle', 'bag']),
       lidColor: TokenRef,
       form: z.enum(['powder', 'crystals', 'liquid', 'solution']),
-      composition: z.array(z.object({ species: Id, phase: Phase, massFraction: z.number().positive() }).strict()).min(1),
+      composition: z
+        .array(z.object({ species: Id, phase: Phase, massFraction: z.number().positive() }).strict())
+        .min(1),
       density: z.number().positive().optional(),
       dosing: z.enum(['portion_solid', 'portion_liquid', 'drop']),
       group: z.enum(['liquids', 'powders']),
@@ -195,12 +157,23 @@ export function makeSchemas<T extends z.ZodTypeAny>(Text: T) {
     .strict();
 
   const Dosing = z
-    .object({ portion_solid_g: z.number().positive(), portion_liquid_ml: z.number().positive(), drop_ml: z.number().positive() })
+    .object({
+      portion_solid_g: z.number().positive(),
+      portion_liquid_ml: z.number().positive(),
+      drop_ml: z.number().positive(),
+    })
     .strict();
 
-  const Match = z.object({ species: Id.optional(), class: Id.optional(), notClass: z.array(Id).optional() }).strict();
+  const Match = z
+    .object({ species: Id.optional(), class: Id.optional(), notClass: z.array(Id).optional() })
+    .strict();
   const Reactant = z
-    .object({ bind: z.string().min(1), match: Match, phases: z.array(Phase).optional(), minGrams: z.number().optional() })
+    .object({
+      bind: z.string().min(1),
+      match: Match,
+      phases: z.array(Phase).optional(),
+      minGrams: z.number().optional(),
+    })
     .strict();
   const Condition = z
     .object({
@@ -255,11 +228,23 @@ export function makeSchemas<T extends z.ZodTypeAny>(Text: T) {
     z.object({ type: z.literal('suspend'), bind: z.string() }).strict(),
     z.object({ type: z.literal('settle'), bind: z.string() }).strict(),
     z.object({ type: z.literal('phase_change'), bind: z.string(), to: Phase }).strict(),
-    z.object({ type: z.literal('transform'), bind: z.string(), to: Id, fumeHood: z.boolean().default(false) }).strict(),
+    z
+      .object({
+        type: z.literal('transform'),
+        bind: z.string(),
+        to: Id,
+        toPhase: Phase.optional(),
+        fumeHood: z.boolean().default(false),
+      })
+      .strict(),
     z.object({ type: z.literal('crystallize') }).strict(),
     z.object({ type: z.literal('indicator'), bind: z.string() }).strict(),
     z
-      .object({ type: z.literal('observe_only'), once: z.enum(['vessel', 'heat_session']), fumeHood: z.boolean().default(false) })
+      .object({
+        type: z.literal('observe_only'),
+        once: z.enum(['vessel', 'heat_session']),
+        fumeHood: z.boolean().default(false),
+      })
       .strict(),
     z.object({ type: z.literal('stop') }).strict(),
   ]);
@@ -350,11 +335,19 @@ export function makeSchemas<T extends z.ZodTypeAny>(Text: T) {
       z.object({ all: z.array(Predicate) }).strict(),
       z.object({ any: z.array(Predicate) }).strict(),
       z.object({ not: Predicate }).strict(),
-      z.object({ experimentsDone: z.object({ gte: z.number().optional(), lte: z.number().optional() }).strict() }).strict(),
+      z
+        .object({
+          experimentsDone: z.object({ gte: z.number().optional(), lte: z.number().optional() }).strict(),
+        })
+        .strict(),
       z
         .object({
           jarsWith: z
-            .object({ where: z.record(Id, z.array(Id)), gte: z.number().optional(), lte: z.number().optional() })
+            .object({
+              where: z.record(Id, z.array(Id)),
+              gte: z.number().optional(),
+              lte: z.number().optional(),
+            })
             .strict(),
         })
         .strict(),
@@ -377,15 +370,18 @@ export function makeSchemas<T extends z.ZodTypeAny>(Text: T) {
       tests: z.array(MissionTest).min(1),
       signatures: z.record(Id, z.record(Id, Id)),
       hints: z
-        .array(
-          z
-            .object({ situation: Id, when: Predicate, levels: z.tuple([Text, Text, Text]) })
-            .strict(),
-        )
+        .array(z.object({ situation: Id, when: Predicate, levels: z.tuple([Text, Text, Text]) }).strict())
         .min(1),
       twists: z.array(z.object({ id: Id, when: Predicate, line: Text }).strict()).default([]),
       check: z
-        .object({ correct: Text, contradiction: Text, noData: Text, sameAgain: Text, allCorrect: Text, washHands: Text })
+        .object({
+          correct: Text,
+          contradiction: Text,
+          noData: Text,
+          sameAgain: Text,
+          allCorrect: Text,
+          washHands: Text,
+        })
         .strict(),
       finale: z.array(Text),
       mixWarning: Text,
@@ -405,9 +401,7 @@ export function makeSchemas<T extends z.ZodTypeAny>(Text: T) {
       noReactions: z.array(NoReaction),
       effects: z.array(EffectDef),
       missions: z.array(Mission),
-      sandbox: z
-        .object({ substances: z.array(Id), equipment: z.array(Id), ideas: z.array(Text) })
-        .strict(),
+      sandbox: z.object({ substances: z.array(Id), equipment: z.array(Id), ideas: z.array(Text) }).strict(),
       strings: z.record(z.string(), Text),
       colors: z.record(z.string(), z.string()).default({}),
     })

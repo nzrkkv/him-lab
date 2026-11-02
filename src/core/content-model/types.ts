@@ -3,7 +3,14 @@
  * Импортируйте только как `import type`, чтобы Zod не попал в сборку сайта.
  */
 import type { z } from 'zod';
-import type { CompiledSchemas, PHASES, OBSERVATION_KINDS, OBSERVATION_DETAILS, ACTION_TYPES, MAGNIFIER_VIEWS } from './schema.ts';
+import type { CompiledSchemas } from './schema.ts';
+import type {
+  PHASES,
+  OBSERVATION_KINDS,
+  OBSERVATION_DETAILS,
+  ACTION_TYPES,
+  MAGNIFIER_VIEWS,
+} from './constants.ts';
 
 type S = typeof CompiledSchemas;
 export type ContentBundle = z.output<S['Bundle']>;

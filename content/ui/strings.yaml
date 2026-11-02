@@ -71,7 +71,6 @@ act.remove: { ru: "Убрать" }
 
 qty.title: { ru: "Сколько добавить?" }
 qty.add: { ru: "Добавить" }
-qty.portions: { one: { ru: "{count} порция" }, other: { ru: "" } }
 qty.cancel: { ru: "Отмена" }
 unit.portion.one: { ru: "порция" }
 unit.portion.few: { ru: "порции" }

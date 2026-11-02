@@ -1,0 +1,509 @@
+# Табличные тесты движка (docs/spec/04-engine-and-content.md, раздел 6.4). Порция — 0,2 г порошка или 5 мл жидкости.
+
+- id: t01_salt_dissolves_after_stir
+  rules: [dissolve_soluble, nr_powder_needs_stir]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: table_salt, n: 1 }
+    - add: { v: v1, s: water, n: 2 }
+    - stir: v1
+  expect:
+    events:
+      include:
+        - { type: nothing_happened, reasonId: nr_powder_needs_stir }
+        - { type: observation, kind: dissolve, ruleId: dissolve_soluble }
+    vessels:
+      v1: { phases: { sodium_chloride: { dissolved: { approx: 0.2 }, solid: 0 } } }
+
+- id: t02_soda_needs_three_stirs
+  rules: [dissolve_soluble]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: baking_soda, n: 1 }
+    - add: { v: v1, s: water, n: 2 }
+    - stir: v1
+  expect:
+    vessels:
+      v1: { phases: { sodium_bicarbonate: { solid: { approx: 0.1333 }, dissolved: { approx: 0.0667 } } } }
+
+- id: t03_soda_dissolved_after_three_stirs
+  rules: [dissolve_soluble]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: baking_soda, n: 1 }
+    - add: { v: v1, s: water, n: 2 }
+    - stir: { v: v1, times: 3 }
+  expect:
+    vessels:
+      v1: { phases: { sodium_bicarbonate: { dissolved: { approx: 0.2 }, solid: 0 } } }
+
+- id: t04_soda_saturation
+  rules: [saturated_solution, dissolve_soluble]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: baking_soda, n: 10 }
+    - add: { v: v1, s: water, n: 2 }
+    - stir: { v: v1, times: 3 }
+  expect:
+    events:
+      include: [{ type: observation, kind: dissolve, detail: saturated }]
+    vessels:
+      v1: { phases: { sodium_bicarbonate: { dissolved: { approx: 0.96 }, solid: { approx: 1.04 } } } }
+
+- id: t05_starch_suspension
+  rules: [suspend_insoluble]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: starch, n: 1 }
+    - add: { v: v1, s: water, n: 2 }
+    - stir: v1
+  expect:
+    events:
+      include: [{ type: observation, kind: turbid, ruleId: suspend_insoluble }]
+    vessels:
+      v1: { phases: { starch: { suspended: { approx: 0.2 } } } }
+
+- id: t06_suspension_settles_on_wait
+  rules: [settle_suspension]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: chalk, n: 1 }
+    - add: { v: v1, s: water, n: 2 }
+    - stir: v1
+    - wait: 60
+  expect:
+    events:
+      include: [{ type: observation, kind: turbid, detail: settled }]
+    vessels:
+      v1: { phases: { calcium_carbonate: { sediment: { gt: 0.19 }, suspended: { lt: 0.01 } } } }
+
+- id: t06b_sand_sinks
+  rules: [sink_insoluble]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: sand, n: 1 }
+    - add: { v: v1, s: water, n: 2 }
+    - stir: v1
+  expect:
+    events:
+      include: [{ type: observation, kind: precipitate, ruleId: sink_insoluble }]
+    vessels:
+      v1: { phases: { silicon_dioxide: { sediment: { approx: 0.2 } } } }
+
+- id: t07_soda_vinegar_fizz_and_cold
+  rules: [acid_carbonate_gas]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: baking_soda, n: 1 }
+    - add: { v: v1, s: vinegar, n: 1 }
+  expect:
+    events:
+      include:
+        - { type: observation, kind: gas, intensity: strong, variantId: acetic_bicarbonate }
+        - { type: observation, kind: foam }
+        - { type: observation, kind: cold }
+      exclude:
+        - { type: observation, kind: foam, detail: overflow }
+        - { type: nothing_happened }
+    vessels:
+      v1:
+        grams: { sodium_bicarbonate: 0, acetic_acid: { approx: 0.3115 }, sodium_acetate: { approx: 0.1953 } }
+        temperatureC: { between: [16, 19] }
+
+- id: t08_vinegar_runs_out_soda_left
+  rules: [acid_carbonate_gas]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: baking_soda, n: 5 }
+    - add: { v: v1, s: vinegar, n: 1 }
+  expect:
+    vessels:
+      v1: { grams: { acetic_acid: { lt: 0.0001 }, sodium_bicarbonate: { approx: 0.364 } } }
+
+- id: t09_more_vinegar_fizzes_again
+  rules: [acid_carbonate_gas]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: baking_soda, n: 5 }
+    - add: { v: v1, s: vinegar, n: 1 }
+    - add: { v: v1, s: vinegar, n: 1 }
+  expect:
+    vessels:
+      v1: { grams: { sodium_bicarbonate: { lt: 0.0001 } } }
+
+- id: t10_too_much_vinegar_overflows
+  rules: [acid_carbonate_gas]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: baking_soda, n: 1 }
+    - add: { v: v1, s: vinegar, n: 3 }
+  expect:
+    events:
+      include: [{ type: observation, kind: foam, detail: overflow }]
+    vessels:
+      v1: { overflowed: true }
+
+- id: t11_chalk_vinegar_slow_and_clears
+  rules: [acid_carbonate_gas]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: chalk, n: 1 }
+    - add: { v: v1, s: water, n: 2 }
+    - stir: v1
+    - add: { v: v1, s: vinegar, n: 1 }
+    - tick: 32
+  expect:
+    events:
+      include:
+        - { type: observation, kind: gas, intensity: weak, variantId: acetic_calcium_carbonate }
+        - { type: process, phase: started }
+        - { type: process, phase: finished }
+    vessels:
+      v1: { grams: { calcium_carbonate: { lt: 0.0005 }, calcium_acetate: { approx: 0.316 } } }
+
+- id: t12_salt_vinegar_nothing
+  rules: [nr_salt_acid]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: table_salt, n: 1 }
+    - add: { v: v1, s: vinegar, n: 1 }
+  expect:
+    events:
+      include: [{ type: nothing_happened, reasonId: nr_salt_acid }]
+      exclude: [{ type: observation, kind: gas }]
+
+- id: t12b_sugar_and_starch_vinegar_nothing
+  rules: [nr_sugar_acid, nr_starch_acid]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: sugar, n: 1 }
+    - add: { v: v1, s: vinegar, n: 1 }
+    - place: test_tube
+    - add: { v: v2, s: starch, n: 1 }
+    - add: { v: v2, s: vinegar, n: 1 }
+  expect:
+    events:
+      include:
+        - { type: nothing_happened, vesselId: v1, reasonId: nr_sugar_acid }
+        - { type: nothing_happened, vesselId: v2, reasonId: nr_starch_acid }
+
+- id: t13_iodine_finds_starch
+  rules: [starch_iodine_complex]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: starch, n: 1 }
+    - add: { v: v1, s: iodine_solution, n: 1 }
+  expect:
+    events:
+      include: [{ type: observation, kind: color, ruleId: starch_iodine_complex }]
+    vessels:
+      v1: { grams: { starch_iodine_complex: { approx: 0.2 }, starch: 0 } }
+
+- id: t14_iodine_on_salt_nothing
+  rules: [nr_iodine_no_starch]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: table_salt, n: 1 }
+    - add: { v: v1, s: iodine_solution, n: 1 }
+  expect:
+    events:
+      include: [{ type: nothing_happened, reasonId: nr_iodine_no_starch, showsColor: true }]
+
+- id: t14b_iodine_control_experiment
+  rules: [nr_iodine_control]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: water, n: 2 }
+    - add: { v: v1, s: iodine_solution, n: 1 }
+  expect:
+    events:
+      include: [{ type: nothing_happened, reasonId: nr_iodine_control }]
+
+- id: t15_blue_fades_when_hot
+  rules: [starch_iodine_fade, starch_gelatinization]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: starch, n: 1 }
+    - add: { v: v1, s: water, n: 2 }
+    - stir: v1
+    - add: { v: v1, s: iodine_solution, n: 1 }
+    - holder: v1
+    - heat_start: v1
+    - tick: 70
+  expect:
+    events:
+      include:
+        - { type: observation, kind: color, ruleId: starch_iodine_complex }
+        - { type: observation, kind: color, detail: fade }
+        - { type: observation, kind: turbid, detail: thicken }
+    vessels:
+      v1: { grams: { starch_iodine_complex: 0 } }
+
+- id: t16_blue_returns_when_cooled
+  rules: [starch_iodine_complex]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: starch, n: 1 }
+    - add: { v: v1, s: water, n: 2 }
+    - stir: v1
+    - add: { v: v1, s: iodine_solution, n: 1 }
+    - holder: v1
+    - heat_start: v1
+    - tick: 70
+    - heat_stop: v1
+    - cool_start: v1
+    - tick: 120
+  expect:
+    vessels:
+      v1: { grams: { starch_iodine_complex: { approx: 0.2 } }, temperatureC: { lt: 10 } }
+
+- id: t17_sugar_melts_caramel_then_char
+  rules: [sugar_melt, sugar_caramelize, char_organic]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: sugar, n: 1 }
+    - holder: v1
+    - heat_start: v1
+    - tick: 70
+  expect:
+    events:
+      include:
+        - { type: observation, kind: melt, ruleId: sugar_melt }
+        - { type: observation, kind: color, detail: caramel }
+        - { type: discovery, speciesId: caramel }
+        - { type: observation, kind: color, detail: char }
+        - { type: discovery, speciesId: carbon }
+        - { type: fume_hood, on: true }
+    fumeHoodOn: true
+    vessels:
+      v1: { grams: { sucrose: 0, carbon: { approx: 0.2 } } }
+
+- id: t17b_starch_toasts
+  rules: [starch_toast]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: starch, n: 1 }
+    - holder: v1
+    - heat_start: v1
+    - tick: 35
+  expect:
+    events:
+      include: [{ type: observation, kind: color, detail: toasted }]
+    vessels:
+      v1: { grams: { dextrin: { approx: 0.2 } } }
+
+- id: t18_dry_soda_droplets
+  rules: [bicarbonate_dry_decomposition]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: baking_soda, n: 1 }
+    - holder: v1
+    - heat_start: v1
+    - tick: 40
+    - heat_stop: v1
+  expect:
+    events:
+      include:
+        - { type: observation, kind: steam, detail: droplets_on_walls }
+        - { type: discovery, speciesId: sodium_carbonate }
+      exclude: [{ type: nothing_happened }]
+    vessels:
+      v1: { grams: { sodium_bicarbonate: { lt: 0.001 }, sodium_carbonate: { approx: 0.1262 } } }
+
+- id: t18b_soda_solution_bubbles_when_hot
+  rules: [bicarbonate_solution_decomposition]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: baking_soda, n: 1 }
+    - add: { v: v1, s: water, n: 2 }
+    - stir: { v: v1, times: 3 }
+    - holder: v1
+    - heat_start: v1
+    - tick: 90
+  expect:
+    events:
+      include: [{ type: observation, kind: gas, ruleId: bicarbonate_solution_decomposition }]
+
+- id: t19_chalk_heat_nothing
+  rules: [nr_heat_stable]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: chalk, n: 1 }
+    - holder: v1
+    - heat_start: v1
+    - tick: 40
+    - heat_stop: v1
+  expect:
+    events:
+      include: [{ type: nothing_happened, reasonId: nr_heat_stable }]
+    vessels:
+      v1: { grams: { calcium_carbonate: { approx: 0.2 } } }
+
+- id: t19b_salt_crackles
+  rules: [salt_crackle]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: table_salt, n: 1 }
+    - holder: v1
+    - heat_start: v1
+    - tick: 40
+    - heat_stop: v1
+  expect:
+    events:
+      include: [{ type: observation, kind: nothing, detail: crackle }]
+      exclude: [{ type: nothing_happened }]
+
+- id: t20_starch_kisel
+  rules: [starch_gelatinization]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: starch, n: 1 }
+    - add: { v: v1, s: water, n: 2 }
+    - stir: v1
+    - holder: v1
+    - heat_start: v1
+    - tick: 70
+  expect:
+    events:
+      include: [{ type: observation, kind: turbid, detail: thicken }]
+    vessels:
+      v1: { phases: { starch: { gel: { approx: 0.2 } } } }
+
+- id: t21_evaporate_salt_water
+  rules: [water_boiling, evaporate_to_residue]
+  actions:
+    - place: evaporating_dish
+    - add: { v: v1, s: table_salt, n: 1 }
+    - add: { v: v1, s: water, n: 2 }
+    - stir: v1
+    - heat_start: v1
+    - tick: 800
+  expect:
+    events:
+      include:
+        - { type: observation, kind: steam, detail: boiling }
+        - { type: observation, kind: crystals }
+    vessels:
+      v1: { grams: { water: 0 }, phases: { sodium_chloride: { solid: { approx: 0.2 } } } }
+
+- id: t22_cabbage_turns_red_with_vinegar
+  rules: [cabbage_indicator]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: red_cabbage, n: 2 }
+    - add: { v: v1, s: vinegar, n: 1 }
+  expect:
+    events:
+      include: [{ type: observation, kind: color, ruleId: cabbage_indicator, colorName: "красно-розовым" }]
+    vessels:
+      v1: { indicatorBand: 0 }
+
+- id: t23_cabbage_turns_blue_with_soda
+  rules: [cabbage_indicator]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: red_cabbage, n: 2 }
+    - add: { v: v1, s: baking_soda, n: 1 }
+    - stir: { v: v1, times: 3 }
+  expect:
+    events:
+      include: [{ type: observation, kind: color, colorName: "синим" }]
+    vessels:
+      v1: { indicatorBand: 4 }
+
+- id: t24_neutralize_blue_to_pink
+  rules: [cabbage_indicator, acid_carbonate_gas]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: red_cabbage, n: 2 }
+    - add: { v: v1, s: baking_soda, n: 1 }
+    - stir: { v: v1, times: 3 }
+    - add: { v: v1, s: vinegar, n: 1 }
+  expect:
+    events:
+      include:
+        - { type: observation, kind: gas, ruleId: acid_carbonate_gas }
+        - { type: observation, kind: color, colorName: "розово-фиолетовым" }
+    vessels:
+      v1: { indicatorBand: 1 }
+
+- id: t25_iodine_heat_dry_stopped
+  rules: [hz_iodine_heat_dry]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: table_salt, n: 1 }
+    - add: { v: v1, s: iodine_solution, n: 1 }
+    - holder: v1
+    - heat_start: v1
+  expect:
+    events:
+      include: [{ type: safety_stop, ruleId: hz_iodine_heat_dry }]
+    vessels:
+      v1: { heat: none }
+
+- id: t26_heat_needs_holder
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: table_salt, n: 1 }
+    - heat_start: v1
+  expect:
+    events:
+      include: [{ type: blocked, reason: needs_holder }]
+    vessels:
+      v1: { heat: none }
+
+- id: t27_no_return_to_jar
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: table_salt, n: 1 }
+    - return_to_jar: { v: v1, s: table_salt }
+  expect:
+    events:
+      include: [{ type: blocked, reason: no_return_to_jar }]
+    vessels:
+      v1: { grams: { sodium_chloride: { approx: 0.2 } } }
+
+- id: t28_more_water_nothing_new
+  rules: [nr_more_liquid, nr_stir_nothing_new]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: water, n: 2 }
+    - add: { v: v1, s: water, n: 1 }
+    - stir: v1
+  expect:
+    events:
+      include:
+        - { type: nothing_happened, reasonId: nr_more_liquid }
+        - { type: nothing_happened, reasonId: nr_stir_nothing_new }
+
+- id: t29_capacity_limit
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: water, n: 4 }
+    - add: { v: v1, s: water, n: 1 }
+  expect:
+    events:
+      include: [{ type: blocked, reason: capacity }]
+    vessels:
+      v1: { grams: { water: { approx: 20 } } }
+
+- id: t30_smell_and_vinegar_heat
+  rules: [acid_vapor_on_heat, water_boiling]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: table_salt, n: 1 }
+    - smell: v1
+    - place: test_tube
+    - add: { v: v2, s: vinegar, n: 1 }
+    - smell: v2
+    - holder: v2
+    - heat_start: v2
+    - tick: 120
+  expect:
+    events:
+      include:
+        - { type: smelled, vesselId: v1, odor: null }
+        - { type: smelled, vesselId: v2, odor: acetic_acid }
+        - { type: observation, kind: smell, ruleId: acid_vapor_on_heat }
+        - { type: fume_hood, on: true }
+        - { type: observation, kind: steam, detail: boiling }
