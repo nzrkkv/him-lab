@@ -5,7 +5,8 @@ import { LabController } from '../ui/lab/controller.ts';
 import { mountLab } from '../ui/lab/view.ts';
 import { mountHome, mountParents } from '../ui/pages/home.ts';
 import { mountLesson } from '../ui/lesson/player.ts';
-import { availableSubstances, progress } from '../ui/progress-store.ts';
+import { availableSubstances, progress, resetProgressView } from '../ui/progress-store.ts';
+import { applyTestModeParam, setTestMode, testMode } from '../ui/test-mode.ts';
 import { bundle } from '../ui/content.ts';
 
 const root = document.getElementById('app') as HTMLElement;
@@ -16,7 +17,35 @@ function goHome(): void {
   location.hash = '#/';
 }
 
+/** Плашка тестового режима: заметна на всех экранах, кнопка выключает режим. */
+function renderTestBanner(): void {
+  document.getElementById('test-mode-bar')?.remove();
+  document.body.classList.toggle('app-test-mode', testMode());
+  if (!testMode()) return;
+  document.body.prepend(
+    h(
+      'div',
+      { id: 'test-mode-bar', class: 'app-test-bar', role: 'status' },
+      h('span', {}, t('testmode.banner')),
+      h(
+        'button',
+        {
+          class: 'hl-btn hl-btn--sm',
+          onclick: () => {
+            setTestMode(false);
+            resetProgressView();
+            route();
+          },
+        },
+        t('testmode.off'),
+      ),
+    ),
+  );
+}
+
 function route(): void {
+  if (applyTestModeParam()) resetProgressView();
+  renderTestBanner();
   unmount?.();
   unmount = null;
   document.title = t('app.title');
@@ -36,7 +65,7 @@ function route(): void {
     );
     return;
   }
-  const hash = location.hash.replace(/^#/, '') || '/';
+  const hash = location.hash.replace(/^#/, '').split('?')[0] || '/';
   try {
     if (hash.startsWith('/lab/mission/')) {
       unmount = mountLab(root, new LabController('mission'), goHome);
