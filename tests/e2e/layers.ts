@@ -1,6 +1,6 @@
 /** Проверка в браузере: не больше одного всплывающего слоя, нет горизонтальной прокрутки, кнопки в пределах экрана. */
 export const LAYER_CHECK = `(() => {
-  const sel = ['.hl-result', '.hl-popover', '.hl-guide-bubble', '.hl-scrim', '.hl-journal-panel.is-open'];
+  const sel = ['.hl-result', '.hl-popover', '.hl-guide-bubble', '.hl-scrim', '.hl-journal-panel.is-open', '.hl-toast'];
   const vis = (e) => { const r = e.getBoundingClientRect(); const s = getComputedStyle(e); return r.width > 0 && r.height > 0 && s.display !== 'none' && s.visibility !== 'hidden'; };
   const narrow = innerWidth < 1280;
   const layers = sel.flatMap((s) => [...document.querySelectorAll(s)]).filter(vis).filter((e) => narrow || !e.matches('.hl-journal-panel'));

@@ -208,3 +208,35 @@ test('песочница: новые действия без жидкости о
   await page.getByRole('button', { name: 'Поднести магнит' }).click();
   await expect(page.locator('.hl-result__text')).toContainText('Магнит ничего не притянул');
 });
+
+test('тестовый режим автора: открыто всё, после выключения — стартовый набор, прогресс не тронут', async ({
+  page,
+}) => {
+  const shelf = page.locator('.hl-shelf .hl-substance:not(.is-locked)');
+  await page.goto('/#/lab');
+  await page.evaluate(() => localStorage.clear());
+  await page.reload();
+  const starter = await shelf.count();
+  expect(starter).toBe(13);
+  const before = await page.evaluate(() => localStorage.getItem('himlab:test:progress'));
+  await page.goto('/?all=1#/lab');
+  await expect(page.getByRole('status').filter({ hasText: 'Тестовый режим: открыто всё' })).toBeVisible();
+  await expect(shelf).toHaveCount(23);
+  expect(page.url()).not.toContain('all=');
+  // Опыт с лабораторным веществом не записывается в прогресс.
+  await page.getByRole('listitem', { name: /Пробирка/ }).click();
+  await page.getByRole('button', { name: /^Купорос/ }).click();
+  await page.getByRole('button', { name: 'Добавить' }).click();
+  await page.waitForTimeout(800);
+  await page.reload();
+  await expect(shelf).toHaveCount(23);
+  await page.getByRole('button', { name: 'Выключить' }).click();
+  await expect(page.locator('#test-mode-bar')).toHaveCount(0);
+  await expect(shelf).toHaveCount(starter);
+  expect(await page.evaluate(() => localStorage.getItem('himlab:test:progress'))).toBe(before);
+  // Включение внутри hash и выключение параметром ?all=0.
+  await page.goto('/#/lab?all=1');
+  await expect(shelf).toHaveCount(23);
+  await page.goto('/#/lab?all=0');
+  await expect(shelf).toHaveCount(starter);
+});
