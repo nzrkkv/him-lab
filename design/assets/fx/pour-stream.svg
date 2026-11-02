@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 120" width="20" height="120" class="hl-asset hl-fx" data-asset="fx-pour-stream" preserveAspectRatio="none" role="img" aria-label="Струя жидкости">
+<title>Струя жидкости</title>
+<path d="M10 0 C6 30 8 60 10 120" fill="none" stroke="#16213F" stroke-width="10" stroke-linecap="round" opacity="0.35"/>
+<path d="M10 0 C6 30 8 60 10 120" fill="none" style="stroke:var(--liquid-color, #CDE9FB)" stroke-width="7" stroke-linecap="round"/>
+</svg>

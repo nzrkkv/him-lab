@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" class="hl-icon" data-icon="magnify" aria-hidden="true">
+<title>Рассмотреть в лупу</title>
+<circle fill="currentColor" fill-opacity="0.18" stroke="none" cx="13.5" cy="13.5" r="8.5"/><circle fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" cx="13.5" cy="13.5" r="9"/><path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="M20.2 20.2 L28 28 M9 10.5 A5 5 0 0 1 12 8"/>
+</svg>

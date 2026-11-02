@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 136" width="120" height="136" class="hl-asset hl-asset--badge" data-asset="badge-discoverer"  role="img" aria-label="Значок «Первооткрыватель»">
+<title>Значок «Первооткрыватель»</title>
+<g data-layer="ribbon"><path d="M38 108 L30 132 L42 127 L48 135 L56 114 Z M82 108 L90 132 L78 127 L72 135 L64 114 Z" fill="#E2483D" stroke="#16213F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g data-layer="medal"><path d="M60 8 L108.5 36 V92 L60 120 L11.5 92 V36 Z" fill="#8B2FC9" stroke="#16213F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M60 20 L98 42 V86 L60 108 L22 86 V42 Z" fill="none" stroke="#EBDAFA" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/></g>
+<g data-layer="emblem">
+    <path d="M52 36 H68 M54 36 V54 L38 82 Q35 90 44 90 H76 Q85 90 82 82 L66 54 V36" fill="#FFFFFF" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M43 76 H77 L80 82 Q82 88 76 88 H44 Q38 88 40 82 Z" fill="#A86AE3"/>
+    <path d="M52 36 H68 M54 36 V54 L38 82 Q35 90 44 90 H76 Q85 90 82 82 L66 54 V36" fill="none" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M82 30 C83 38 86 41 94 42 C86 43 83 46 82 54 C81 46 78 43 70 42 C78 41 81 38 82 30 Z" fill="#FFC93C" stroke="#16213F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g data-layer="shine"><path d="M24 44 L24 60" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.9"/></g>
+</svg>

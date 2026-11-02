@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 80" width="96" height="80" class="hl-asset hl-fx" data-asset="fx-smell"  role="img" aria-label="Запах">
+<title>Запах</title>
+<g fill="none" style="stroke:var(--smell-color, #8A6CF0)" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="1 10">
+  <path class="hl-wave" style="--i:0" d="M8 62 C24 52 30 70 46 60 S70 50 86 58"/>
+  <path class="hl-wave" style="--i:1" d="M8 42 C24 32 30 50 46 40 S70 30 86 38"/>
+  <path class="hl-wave" style="--i:2" d="M8 22 C24 12 30 30 46 20 S70 10 86 18"/>
+</g>
+</svg>

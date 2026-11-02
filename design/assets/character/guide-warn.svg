@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220" width="200" height="220" class="hl-asset hl-asset--character" data-asset="guide-warn" data-pose="warn" role="img" aria-label="Пипа предупреждает">
+<title>Пипа предупреждает</title>
+<defs><clipPath id="guide-warn-glass"><circle cx="100" cy="134" r="60"/></clipPath></defs>
+<g data-layer="stand"><ellipse cx="100" cy="202" rx="42" ry="11" fill="#CDA266" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="100" cy="199" rx="24" ry="5" fill="#B38A50"/></g>
+<path d="M46 146 Q30 158 34 176" fill="none" stroke="#16213F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="34" cy="178" r="11" fill="#FFFFFF" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M154 136 Q172 130 176 112" fill="none" stroke="#16213F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(176 100)"><path d="M-13 12 V-6 Q-13 -10 -9.5 -10 Q-6 -10 -6 -6 V-12 Q-6 -16 -2.5 -16 Q1 -16 1 -12 V-10 Q1 -14 4.5 -14 Q8 -14 8 -10 V-6 Q8 -9 11 -9 Q14 -9 14 -6 V6 Q14 16 3 16 H-5 Q-13 16 -13 12 Z" fill="#FFFFFF" stroke="#16213F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g data-layer="body">
+  <path d="M84 30 V78 A62 62 0 1 0 116 78 V30 Z" style="fill:var(--glass-fill, #EAF6FF)" fill-opacity="0.6"/>
+  <g clip-path="url(#guide-warn-glass)" data-layer="liquid">
+    <path class="hl-guide-liquid" d="M38 112 Q54 108 70 112 T102 112 T134 112 T166 112 V200 H38 Z" style="fill:var(--guide-color, #8A6CF0)"/>
+    <path d="M38 112 Q54 108 70 112 T102 112 T134 112 T166 112" fill="none" stroke="#FFFFFF" stroke-opacity="0.45" stroke-width="5"/>
+    <path d="M60 178 Q100 200 140 178 V210 H60 Z" style="fill:var(--guide-shade, #6A4FD6)" opacity="0.6"/>
+  </g>
+  <path d="M84 30 V78 A62 62 0 1 0 116 78 V30" fill="none" stroke="#16213F" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M80 30 H120" stroke="#16213F" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M58 112 Q56 128 62 144" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity="0.9"/><path d="M90 38 V66" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.9"/>
+</g>
+<g data-layer="stopper"><path d="M86 8 H114 L112 30 H88 Z" fill="#CDA266" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="95" cy="17" r="1.8" fill="#6F4A18"/><circle cx="105" cy="23" r="1.6" fill="#6F4A18"/></g>
+<g data-layer="face">
+  <ellipse cx="82" cy="132" rx="7" ry="8.5" fill="#FFFFFF" stroke="#16213F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="82" cy="133" r="4" fill="#16213F"/><ellipse cx="118" cy="132" rx="7" ry="8.5" fill="#FFFFFF" stroke="#16213F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="118" cy="133" r="4" fill="#16213F"/><path d="M70 107 Q80 102 90 106 M110 106 Q120 102 130 107" fill="none" stroke="#16213F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M92 157 H108" fill="none" stroke="#16213F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g data-layer="goggles"><path d="M40 130 Q50 122 60 124 M140 124 Q150 122 160 130" stroke="#16213F" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M58 118 H142 V138 Q142 148 132 148 H112 L100 138 L88 148 H68 Q58 148 58 138 Z" fill="#FFC93C" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M65 123 H94 V136 Q94 141 89 141 H70 Q65 141 65 136 Z M106 123 H135 V136 Q135 141 130 141 H111 Q106 141 106 136 Z" fill="#CDEBFF" fill-opacity="0.85" stroke="#16213F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+</svg>

@@ -62,12 +62,12 @@
   --color-grape-400: #A86AE3;
   --color-grape-600: #8B2FC9;
   --color-grape-800: #5E1F8A;
-  --color-oksi-body: #8A6CF0;
-  --color-oksi-shade: #6A4FD6;
-  --color-oksi-light: #BCA9FF;
-  --color-oksi-cheek: #FF9DBB;
-  --color-oksi-goggles: #FFC93C;
-  --color-oksi-lens: #CDEBFF;
+  --color-guide-body: #8A6CF0;
+  --color-guide-shade: #6A4FD6;
+  --color-guide-light: #BCA9FF;
+  --color-guide-cheek: #FF9DBB;
+  --color-guide-goggles: #FFC93C;
+  --color-guide-lens: #CDEBFF;
   --color-feedback-success-100: #DDF3E6;
   --color-feedback-success-300: #8FD3AE;
   --color-feedback-success-600: #1A7046;
@@ -303,9 +303,9 @@
   --size-icon: 24px;
   --size-icon-lg: 32px;
   --size-topbar: 64px;
-  --size-shelf: 264px;
+  --size-shelf: 248px;
   --size-shelf-compact: 200px;
-  --size-journal: 344px;
+  --size-journal: 328px;
   --size-content-max: 1280px;
   --size-measure: 38em;
 

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 76 148" width="76" height="148" class="hl-asset hl-asset--container" data-asset="bottle" data-slot-label="16,88,44,32" style="--fill-h:78px" role="img" aria-label="Бутылка с раствором">
+<title>Бутылка с раствором</title>
+<defs><clipPath id="bottle-interior"><path d="M32 22 V36 Q32 46 24 52 Q14 59 14 72 V132 Q14 140 22 140 H54 Q62 140 62 132 V72 Q62 59 52 52 Q44 46 44 36 V22 Z"/></clipPath></defs>
+<g data-layer="glass-back"><path d="M32 22 V36 Q32 46 24 52 Q14 59 14 72 V132 Q14 140 22 140 H54 Q62 140 62 132 V72 Q62 59 52 52 Q44 46 44 36 V22 Z" style="fill:var(--glass-fill, #EAF6FF)" fill-opacity="0.6"/></g>
+<g data-layer="contents" clip-path="url(#bottle-interior)">
+  <g data-layer="liquid" class="hl-liquid" style="transform:translateY(calc((1 - var(--level, 0.75)) * 78px))">
+    <rect x="0" y="62" width="76" height="100" style="fill:var(--liquid-color, #CDE9FB);fill-opacity:var(--liquid-opacity, 0.85)"/>
+    <rect x="0" y="62" width="76" height="4" fill="#FFFFFF" fill-opacity="0.45"/>
+  </g>
+</g>
+<g data-layer="glass" fill="none" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M30 20 V36 Q30 44 22 50 Q12 58 12 72 V132 Q12 142 22 142 H54 Q64 142 64 132 V72 Q64 58 54 50 Q46 44 46 36 V20"/></g>
+<g data-layer="cap"><rect x="26" y="4" width="24" height="18" rx="4" style="fill:var(--cap-color, #0F766E)" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M32 9 V17 M38 9 V17 M44 9 V17" stroke="#FFFFFF" stroke-opacity="0.45" stroke-width="2" stroke-linecap="round"/></g>
+<g data-layer="label"><path d="M15 89 L17 87 L60 86.5 L62 88.5 L61.5 119 L59.5 121 L17 121.5 L15 119.5 Z" style="fill:var(--label-color, #FFF6DE)" stroke="#16213F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path data-layer="label-text" d="M23 99 H54 M23 108 H44" stroke="#16213F" stroke-width="3.5" stroke-linecap="round" opacity="0.3"/></g>
+<g data-layer="shine"><path d="M20 74 V82" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.9"/></g>
+</svg>

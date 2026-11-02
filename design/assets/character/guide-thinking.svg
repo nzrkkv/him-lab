@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220" width="200" height="220" class="hl-asset hl-asset--character" data-asset="guide-thinking" data-pose="thinking" role="img" aria-label="Пипа задумалась">
+<title>Пипа задумалась</title>
+<defs><clipPath id="guide-thinking-glass"><circle cx="100" cy="134" r="60"/></clipPath></defs>
+<g data-layer="stand"><ellipse cx="100" cy="202" rx="42" ry="11" fill="#CDA266" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="100" cy="199" rx="24" ry="5" fill="#B38A50"/></g>
+<path d="M50 150 Q66 176 84 168" fill="none" stroke="#16213F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="88" cy="166" r="10" fill="#FFFFFF" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M152 146 Q172 152 166 168" fill="none" stroke="#16213F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="164" cy="170" r="11" fill="#FFFFFF" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<g data-layer="body">
+  <path d="M84 30 V78 A62 62 0 1 0 116 78 V30 Z" style="fill:var(--glass-fill, #EAF6FF)" fill-opacity="0.6"/>
+  <g clip-path="url(#guide-thinking-glass)" data-layer="liquid">
+    <path class="hl-guide-liquid" d="M38 114 Q54 110 70 114 T102 114 T134 114 T166 114 V200 H38 Z" style="fill:var(--guide-color, #8A6CF0)"/>
+    <path d="M38 114 Q54 110 70 114 T102 114 T134 114 T166 114" fill="none" stroke="#FFFFFF" stroke-opacity="0.45" stroke-width="5"/>
+    <path d="M60 178 Q100 200 140 178 V210 H60 Z" style="fill:var(--guide-shade, #6A4FD6)" opacity="0.6"/>
+  </g>
+  <path d="M84 30 V78 A62 62 0 1 0 116 78 V30" fill="none" stroke="#16213F" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M80 30 H120" stroke="#16213F" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M58 112 Q56 128 62 144" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity="0.9"/><path d="M90 38 V66" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.9"/>
+</g>
+<g data-layer="stopper"><path d="M86 8 H114 L112 30 H88 Z" fill="#CDA266" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="95" cy="17" r="1.8" fill="#6F4A18"/><circle cx="105" cy="23" r="1.6" fill="#6F4A18"/></g>
+<g data-layer="face">
+  <ellipse cx="66" cy="152" rx="8" ry="5" fill="#FF9DBB" opacity="0.85"/><ellipse cx="134" cy="152" rx="8" ry="5" fill="#FF9DBB" opacity="0.85"/>
+  <ellipse cx="82" cy="130" rx="9.5" ry="11.5" fill="#FFFFFF" stroke="#16213F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="85" cy="127" r="5.2" fill="#16213F"/><circle cx="87" cy="124" r="1.8" fill="#FFFFFF"/><ellipse cx="118" cy="130" rx="9.5" ry="11.5" fill="#FFFFFF" stroke="#16213F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="121" cy="127" r="5.2" fill="#16213F"/><circle cx="123" cy="124" r="1.8" fill="#FFFFFF"/><path d="M73 112 Q81 109 89 113 M111 109 Q119 105 127 108" fill="none" stroke="#16213F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M94 152 Q102 149 110 153" fill="none" stroke="#16213F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g data-layer="goggles"><path d="M78 58 H122" stroke="#16213F" stroke-width="5"/><rect x="74" y="46" width="24" height="17" rx="7" fill="#FFC93C" stroke="#16213F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="102" y="46" width="24" height="17" rx="7" fill="#FFC93C" stroke="#16213F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="79" y="50" width="14" height="9" rx="4" fill="#CDEBFF"/><rect x="107" y="50" width="14" height="9" rx="4" fill="#CDEBFF"/></g>
+<g data-layer="fx"><circle cx="160" cy="58" r="4" fill="#FFFFFF" stroke="#16213F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="170" cy="42" r="6" fill="#FFFFFF" stroke="#16213F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="180" cy="18" r="15" fill="#FFFFFF" stroke="#16213F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M175 13 Q175 7 180.5 7 Q186 7 186 12.5 Q186 16 181 18 V21 M181 27 V27.2" fill="none" stroke="#16213F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></g>
+</svg>

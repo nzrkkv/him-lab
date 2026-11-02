@@ -142,7 +142,7 @@ const pairs = [
   ['color.ink.900', 'color.bench.top', 4.5],
   ['color.feedback.caution.500', 'color.paper', 3],
   ['color.ink.300', 'color.paper', 1.5],
-  ['color.ink.900', 'color.oksi.body', 3],
+  ['color.ink.900', 'color.guide.body', 3],
   ['color.lamp.400', 'color.paper', 1.5],
 ];
 let fail = 0;

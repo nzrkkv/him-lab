@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 32" width="24" height="32" class="hl-asset hl-fx" data-asset="fx-drop"  role="img" aria-label="Капля">
+<title>Капля</title>
+<path d="M12 3 C12 3 4 14 4 20 A8 8 0 0 0 20 20 C20 14 12 3 12 3 Z" style="fill:var(--liquid-color, #CDE9FB)" stroke="#16213F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.5 19 Q8.5 23 11 25" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
+</svg>

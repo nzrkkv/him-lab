@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 112" width="220" height="112" class="hl-asset hl-asset--device" data-asset="ice-bath" data-anchor="110,100" data-split="back,front" role="img" aria-label="Ледяная баня">
+<title>Ледяная баня</title>
+<g data-layer="back">
+  <path d="M10 30 H210 L198 100 Q196 106 188 106 H32 Q24 106 22 100 Z" fill="#DCEAF3"/>
+  <rect x="40" y="38" width="22" height="20" rx="4" transform="rotate(-12 51 48)" fill="#E1F5FF" stroke="#16213F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="150" y="36" width="24" height="22" rx="4" transform="rotate(10 162 47)" fill="#E1F5FF" stroke="#16213F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M6 30 H214" fill="none" stroke="#16213F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g data-layer="front">
+  <path d="M15.5 54 Q30 50 45 54 T75 54 T105 54 T135 54 T165 54 T195 54 H205 L198 100 Q196 106 188 106 H32 Q24 106 22 100 Z" style="fill:var(--bath-water, #9FD3F5)" fill-opacity="0.55"/>
+  <path d="M15.5 54 Q30 50 45 54 T75 54 T105 54 T135 54 T165 54 T195 54 H205" fill="none" stroke="#16213F" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+  <rect x="22" y="46" width="22" height="20" rx="4" transform="rotate(14 33 56)" fill="#E1F5FF" stroke="#16213F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="176" y="47" width="20" height="18" rx="4" transform="rotate(-10 186 56)" fill="#E1F5FF" stroke="#16213F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M10 30 L22 100 Q24 106 32 106 H188 Q196 106 198 100 L210 30" fill="none" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M30 66 L34 92" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.9"/>
+</g>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 176" width="40" height="176" class="hl-asset hl-asset--tool" data-asset="pipette" data-tip="20,152" style="--fill-h:84px" role="img" aria-label="Пипетка">
+<title>Пипетка</title>
+<defs><clipPath id="pipette-interior"><path d="M16 60 V128 L19.5 150 H20.5 L24 128 V60 Z"/></clipPath></defs>
+<g data-layer="glass-back"><path d="M16 60 V128 L19.5 150 H20.5 L24 128 V60 Z" style="fill:var(--glass-fill, #EAF6FF)" fill-opacity="0.6"/></g>
+<g data-layer="contents" clip-path="url(#pipette-interior)">
+  <g data-layer="liquid" class="hl-liquid" style="transform:translateY(calc((1 - var(--level, 0.5)) * 84px))">
+    <rect x="0" y="66" width="40" height="120" style="fill:var(--liquid-color, #CDE9FB);fill-opacity:var(--liquid-opacity, 0.85)"/>
+  </g>
+</g>
+<g data-layer="glass" fill="none" stroke="#16213F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 60 V128 L18.5 152 H21.5 L26 128 V60"/></g>
+<g data-layer="bulb">
+  <path d="M10 54 V30 C10 8 30 8 30 30 V54 Z" style="fill:var(--bulb-color, #F07A5A)" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="8" y="52" width="24" height="9" rx="2.5" style="fill:var(--bulb-color, #F07A5A)" stroke="#16213F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M15 22 V40" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" opacity="0.9"/>
+</g>
+<g data-layer="drop" class="hl-drop" style="opacity:var(--drop, 0)">
+  <path d="M20 157 C20 157 14 164.5 14 167.5 A6 6 0 0 0 26 167.5 C26 164.5 20 157 20 157 Z" style="fill:var(--liquid-color, #CDE9FB)" stroke="#16213F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g data-layer="shine"><path d="M18.5 68 V120" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/></g>
+</svg>

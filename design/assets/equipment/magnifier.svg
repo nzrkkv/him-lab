@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 132 132" width="132" height="132" class="hl-asset hl-asset--tool" data-asset="magnifier" data-lens="52,52,36" role="img" aria-label="Лупа">
+<title>Лупа</title>
+<defs><clipPath id="magnifier-lens"><circle cx="52" cy="52" r="36"/></clipPath></defs>
+<g data-layer="handle">
+  <path d="M84 84 L94 94" stroke="#16213F" stroke-width="16" stroke-linecap="round"/>
+  <path d="M84 84 L94 94" stroke="#C9D3DD" stroke-width="9" stroke-linecap="round"/>
+  <path d="M96 96 L120 120" stroke="#16213F" stroke-width="22" stroke-linecap="round"/>
+  <path d="M96 96 L120 120" style="stroke:var(--handle-color, #1F5FCC)" stroke-width="14" stroke-linecap="round"/>
+</g>
+<g data-layer="lens"><circle cx="52" cy="52" r="38" style="fill:var(--lens-fill, #EAF6FF)" fill-opacity="0.55"/></g>
+<g data-layer="lens-content" clip-path="url(#magnifier-lens)"></g>
+<g data-layer="rim"><circle cx="52" cy="52" r="40" fill="none" stroke="#16213F" stroke-width="13"/><circle cx="52" cy="52" r="40" fill="none" stroke="#C9D3DD" stroke-width="6"/></g>
+<g data-layer="shine"><path d="M30 44 A24 24 0 0 1 44 29" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity="0.9"/></g>
+</svg>

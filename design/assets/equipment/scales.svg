@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120" width="200" height="120" class="hl-asset hl-asset--device" data-asset="scales" data-anchor="100,18" data-slot-display="62,58,76,30" role="img" aria-label="Весы">
+<title>Весы</title>
+<g data-layer="body">
+  <rect x="92" y="26" width="16" height="16" fill="#8E9DAE" stroke="#16213F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="28" y="16" width="144" height="11" rx="5.5" fill="#C9D3DD" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M18 40 H182 L191 104 Q192 112 184 112 H16 Q8 112 9 104 Z" fill="#FFFFFF" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="58" y="54" width="84" height="38" rx="7" fill="#DDF3E6" stroke="#16213F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" data-layer="display"/>
+  <circle cx="164" cy="73" r="8" fill="#3B78E3" stroke="#16213F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="36" cy="73" r="4" fill="#16213F" opacity="0.25"/>
+</g>
+<g data-layer="shine"><path d="M40 21.5 H70" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.9"/></g>
+</svg>

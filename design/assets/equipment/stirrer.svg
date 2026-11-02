@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 196" width="24" height="196" class="hl-asset hl-asset--tool" data-asset="stirrer" data-tip="12,186" data-grip="12,14" role="img" aria-label="Стеклянная палочка (мешалка)">
+<title>Стеклянная палочка (мешалка)</title>
+<g data-layer="body"><rect x="6" y="4" width="12" height="188" rx="6" style="fill:var(--glass-fill, #EAF6FF)" fill-opacity="0.6" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g data-layer="shine"><path d="M10.5 18 V150" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/></g>
+</svg>

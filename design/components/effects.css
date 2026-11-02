@@ -1,0 +1,81 @@
+/* Хим лаба — эталонные CSS-анимации эффектов. Подробная спецификация — docs/design/05-effects.md.
+   Принцип: состояние сосуда задаётся CSS-переменными на <svg class="hl-asset hl-asset--vessel">:
+     --level (0–1), --liquid-color, --turbidity (0–1), --foam (0–1), --sediment (0–1), --powder (0–1), --bubbles (0–1), --crystals (0–1)
+   Анимации включаются классами-эффектами fx-* на сосуде (или его обёртке) и снимаются движком по окончании. */
+
+/* ---- плавные переходы состояния (работают всегда) ---- */
+.hl-asset .hl-liquid { transition: transform var(--motion-duration-pour) var(--motion-easing-liquid); will-change: transform; }
+.hl-asset [data-layer='liquid-body'], .hl-asset [data-layer='turbidity'] > rect:first-child { transition: fill var(--motion-duration-effect) var(--motion-easing-liquid), fill-opacity var(--motion-duration-effect) var(--motion-easing-liquid); }
+.hl-asset .hl-turbidity { transition: opacity var(--motion-duration-effect) var(--motion-easing-liquid); }
+.hl-asset .hl-sediment, .hl-asset .hl-powder { transition: transform var(--motion-duration-effect-long) var(--motion-easing-settle); }
+.hl-asset .hl-foam, .hl-asset .hl-bubbles, .hl-asset .hl-crystals { transition: opacity var(--motion-duration-slow) var(--motion-easing-standard); }
+
+/* ---- пузырьки газа ---- */
+@keyframes hl-rise {
+  0%   { transform: translate(0, 0) scale(0.6); opacity: 0; }
+  12%  { opacity: 1; }
+  50%  { transform: translate(3px, calc(var(--rise, 90px) * -0.5)) scale(1); }
+  90%  { opacity: 1; }
+  100% { transform: translate(-2px, calc(var(--rise, 90px) * -1)) scale(1.1); opacity: 0; }
+}
+.fx-fizz .hl-bubble { transform-box: fill-box; transform-origin: center; animation: hl-rise calc(1.1s + var(--d, 0s) * 0.4) var(--motion-easing-linear) infinite; animation-delay: calc(var(--i, 0) * -0.17s); }
+.fx-fizz.fx-fizz--strong .hl-bubble { animation-duration: calc(0.7s + var(--d, 0s) * 0.3); }
+
+/* ---- пена: подъём и оседание ---- */
+@keyframes hl-foam-wobble { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+.fx-foam .hl-foam circle { transform-box: fill-box; transform-origin: center; animation: hl-foam-wobble 1.4s ease-in-out infinite; animation-delay: calc(var(--i, 0) * -0.2s); }
+
+/* ---- растворение: порошок уменьшается, жидкость на миг мутнеет ---- */
+@keyframes hl-dissolve-cloud { 0% { opacity: 0; } 30% { opacity: 0.7; } 100% { opacity: 0; } }
+.fx-dissolve .hl-turbidity { animation: hl-dissolve-cloud var(--motion-duration-effect-long) var(--motion-easing-liquid) forwards; }
+.fx-dissolve .hl-powder { --powder: 0 !important; }
+
+/* ---- осадок: хлопья падают, слой растёт ---- */
+@keyframes hl-settle { from { transform: translateY(-60px); opacity: 0; } 30% { opacity: 1; } to { transform: translateY(0); opacity: 1; } }
+.fx-settle .hl-sediment circle { animation: hl-settle var(--motion-duration-effect-long) var(--motion-easing-settle) both; }
+
+/* ---- перемешивание: колебание жидкости ---- */
+@keyframes hl-slosh { 0%, 100% { transform: skewY(0deg); } 25% { transform: skewY(-3deg); } 75% { transform: skewY(3deg); } }
+.fx-stir [data-layer='liquid-surface'] { transform-box: fill-box; transform-origin: center; animation: hl-slosh 0.6s ease-in-out 3; }
+
+/* ---- пламя ---- */
+@keyframes hl-flicker { 0%, 100% { transform: scale(1, 1); } 30% { transform: scale(0.96, 1.05); } 60% { transform: scale(1.03, 0.97); } }
+.hl-flame { animation: hl-flicker 0.9s ease-in-out infinite; }
+.hl-heat { transition: opacity var(--motion-duration-effect) var(--motion-easing-standard); }
+
+/* ---- пар ---- */
+@keyframes hl-wisp { 0% { transform: translateY(12px) scaleY(0.7); opacity: 0; } 30% { opacity: 0.95; } 100% { transform: translateY(-26px) scaleY(1.15); opacity: 0; } }
+.fx-steam .hl-wisp, .hl-fx .hl-wisp { transform-box: fill-box; transform-origin: 50% 100%; animation: hl-wisp 2.4s var(--motion-easing-standard) infinite; animation-delay: calc(var(--i, 0) * -0.8s); }
+
+/* ---- запах: волны ---- */
+@keyframes hl-wave-drift { 0% { transform: translateX(-6px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateX(10px) translateY(-8px); opacity: 0; } }
+.hl-fx .hl-wave { animation: hl-wave-drift 2.2s var(--motion-easing-standard) infinite; animation-delay: calc(var(--i, 0) * -0.7s); }
+
+/* ---- тепло ---- */
+@keyframes hl-heat-rise { 0% { transform: translateY(6px); opacity: 0; } 40% { opacity: 1; } 100% { transform: translateY(-10px); opacity: 0; } }
+.hl-fx .hl-heatwave { animation: hl-heat-rise 1.6s ease-out infinite; animation-delay: calc(var(--i, 0) * -0.5s); }
+
+/* ---- кристаллы: появление по одному ---- */
+@keyframes hl-crystal-pop { from { transform: scale(0); } to { transform: scale(1); } }
+.fx-crystals .hl-crystals rect { transform-box: fill-box; transform-origin: center; animation: hl-crystal-pop 0.5s var(--motion-easing-pop) both; }
+.fx-crystals .hl-crystals rect:nth-child(odd) { animation-delay: 0.6s; }
+.fx-crystals .hl-crystals rect:nth-child(3n) { animation-delay: 1.2s; }
+
+/* ---- струя при наливании ---- */
+@keyframes hl-stream { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+.fx-pour-stream { transform-origin: top center; animation: hl-stream 0.18s var(--motion-easing-enter) both; }
+@keyframes hl-grain-fall { from { transform: translateY(-30px); opacity: 0; } 20% { opacity: 1; } to { transform: translateY(40px); opacity: 0; } }
+.hl-fx .hl-grain { animation: hl-grain-fall 0.8s var(--motion-easing-settle) infinite; animation-delay: calc(var(--i, 0) * -0.06s); }
+
+/* ---- появление пузыря подсказки и награды ---- */
+@keyframes hl-pop-in { from { scale: 0.85; translate: 0 8px; opacity: 0; } to { scale: 1; translate: 0 0; opacity: 1; } }
+.fx-pop-in { animation: hl-pop-in var(--motion-duration-slow) var(--motion-easing-pop) both; }
+
+/* ---- сниженное движение: без частиц и колебаний, только итоговое состояние ---- */
+@media (prefers-reduced-motion: reduce) {
+  .fx-fizz .hl-bubble, .fx-foam .hl-foam circle, .fx-stir [data-layer='liquid-surface'], .hl-flame,
+  .fx-steam .hl-wisp, .hl-fx .hl-wisp, .hl-fx .hl-wave, .hl-fx .hl-heatwave, .hl-fx .hl-grain, .fx-settle .hl-sediment circle,
+  .fx-crystals .hl-crystals rect, .fx-pop-in, .fx-pour-stream { animation: none !important; }
+  .fx-dissolve .hl-turbidity { animation: none; opacity: 0; }
+  .hl-fx .hl-wisp, .hl-fx .hl-wave, .hl-fx .hl-heatwave { opacity: 0.9; }
+}

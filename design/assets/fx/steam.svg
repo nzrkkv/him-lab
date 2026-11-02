@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 90" width="80" height="90" class="hl-asset hl-fx" data-asset="fx-steam"  role="img" aria-label="Пар">
+<title>Пар</title>
+<g fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round">
+  <path class="hl-wisp" style="--i:0" d="M22 84 C10 70 34 60 22 46 C12 34 30 24 24 12"/>
+  <path class="hl-wisp" style="--i:1" d="M42 86 C30 72 54 62 42 48 C32 36 50 26 44 14"/>
+  <path class="hl-wisp" style="--i:2" d="M60 84 C50 72 70 64 60 52 C52 42 66 34 62 24"/>
+</g>
+<g fill="none" stroke="#16213F" stroke-width="2" stroke-linecap="round" opacity="0.18">
+  <path d="M22 84 C10 70 34 60 22 46 C12 34 30 24 24 12"/><path d="M42 86 C30 72 54 62 42 48 C32 36 50 26 44 14"/><path d="M60 84 C50 72 70 64 60 52 C52 42 66 34 62 24"/>
+</g>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 220" width="180" height="220" class="hl-asset hl-asset--device" data-asset="burner" data-anchor="90,40" role="img" aria-label="Спиртовка на треножнике">
+<title>Спиртовка на треножнике</title>
+<defs><clipPath id="burner-fuel"><path d="M52 204 V170 Q52 150 72 146 H108 Q128 150 128 170 V204 Q128 208 124 208 H56 Q52 208 52 204 Z"/></clipPath></defs>
+<g data-layer="tripod" fill="none" stroke="#16213F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M36 50 L20 212 M144 50 L160 212"/></g>
+<g data-layer="flame" class="hl-flame" style="opacity:var(--flame, 1);transform-box:fill-box;transform-origin:50% 100%">
+  <path d="M90 56 C104 77 110 92 106 104 C103 114 97 118 90 118 C83 118 77 114 74 104 C70 92 76 77 90 56 Z" fill="#FF8A1F" stroke="#16213F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M90 80 C96.5 91 99.5 98.5 98 106 C96.5 111.5 93.5 113.5 90 113.5 C86.5 113.5 83.5 111.5 82 106 C80.5 98.5 83.5 91 90 80 Z" fill="#FFD23F"/>
+  <path d="M84 113 Q90 118 96 113" fill="none" stroke="#4FA3FF" stroke-width="4" stroke-linecap="round"/>
+</g>
+<g data-layer="lamp">
+  <path d="M52 204 V170 Q52 150 72 146 H108 Q128 150 128 170 V204 Q128 212 120 212 H60 Q52 212 52 204 Z" style="fill:var(--glass-fill, #EAF6FF)" fill-opacity="0.6"/>
+  <g clip-path="url(#burner-fuel)"><rect x="40" y="176" width="100" height="40" style="fill:var(--fuel-color, #E4DDFB)" fill-opacity="0.9"/><rect x="40" y="176" width="100" height="4" fill="#FFFFFF" fill-opacity="0.5"/></g>
+  <path d="M52 204 V170 Q52 150 72 146 H108 Q128 150 128 170 V204 Q128 212 120 212 H60 Q52 212 52 204 Z" fill="none" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="78" y="130" width="24" height="17" rx="3" fill="#C9D3DD" stroke="#16213F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M90 130 V119" stroke="#6F4A18" stroke-width="5" stroke-linecap="round"/>
+  <path d="M62 166 V196" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.9"/>
+</g>
+<g data-layer="gauze">
+  <rect x="22" y="40" width="136" height="11" rx="3" fill="#C9D3DD" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="52" y="42" width="76" height="7" fill="#8E9DAE" opacity="0.6"/>
+  <rect data-layer="heat" class="hl-heat" x="52" y="42" width="76" height="7" fill="#FF6B3D" style="opacity:var(--heat, 0)"/>
+</g>
+</svg>

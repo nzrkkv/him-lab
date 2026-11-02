@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 132" width="28" height="132" class="hl-asset hl-asset--tool" data-asset="ph-strip" data-tip="14,126" role="img" aria-label="Индикаторная бумага (pH-полоска)">
+<title>Индикаторная бумага (pH-полоска)</title>
+<g data-layer="body"><rect x="6" y="4" width="16" height="124" rx="3" fill="#FFFFFF" stroke="#16213F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g data-layer="pad" class="hl-ph-pad"><rect x="6" y="80" width="16" height="48" rx="3" style="fill:var(--ph-color, #F2C66D);transition:fill var(--motion-duration-effect, 1.6s) var(--motion-easing-liquid, ease)" stroke="#16213F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g data-layer="grip" fill="none" stroke="#16213F" stroke-width="2" stroke-linecap="round" opacity="0.35"><path d="M11 14 H17 M11 20 H17 M11 26 H17"/></g>
+</svg>

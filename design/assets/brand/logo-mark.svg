@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 68 76" width="68" height="76" class="hl-asset hl-asset--brand" data-asset="logo-mark"  role="img" aria-label="Хим лаба">
+<title>Хим лаба</title>
+<defs><clipPath id="logo-glass"><circle cx="34" cy="48" r="24"/></clipPath></defs>
+<path d="M27 6 V27 A25 25 0 1 0 41 27 V6 Z" fill="#EAF6FF"/>
+<g clip-path="url(#logo-glass)"><path d="M6 46 Q14 41 22 46 T38 46 T54 46 T70 46 V80 H6 Z" style="fill:var(--logo-liquid, #8A6CF0)"/></g>
+<path d="M27 6 V27 A25 25 0 1 0 41 27 V6" fill="none" stroke="#16213F" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M23 6 H45" stroke="#16213F" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="28" cy="56" r="4" fill="#FFFFFF" stroke="#16213F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="40" cy="51" r="2.6" fill="#FFFFFF" stroke="#16213F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17 42 Q16 48 18 54" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.9"/>
+</svg>

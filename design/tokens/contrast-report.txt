@@ -26,5 +26,5 @@ OK   11.08 (мин 4.5)  color.ink.900 на color.wood.200
 OK   11.82 (мин 4.5)  color.ink.900 на color.bench.top
 OK    3.59 (мин 3)  color.feedback.caution.500 на color.paper
 OK    2.16 (мин 1.5)  color.ink.300 на color.paper
-OK    4.14 (мин 3)  color.ink.900 на color.oksi.body
+OK    4.14 (мин 3)  color.ink.900 на color.guide.body
 OK    1.54 (мин 1.5)  color.lamp.400 на color.paper

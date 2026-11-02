@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 104 124" width="104" height="124" class="hl-asset hl-asset--container" data-asset="bag" data-slot-label="24,88,56,22" role="img" aria-label="Пакет с веществом">
+<title>Пакет с веществом</title>
+<g data-layer="body">
+  <path d="M14 30 L18 114 Q18.5 120 24 120 H80 Q85.5 120 86 114 L90 30 Z" style="fill:var(--bag-color, #F7E9CC)" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M24 34 L26 110" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+</g>
+<g data-layer="window">
+  <rect x="30" y="46" width="44" height="34" rx="8" style="fill:var(--substance-color, #FFFFFF)" stroke="#16213F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="34.0" cy="58.8" r="1.6" fill="#16213F" fill-opacity="0.14"/><circle cx="54.3" cy="71.5" r="1.5" fill="#16213F" fill-opacity="0.14"/><circle cx="46.2" cy="55.2" r="1.2" fill="#16213F" fill-opacity="0.14"/><circle cx="47.1" cy="55.9" r="1.8" fill="#16213F" fill-opacity="0.14"/><circle cx="69.9" cy="61.8" r="1.7" fill="#16213F" fill-opacity="0.14"/><circle cx="55.9" cy="66.9" r="1.5" fill="#16213F" fill-opacity="0.14"/><circle cx="42.0" cy="69.4" r="1.6" fill="#16213F" fill-opacity="0.14"/><circle cx="61.4" cy="71.3" r="1.1" fill="#16213F" fill-opacity="0.14"/><circle cx="36.8" cy="60.7" r="1.5" fill="#16213F" fill-opacity="0.14"/><circle cx="49.4" cy="63.9" r="1.7" fill="#16213F" fill-opacity="0.14"/><circle cx="56.8" cy="53.0" r="1.6" fill="#16213F" fill-opacity="0.14"/><circle cx="47.3" cy="56.8" r="1.3" fill="#16213F" fill-opacity="0.14"/>
+</g>
+<g data-layer="top">
+  <path d="M10 16 H94 V31 H10 Z" style="fill:var(--bag-fold, #ECD5A9)" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="40" y="6" width="24" height="16" rx="3" style="fill:var(--clip-color, #1F5FCC)" stroke="#16213F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g data-layer="label"><path d="M23 88 L25 86.5 L79 86 L81 88 L80.5 108 L78.5 110 L25 110.5 L23 108.5 Z" style="fill:var(--label-color, #FFFFFF)" stroke="#16213F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+</svg>

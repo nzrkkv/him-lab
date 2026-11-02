@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 208" width="40" height="208" class="hl-asset hl-asset--tool" data-asset="thermometer" data-tip="18,190" data-scale="24,172" style="--fill-h:148px" role="img" aria-label="Термометр">
+<title>Термометр</title>
+<defs><clipPath id="thermometer-column"><rect x="15" y="16" width="6" height="170" rx="3"/><circle cx="18" cy="188" r="13"/></clipPath></defs>
+<g data-layer="body">
+  <rect x="7" y="4" width="22" height="178" rx="11" fill="#FFFFFF" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="15" y="16" width="6" height="160" rx="3" fill="#E6E9F2"/>
+</g>
+<g data-layer="column" clip-path="url(#thermometer-column)">
+  <g class="hl-thermo-column" style="transform:translateY(calc((1 - var(--temp, 0.3)) * 148px))"><rect x="10" y="24" width="16" height="190" style="fill:var(--thermo-color, #E2483D)"/></g>
+  <circle cx="18" cy="188" r="13" style="fill:var(--thermo-color, #E2483D)"/>
+</g>
+<g data-layer="bulb"><circle cx="18" cy="188" r="15" fill="none" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g data-layer="marks" fill="none" stroke="#16213F" stroke-width="2.5" stroke-linecap="round" opacity="0.55">
+  <path d="M23 24 H28"/><path d="M23 38.8 H26"/><path d="M23 53.6 H26"/><path d="M23 68.4 H26"/><path d="M23 83.2 H26"/><path d="M23 98 H28"/><path d="M23 112.80000000000001 H26"/><path d="M23 127.60000000000001 H26"/><path d="M23 142.4 H26"/><path d="M23 157.20000000000002 H26"/><path d="M23 172 H28"/>
+</g>
+<g data-layer="shine"><path d="M11.5 22 V60" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/></g>
+</svg>

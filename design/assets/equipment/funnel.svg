@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 176" width="120" height="176" class="hl-asset hl-asset--device" data-asset="funnel" data-mouth="60,14" data-outlet="60,158" style="--fill-h:60px" role="img" aria-label="Воронка с фильтром">
+<title>Воронка с фильтром</title>
+<defs><clipPath id="funnel-filter"><path d="M16 20 L60 86 L104 20 Z"/></clipPath></defs>
+<g data-layer="glass-back"><path d="M6 14 H114 L68 84 V156 H52 V84 Z" style="fill:var(--glass-fill, #EAF6FF)" fill-opacity="0.6"/></g>
+<g data-layer="stream" class="hl-stream" style="opacity:var(--flow, 0)"><path d="M60 90 V154" style="stroke:var(--liquid-color, #CDE9FB)" stroke-width="6" stroke-linecap="round"/></g>
+<g data-layer="filter">
+  <path d="M14 18 L22 23 L30 17 L38 23 L46 17 L54 23 L62 17 L70 23 L78 17 L86 23 L94 17 L102 23 L106 18 L60 88 Z" fill="#F8F5EE" stroke="#16213F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g data-layer="contents" clip-path="url(#funnel-filter)">
+  <g data-layer="liquid" class="hl-liquid" style="transform:translateY(calc((1 - var(--level, 0)) * 60px))">
+    <rect x="0" y="26" width="120" height="80" style="fill:var(--liquid-color, #CDE9FB);fill-opacity:var(--liquid-opacity, 0.85)"/>
+    <rect x="0" y="26" width="120" height="4" fill="#FFFFFF" fill-opacity="0.45"/>
+  </g>
+  <g data-layer="residue" class="hl-residue" style="opacity:var(--residue, 0)">
+    <path d="M38 64 Q46 56 52 60 Q58 52 66 58 Q74 55 82 64 L60 88 Z" style="fill:var(--residue-color, #F3F1EA)" stroke="#16213F" stroke-width="2" stroke-opacity="0.6"/>
+    <circle cx="48.0" cy="73.3" r="1.5" fill="#16213F" fill-opacity="0.14"/><circle cx="57.4" cy="64.7" r="1.2" fill="#16213F" fill-opacity="0.14"/><circle cx="57.6" cy="72.0" r="1.6" fill="#16213F" fill-opacity="0.14"/><circle cx="64.1" cy="70.9" r="1.4" fill="#16213F" fill-opacity="0.14"/><circle cx="57.1" cy="74.2" r="1.7" fill="#16213F" fill-opacity="0.14"/><circle cx="48.4" cy="65.7" r="1.4" fill="#16213F" fill-opacity="0.14"/><circle cx="61.3" cy="68.5" r="1.3" fill="#16213F" fill-opacity="0.14"/><circle cx="48.6" cy="62.6" r="1.4" fill="#16213F" fill-opacity="0.14"/>
+  </g>
+</g>
+<g data-layer="glass" fill="none" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14 H114 M6 14 L52 84 V158 M114 14 L68 84 V152 M52 158 L68 152"/></g>
+<g data-layer="drip" class="hl-drip" style="opacity:var(--drip, 0)"><path d="M60 162 C60 162 55.5 168 55.5 170.5 A4.5 4.5 0 0 0 64.5 170.5 C64.5 168 60 162 60 162 Z" style="fill:var(--liquid-color, #CDE9FB)" stroke="#16213F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g data-layer="shine"><path d="M57 96 V140" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.9"/></g>
+</svg>

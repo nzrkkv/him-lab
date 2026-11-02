@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" class="hl-icon" data-icon="sound-on" aria-hidden="true">
+<title>Звук включён</title>
+<path fill="currentColor" fill-opacity="0.18" stroke="none" d="M5 12 H10 L16 7 V25 L10 20 H5 Z"/><path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="M5 12 H10 L16 7 V25 L10 20 H5 Z M20.5 12 A5.5 5.5 0 0 1 20.5 20 M23.5 8.5 A10 10 0 0 1 23.5 23.5"/>
+</svg>

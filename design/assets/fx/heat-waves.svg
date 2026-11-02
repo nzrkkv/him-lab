@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 60" width="80" height="60" class="hl-asset hl-fx" data-asset="fx-heat-waves"  role="img" aria-label="Тепло">
+<title>Тепло</title>
+<g fill="none" stroke="#FF6B3D" stroke-width="4" stroke-linecap="round">
+  <path class="hl-heatwave" style="--i:0" d="M16 54 C8 44 24 36 16 24 C10 16 20 10 16 4"/>
+  <path class="hl-heatwave" style="--i:1" d="M40 54 C32 44 48 36 40 24 C34 16 44 10 40 4"/>
+  <path class="hl-heatwave" style="--i:2" d="M64 54 C56 44 72 36 64 24 C58 16 68 10 64 4"/>
+</g>
+</svg>
