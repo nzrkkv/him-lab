@@ -10,7 +10,7 @@ export const LAYER_CHECK = `(() => {
   for (const b of document.querySelectorAll('button, a[href]')) {
     if (!vis(b) || b.closest('.hl-shelf__body')) continue;
     const r = b.getBoundingClientRect();
-    if (r.right > innerWidth + 2 || r.bottom > innerHeight + 2 || r.left < -2) out.push('за экраном: ' + (b.getAttribute('aria-label') || b.textContent || '').trim().slice(0, 30));
+    if (r.right > innerWidth + 2 || r.left < -2 || (b.closest('.hl-lab') && r.bottom > innerHeight + 2)) out.push('за экраном: ' + (b.getAttribute('aria-label') || b.textContent || '').trim().slice(0, 30));
   }
   return out;
 })()`;

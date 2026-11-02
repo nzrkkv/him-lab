@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100" width="120" height="100" class="hl-fx" data-asset="fx-fan-hand" role="img" aria-label="Ладонь подгоняет воздух к носу">
+<title>Ладонь подгоняет воздух к носу</title>
+<g data-layer="hand" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M40 82 Q30 60 34 40 Q36 30 42 32 Q46 34 46 44 L48 22 Q50 14 56 16 Q60 18 60 26 L60 18 Q62 10 68 12 Q72 14 72 22 L72 26 Q74 18 80 20 Q84 22 84 30 L82 58 Q80 76 70 86 Z" style="fill:var(--hand-color, #F2C9A6)"/></g>
+<g data-layer="waves" fill="none" stroke="#8A6CF0" stroke-width="3" stroke-linecap="round"><path class="hl-wave" d="M92 40 Q100 34 108 40"/><path class="hl-wave" d="M94 54 Q104 48 114 54"/><path class="hl-wave" d="M92 68 Q100 62 108 68"/></g>
+</svg>

@@ -1,6 +1,9 @@
-# Песочница прототипа: все вещества и оборудование прототипа открыты сразу (вопрос Q-09, рабочее решение).
-substances: [water, vinegar, iodine_solution, red_cabbage, table_salt, sugar, baking_soda, starch, chalk, sand]
+# Песочница: стартовый набор сразу (Q-09, рабочее решение), остальное открывается за урок 1 и миссию.
+starter: [water, table_salt, sugar, sand, baking_soda, vinegar, red_cabbage]
 equipment: [beaker, test_tube, evaporating_dish, tube_holder, burner, ice_bath, stirrer, magnifier, thermometer, ph_strip, scales]
+unlocks:
+  - { by: m1_l01, substances: [chalk] }
+  - { by: powder_mystery, substances: [starch, iodine_solution] }
 ideas:
   - { ru: "Смешай крахмал с водой и нагрей. Что получится?" }
   - { ru: "Выпари солёную воду. Вернётся ли соль?" }

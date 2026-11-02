@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 140" width="160" height="140" class="hl-asset hl-asset--device" data-asset="sink" data-anchor="80,70" role="img" aria-label="Раковина">
+<title>Раковина</title>
+<g data-layer="tap" fill="none" stroke="#16213F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M80 52 V20 Q80 10 92 10 H108 Q118 10 118 20 V30" fill="#C9D3DD"/><rect x="70" y="44" width="20" height="12" rx="4" fill="#8E9DAE"/><path d="M60 26 H72" /></g>
+<g data-layer="water" style="opacity:var(--flow, 0)"><path d="M118 32 V78" stroke="#8CC8EE" stroke-width="6" stroke-linecap="round"/></g>
+<g data-layer="basin"><path d="M10 70 H150 L140 120 Q138 130 128 130 H32 Q22 130 20 120 Z" fill="#EAF6FF" stroke="#16213F" stroke-width="4" stroke-linejoin="round"/><ellipse cx="80" cy="112" rx="10" ry="4" fill="#8E9DAE" stroke="#16213F" stroke-width="3"/><path d="M6 70 H154" stroke="#16213F" stroke-width="6" stroke-linecap="round"/></g>
+<g data-layer="shine"><path d="M30 82 L36 112" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity="0.9"/></g>
+</svg>

@@ -1,0 +1,425 @@
+/* Скопировано из design/mockups/home.html (стили макета). Править — в приложении, не в design/. */
+
+body {
+  background: var(--color-tile-100);
+}
+.hm-top {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: 72px;
+  padding: 0 32px;
+  background: var(--color-paper);
+  border-bottom: 2px solid var(--color-ink-900);
+}
+.hm-nav {
+  display: flex;
+  gap: 4px;
+  margin-left: 24px;
+}
+.hm-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--color-ink-700);
+  text-decoration: none;
+}
+.hm-nav a .hl-icon {
+  width: 22px;
+  height: 22px;
+}
+.hm-nav a[aria-current='page'] {
+  background: var(--color-lamp-100);
+  color: var(--color-ink-900);
+  box-shadow: inset 0 0 0 2px var(--color-ink-900);
+}
+.hm-top__right {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.hm-parents {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-ink-700);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 12px 8px;
+}
+.hm {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 28px 32px 40px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 24px;
+}
+.hm-module {
+  grid-column: 1;
+}
+.hm-module__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.hm-module__head small {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-ink-500);
+  margin-bottom: 4px;
+}
+.hm-module__head h1 {
+  font: 700 40px/1.1 var(--font-family-display);
+  letter-spacing: -0.02em;
+}
+.hm-module__head p {
+  font-size: 18px;
+  color: var(--color-ink-700);
+  margin-top: 6px;
+}
+.hm-progress {
+  width: 220px;
+  flex: none;
+}
+.hm-progress span {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  text-align: right;
+}
+.mp {
+  position: relative;
+  padding: 22px 16px 22px;
+  border: 2px solid var(--color-ink-900);
+  border-radius: var(--radius-xl);
+  background: var(--color-wood-100);
+}
+.mp::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 196px;
+  height: 16px;
+  background: var(--color-wood-200);
+  border-block: 2px solid var(--color-ink-900);
+  border-bottom-width: 4px;
+  border-bottom-color: var(--color-wood-400);
+}
+.mp-pipe {
+  position: absolute;
+  left: 12.5%;
+  right: 12.5%;
+  top: 140px;
+  height: 16px;
+  border: 2px solid var(--color-ink-900);
+  border-radius: 8px;
+  background: var(--color-lab-glass);
+  overflow: hidden;
+}
+.mp-pipe i {
+  display: block;
+  width: 14%;
+  height: 100%;
+  background: var(--color-guide-body);
+}
+.mp-list {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+.mp-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 22px;
+}
+.mp-flask {
+  position: relative;
+  display: block;
+  width: 128px;
+  height: 172px;
+  border-radius: 20px;
+  padding: 2px 8px 0;
+  text-decoration: none;
+  color: inherit;
+}
+.mp-flask > svg {
+  width: 100%;
+  height: auto;
+}
+.mp-num {
+  position: absolute;
+  left: 50%;
+  top: 64%;
+  transform: translate(-50%, -50%);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--color-paper);
+  border: 2px solid var(--color-ink-900);
+  font: 700 19px/1 var(--font-family-display);
+}
+.mp-num .hl-icon {
+  width: 22px;
+  height: 22px;
+  color: var(--color-ink-500);
+}
+.mp-node--current .mp-flask {
+  background: rgba(255, 201, 60, 0.35);
+  box-shadow: 0 0 0 3px var(--color-lamp-400);
+}
+.mp-node--locked .mp-flask > svg {
+  opacity: 0.55;
+}
+.mp-text {
+  max-width: 220px;
+}
+.mp-text b {
+  display: block;
+  font-size: 18px;
+  line-height: 1.25;
+}
+.mp-text span {
+  display: block;
+  font-size: 15px;
+  color: var(--color-ink-700);
+  margin-top: 4px;
+  line-height: 1.3;
+}
+.mp-node--locked .mp-text b {
+  color: var(--color-ink-700);
+}
+.mp-text .mp-here {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 12px;
+  border-radius: 99px;
+  background: var(--color-ink-900);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+}
+.hm-sand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: var(--radius-xl);
+  background: var(--color-paper);
+  border: 2px solid var(--color-ink-900);
+  box-shadow: 0 3px 0 0 rgba(22, 33, 63, 0.2);
+  text-decoration: none;
+  color: inherit;
+}
+.hm-sand > .hl-icon:first-child {
+  width: 48px;
+  height: 48px;
+  padding: 8px;
+  border-radius: 14px;
+  background: var(--color-lamp-100);
+  color: var(--color-lamp-800);
+}
+.hm-sand b {
+  display: block;
+  font: 600 19px/1.2 var(--font-family-display);
+}
+.hm-sand small {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-ink-700);
+  margin-top: 2px;
+}
+.hm-sand > .hl-icon:last-child {
+  margin-left: auto;
+  width: 24px;
+  height: 24px;
+  flex: none;
+}
+.hm-side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.hm-cont {
+  position: relative;
+  padding: 20px;
+  border: 2px solid var(--color-ink-900);
+  border-radius: var(--radius-xl);
+  background: var(--color-paper);
+}
+.hm-cont__art {
+  position: absolute;
+  right: 12px;
+  top: -26px;
+  width: 104px;
+}
+.hm-cont small {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-ink-500);
+}
+.hm-cont h2 {
+  font: 700 22px/1.25 var(--font-family-display);
+  margin: 6px 0 4px;
+  max-width: 200px;
+}
+.hm-cont p {
+  font-size: 16px;
+  color: var(--color-ink-700);
+}
+.hm-cont .hm-cont__name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-ink-900);
+  max-width: 190px;
+  margin-bottom: 4px;
+}
+.hm-cont .hl-progress-bar {
+  margin: 14px 0 16px;
+}
+.hm-badges {
+  padding: 16px;
+  border: 2px solid var(--color-ink-200);
+  border-radius: var(--radius-xl);
+  background: var(--color-paper);
+}
+.hm-badges h2,
+.hm-modules h2 {
+  font: 600 18px/1.2 var(--font-family-display);
+  margin-bottom: 12px;
+}
+.hm-badges ul {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.hm-badges .hl-badge {
+  width: auto;
+}
+.hm-badges .hl-badge__art {
+  width: 64px;
+}
+.hm-badges .hl-badge__name {
+  font-size: 13px;
+}
+.hm-modules {
+  grid-column: 1 / -1;
+}
+.hm-modules ol {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.hm-mod {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
+  padding: 10px 14px;
+  border-radius: var(--radius-lg);
+  border: 2px dashed var(--color-ink-300);
+  color: var(--color-ink-700);
+  font-weight: 600;
+  font-size: 16px;
+}
+.hm-mod i {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  background: var(--color-ink-100);
+  font: 700 15px/1 var(--font-family-display);
+  font-style: normal;
+}
+.hm-mod--open {
+  border: 2px solid var(--color-ink-900);
+  background: var(--color-paper);
+  color: var(--color-ink-900);
+  font-weight: 700;
+}
+.hm-mod--open i {
+  background: var(--color-guide-body);
+  color: #fff;
+}
+.hm-mod small {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-ink-500);
+}
+@media (max-width: 1279px) {
+  .hm-top {
+    padding: 0 20px;
+    gap: 12px;
+  }
+  .hm-nav {
+    margin-left: 8px;
+  }
+  .hm-nav a {
+    padding: 0 10px;
+  }
+  .hm-parents {
+    display: none;
+  }
+  .hm {
+    grid-template-columns: minmax(0, 1fr) 280px;
+    padding: 20px;
+    gap: 16px;
+  }
+  .hm-module__head h1 {
+    font-size: 30px;
+  }
+  .hm-module__head p {
+    display: none;
+  }
+  .hm-progress {
+    width: 160px;
+  }
+  .mp::before {
+    top: 166px;
+  }
+  .mp-pipe {
+    top: 118px;
+  }
+  .mp-flask {
+    width: 104px;
+    height: 142px;
+  }
+  .mp-node {
+    gap: 20px;
+  }
+  .mp-text b {
+    font-size: 16px;
+  }
+  .mp-text span {
+    font-size: 14px;
+  }
+  .hm-cont h2 {
+    font-size: 19px;
+    max-width: 160px;
+  }
+  .hm-cont__art {
+    width: 84px;
+  }
+  .hm-modules ol {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

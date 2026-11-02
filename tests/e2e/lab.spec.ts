@@ -31,8 +31,8 @@ test('главная открывается без ошибок и без сто
   page.on('pageerror', (e) => errors.push(e.message));
   const external = await noExternalRequests(page);
   await page.goto('/');
-  await expect(page.getByRole('link', { name: /Загадка белых порошков/ })).toBeVisible();
-  await expect(page.getByRole('link', { name: /Песочница/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: /Урок 1: Добро пожаловать/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: /Песочница/ }).first()).toBeVisible();
   await page.goto('/#/lab');
   await page.goto('/#/lab/mission/powder-mystery');
   expect(errors).toEqual([]);

@@ -19,13 +19,8 @@ import {
   type JarCheck,
   type MissionState,
 } from '../../core/mission/mission.ts';
-import {
-  emptyProgress,
-  loadProgress,
-  type ProgressV1,
-  type SandboxLogLine,
-} from '../../core/progress/progress.ts';
-import { debouncedWriter, readKey, writeKey } from '../../platform/storage.ts';
+import { awardBadge, type ProgressV1, type SandboxLogLine } from '../../core/progress/progress.ts';
+import { availableSubstances, progress, saveProgress } from '../progress-store.ts';
 import { bundle, ix, plural, t } from '../content.ts';
 
 export type Mode = 'sandbox' | 'mission';
@@ -85,8 +80,6 @@ export interface LabUiState {
   mixedWarned: boolean;
 }
 
-const PROGRESS_KEY = 'progress';
-
 export class LabController {
   state: LabUiState;
   progress: ProgressV1;
@@ -95,11 +88,8 @@ export class LabController {
   private save: () => void;
 
   constructor(mode: Mode) {
-    const loaded = loadProgress(readKey(PROGRESS_KEY));
-    if (!loaded.ok && loaded.reason === 'corrupt')
-      writeKey(`backup:${Date.now()}`, readKey(PROGRESS_KEY) ?? '');
-    this.progress = loaded.ok ? loaded.progress : emptyProgress();
-    this.save = debouncedWriter(PROGRESS_KEY, () => JSON.stringify(this.progress));
+    this.progress = progress();
+    this.save = saveProgress;
     this.mission = bundle.missions[0] as Mission;
     this.state = {
       mode,
@@ -335,9 +325,15 @@ export class LabController {
     if (this.state.mission.status === 'completed' && !this.progress.missionsCompleted.includes(m.missionId)) {
       this.progress.missionsCompleted.push(m.missionId);
     }
+    if (this.state.mission.status === 'completed') awardBadge(this.progress, 'powder-detective');
     this.state.speech = null;
     this.persist();
     this.emit();
+  }
+
+  /** Вещества песочницы: стартовый набор + открытые за пройденные уроки и миссии. */
+  availableSubstances(): string[] {
+    return availableSubstances(this.progress);
   }
 
   // ---------- выбор и количество ----------

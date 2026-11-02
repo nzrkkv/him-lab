@@ -223,18 +223,50 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
         ...rows(c.mission.helpers.map((s) => substanceButton(s))),
       );
     } else {
-      const subs = bundle.sandbox.substances.map((s) => ix.substances.get(s)).filter((s) => s !== undefined);
+      const open = c.availableSubstances();
+      const subs = open.map((s) => ix.substances.get(s)).filter((s) => s !== undefined);
       for (const group of ['liquids', 'powders'] as const) {
         body.append(
           h('h3', { class: 'hl-shelf__group' }, t(`shelf.${group}`)),
           ...rows(subs.filter((s) => s.group === group).map((s) => substanceButton(s.id))),
         );
       }
+      const locked = bundle.sandbox.unlocks.flatMap((u) =>
+        u.substances.filter((x) => !open.includes(x)).map((x) => ({ id: x, by: u.by })),
+      );
+      if (locked.length) {
+        body.append(
+          h('h3', { class: 'hl-shelf__group' }, icon('lock'), t('shelf.locked')),
+          ...rows(
+            locked.map(({ id, by }) => {
+              const sub = ix.substances.get(id);
+              const why = t(`shelf.unlock.${by}`);
+              return h(
+                'button',
+                {
+                  class: `hl-substance is-locked${sub?.container === 'bottle' ? ' hl-substance--bottle' : ''}`,
+                  'aria-disabled': 'true',
+                  'aria-label': `${sub?.shortName ?? id}. ${why}`,
+                  onclick: () => c.set('toast', why),
+                },
+                h(
+                  'span',
+                  { class: 'hl-substance__art' },
+                  asset(sub?.container === 'bottle' ? 'containers/bottle' : 'containers/jar', { label: '' }),
+                  h('span', { class: 'hl-substance__lock' }, icon('lock')),
+                ),
+                h('span', { class: 'hl-substance__name' }, sub?.shortName ?? id),
+                h('span', { class: 'hl-substance__meta' }, t(`shelf.unlock.short.${by}`)),
+              );
+            }),
+          ),
+        );
+      }
     }
     const title = isMission ? t('shelf.mission.title') : t('shelf.title');
     const count = isMission
       ? t('shelf.mission.count')
-      : t('shelf.count', { count: bundle.sandbox.substances.length });
+      : t('shelf.count', { count: c.availableSubstances().length });
     replaceChildren(
       shelf,
       h(
@@ -932,6 +964,8 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
   }
 
   function renderFinale(): HTMLElement {
+    const lessonInProgress = Object.entries(c.progress.lessons).find(([, l]) => !l.completed);
+    const lessonBack = lessonInProgress ? `#/lesson/${lessonInProgress[0].replace(/_/g, '-')}` : null;
     const m = c.state.mission;
     const rowsEl = c.mission.jars.map((jar) => {
       const s = m?.jarSubstance[jar] ?? '';
@@ -960,9 +994,17 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
       h(
         'div',
         { class: 'hl-result__actions' },
+        lessonBack
+          ? h(
+              'a',
+              { class: 'hl-btn hl-btn--primary', href: lessonBack },
+              icon('back'),
+              t('lesson.mission.back'),
+            )
+          : null,
         h(
           'button',
-          { class: 'hl-btn hl-btn--primary', onclick: () => c.openMission(true) },
+          { class: 'hl-btn hl-btn--secondary', onclick: () => c.openMission(true) },
           t('mission.again'),
         ),
         h(

@@ -31,7 +31,8 @@ function designFxClasses(): Set<string> {
 }
 
 const FORMULA = /\b(?:[A-Z][a-z]?\d*){2,}\b/;
-const GENDERED = /(?:^|[^а-яё])(нашёл|нашла|сделал|сделала|смог|смогла|понял|поняла|увидел|увидела|проверил|проверила)(?:[^а-яё]|$)/i;
+// Родовое обращение к ребёнку: «ты нашёл», «ты сделала» (третье лицо — «йод нашёл» — допустимо).
+const GENDERED = /(?:^|[^а-яё])ты\s+(нашёл|нашла|сделал|сделала|смог|смогла|понял|поняла|увидел|увидела|проверил|проверила)(?:[^а-яё]|$)/i;
 const NUMBER_WITH_UNIT = /\d+\s*(г\b|мл|%|°|капл|порц|ложк)/i;
 
 function lintChildText(where: string, text: string | undefined, issues: Issue[]): void {
@@ -150,7 +151,67 @@ export function validateBundle(b: ContentBundle, _source: unknown): Issue[] {
     for (const p of m.solutionPaths) for (const t of p.order) if (!testIds.has(t)) err(where, `путь ${p.id}: нет проверки ${t}`);
     for (const t of m.intro) lintChildText(`${where}.intro`, t, issues);
   }
-  for (const s of [...b.sandbox.substances]) if (!substanceIds.has(s)) err('sandbox', `нет вещества ${s}`);
+  const missionIds = new Set(b.missions.map((m) => m.id));
+  for (const l of b.lessons) {
+    const where = `lessons.${l.id}`;
+    const stages = l.stages.map((st) => st.id);
+    let lastStage = 0;
+    const blockTypes = new Set<string>();
+    for (const sc of l.screens) {
+      const w = `${where}.${sc.id}`;
+      const si = stages.indexOf(sc.stage);
+      if (si < 0) err(w, `нет этапа ${sc.stage}`);
+      if (si < lastStage) err(w, `этап ${sc.stage} идёт раньше предыдущего: шаблон «сначала опыт, потом объяснение»`);
+      lastStage = Math.max(lastStage, si);
+      for (const id of sc.sci ?? []) if (!substanceIds.has(id)) err(w, `нет вещества ${id}`);
+      for (const t of [sc.lead, sc.next, ...(sc.guide?.lines ?? []), ...(sc.deeper?.body ?? [])]) lintChildText(w, t, issues);
+      const predicts = new Set(sc.blocks.flatMap((bl) => (bl.type === 'predict' ? [bl.id] : [])));
+      for (const bl of sc.blocks) {
+        blockTypes.add(bl.type);
+        if (bl.type === 'choice') {
+          for (const o of bl.options) lintChildText(`${w}.${bl.id}`, o.reply, issues);
+        } else if (bl.type === 'sort') {
+          const shelves = new Set(bl.shelves.map((x) => x.id));
+          for (const c of bl.cards) if (!shelves.has(c.shelf)) err(`${w}.${bl.id}`, `нет полки ${c.shelf}`);
+        } else if (bl.type === 'lab') {
+          for (const v of bl.vessels) for (const x of v.contents) if (!substanceIds.has(x.substance)) err(`${w}.${bl.id}`, `нет вещества ${x.substance}`);
+          for (const a of bl.actions) {
+            if (a.vessel >= bl.vessels.length) err(`${w}.${bl.id}`, `действие ${a.id}: нет сосуда ${a.vessel}`);
+            if (a.add && !substanceIds.has(a.add)) err(`${w}.${bl.id}`, `нет вещества ${a.add}`);
+            if (!a.add && !a.stir && !a.magnify && !a.smell) err(`${w}.${bl.id}`, `действие ${a.id} ничего не делает`);
+          }
+          if (bl.predict && !predicts.has(bl.predict.from)) err(`${w}.${bl.id}`, `нет предсказания ${bl.predict.from} на экране`);
+        } else if (bl.type === 'mission' && !missionIds.has(bl.missionId)) err(w, `нет миссии ${bl.missionId}`);
+        else if (bl.type === 'spot' && !bl.cards.some((c) => c.mistake)) err(w, 'в «найди ошибки» нет ни одной ошибки');
+      }
+    }
+    for (const need of ['lab', 'mission', 'test', 'home', 'reward']) if (!blockTypes.has(need)) err(where, `в уроке нет обязательного блока ${need}`);
+    for (const q of l.test.questions) {
+      const w = `${where}.test.${q.id}`;
+      if (q.type === 'single' || q.type === 'predict') {
+        if (q.options.filter((o) => o.correct).length !== 1) err(w, 'нужен ровно один верный ответ');
+      } else if (q.type === 'multi') {
+        if (q.options.filter((o) => o.correct).length < 2) err(w, 'в вопросе с несколькими ответами нужно 2+ верных');
+      } else if (q.type === 'sort') {
+        const shelves = new Set(q.shelves.map((x) => x.id));
+        for (const c of q.cards) if (!shelves.has(c.shelf)) err(w, `нет полки ${c.shelf}`);
+      }
+      lintChildText(w, q.prompt, issues);
+    }
+    if (l.test.questions.length < 10) issues.push({ level: 'warning', where, message: `в тесте ${l.test.questions.length} вопросов (ориентир 10)` });
+    // Грубая оценка: чтение базовых текстов экранов (без «копнуть глубже» и домашнего опыта) + интерактивы.
+    const visible = l.screens.map((sc) => ({ ...sc, deeper: undefined }));
+    const words = JSON.stringify(visible).replace(/"[a-z_]+":/g, ' ').split(/\s+/).length;
+    const minutes = words / 110 + l.screens.length * 0.3 + l.test.questions.length * 0.2;
+    if (minutes > l.minutes * 1.4) issues.push({ level: 'warning', where, message: `оценка длительности ${minutes.toFixed(0)} мин` });
+  }
+  const lessonIds = new Set(b.lessons.map((l) => l.id));
+  for (const m of b.modules) for (const l of m.lessons) if (m.order === 1 && l.id === 'm1_l01' && !lessonIds.has(l.id)) err('modules', `нет урока ${l.id}`);
+  const lessonOrMission = new Set([...b.lessons.map((l) => l.id), ...b.missions.map((m) => m.id)]);
+  for (const s of [...b.sandbox.starter, ...b.sandbox.unlocks.flatMap((u) => u.substances)]) if (!substanceIds.has(s)) err('sandbox', `нет вещества ${s}`);
+  for (const u of b.sandbox.unlocks) if (!lessonOrMission.has(u.by)) err('sandbox', `открытие за неизвестное ${u.by}`);
+  const allSandbox = [...b.sandbox.starter, ...b.sandbox.unlocks.flatMap((u) => u.substances)];
+  if (new Set(allSandbox).size !== allSandbox.length) err('sandbox', 'вещество открывается дважды');
   for (const e of b.sandbox.equipment) if (!equipmentIds.has(e)) err('sandbox', `нет оборудования ${e}`);
   for (const [k, v] of Object.entries(b.strings)) lintChildText(`strings.${k}`, v, issues);
   return issues;
