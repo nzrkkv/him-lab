@@ -16,6 +16,7 @@ interface WareRef {
   equipmentId: string;
 }
 
+const LENS_VIEWS = ['cubes', 'crystals', 'fine_powder', 'ultrafine_powder'];
 const NATURAL_WIDTH: Record<string, number> = {
   beaker: 120,
   test_tube: 48,
@@ -56,7 +57,7 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
   const stageMain = h('div', { class: 'hl-stage__main' }, isMission ? head : rail, scene);
   const lab = h(
     'div',
-    { class: 'hl-lab' },
+    { class: `hl-lab${isMission ? ' app-lab--mission' : ''}` },
     topbar,
     shelf,
     h('main', { class: 'hl-stage', 'aria-label': t('bench.title') }, stageMain, dock),
@@ -210,6 +211,9 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
   }
 
   function renderShelf(): void {
+    // Перерисовка не должна сбрасывать прокрутку полки.
+    const old = shelf.querySelector<HTMLElement>('.hl-shelf__body');
+    const keep = old ? { left: old.scrollLeft, top: old.scrollTop } : null;
     const body = h('div', { class: 'hl-shelf__body' });
     if (isMission) {
       const jars = c.mission.jars.map((j) => substanceButton(c.jarSubstance(j) ?? '', { jar: j }));
@@ -219,18 +223,50 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
         ...rows(c.mission.helpers.map((s) => substanceButton(s))),
       );
     } else {
-      const subs = bundle.sandbox.substances.map((s) => ix.substances.get(s)).filter((s) => s !== undefined);
+      const open = c.availableSubstances();
+      const subs = open.map((s) => ix.substances.get(s)).filter((s) => s !== undefined);
       for (const group of ['liquids', 'powders'] as const) {
         body.append(
           h('h3', { class: 'hl-shelf__group' }, t(`shelf.${group}`)),
           ...rows(subs.filter((s) => s.group === group).map((s) => substanceButton(s.id))),
         );
       }
+      const locked = bundle.sandbox.unlocks.flatMap((u) =>
+        u.substances.filter((x) => !open.includes(x)).map((x) => ({ id: x, by: u.by })),
+      );
+      if (locked.length) {
+        body.append(
+          h('h3', { class: 'hl-shelf__group' }, icon('lock'), t('shelf.locked')),
+          ...rows(
+            locked.map(({ id, by }) => {
+              const sub = ix.substances.get(id);
+              const why = t(`shelf.unlock.${by}`);
+              return h(
+                'button',
+                {
+                  class: `hl-substance is-locked${sub?.container === 'bottle' ? ' hl-substance--bottle' : ''}`,
+                  'aria-disabled': 'true',
+                  'aria-label': `${sub?.shortName ?? id}. ${why}`,
+                  onclick: () => c.set('toast', why),
+                },
+                h(
+                  'span',
+                  { class: 'hl-substance__art' },
+                  asset(sub?.container === 'bottle' ? 'containers/bottle' : 'containers/jar', { label: '' }),
+                  h('span', { class: 'hl-substance__lock' }, icon('lock')),
+                ),
+                h('span', { class: 'hl-substance__name' }, sub?.shortName ?? id),
+                h('span', { class: 'hl-substance__meta' }, t(`shelf.unlock.short.${by}`)),
+              );
+            }),
+          ),
+        );
+      }
     }
     const title = isMission ? t('shelf.mission.title') : t('shelf.title');
     const count = isMission
       ? t('shelf.mission.count')
-      : t('shelf.count', { count: bundle.sandbox.substances.length });
+      : t('shelf.count', { count: c.availableSubstances().length });
     replaceChildren(
       shelf,
       h(
@@ -244,8 +280,33 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
         ),
       ),
       body,
+      more,
     );
+    if (keep) {
+      body.scrollLeft = keep.left;
+      body.scrollTop = keep.top;
+    }
+    updateMore();
   }
+  // Портрет: кнопка «листай дальше» — признак прокрутки полки (и способ листать без жеста).
+  const more = h(
+    'button',
+    {
+      class: 'app-shelf-more',
+      'aria-label': t('shelf.scroll'),
+      onclick: () => shelf.querySelector('.hl-shelf__body')?.scrollBy({ left: 240, behavior: 'smooth' }),
+    },
+    icon('forward'),
+  );
+  function updateMore(): void {
+    const body = shelf.querySelector<HTMLElement>('.hl-shelf__body');
+    if (!body) return;
+    const end = body.scrollLeft + body.clientWidth >= body.scrollWidth - 4;
+    body.classList.toggle('is-end', end);
+    more.hidden = end || body.scrollWidth <= body.clientWidth + 4;
+  }
+  shelf.addEventListener('scroll', updateMore, true);
+  window.addEventListener('resize', updateMore);
 
   // ---------- оборудование (песочница) ----------
   function renderRail(): void {
@@ -332,6 +393,12 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
   // ---------- стол ----------
   function wareFor(v: VesselState): WareRef {
     let w = wares.get(v.id);
+    // Выпаривание переливает содержимое в чашку: тот же сосуд, но другая посуда — рисуем заново.
+    if (w && w.equipmentId !== v.equipmentId) {
+      w.el.remove();
+      wares.delete(v.id);
+      w = undefined;
+    }
     if (!w) {
       const svg = asset(ASSET[v.equipmentId] ?? 'equipment/beaker', { label: '' });
       const el = h('button', {
@@ -373,7 +440,13 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
       Math.abs(temp - 20) >= 2
         ? h('span', { class: 'hl-ware__chip' }, icon('temperature'), t('vessel.temp', { value: temp }))
         : null;
-    w.el.append(h('span', { class: 'hl-ware__tag' }, isMission ? String(v.no) : name, chip));
+    // Когда сосудов много, подпись — только номер (полное имя — в доке и для чтеца), иначе подписи наезжают.
+    const crowded = isMission || c.state.lab.order.length >= 4;
+    const short =
+      v.equipmentId === 'evaporating_dish'
+        ? t('bench.vessel', { name: t('bench.short.dish'), no: v.no })
+        : name;
+    w.el.append(h('span', { class: 'hl-ware__tag' }, crowded ? String(v.no) : short, chip));
     const r = c.state.readout;
     if (r?.vesselId === v.id) {
       const scale =
@@ -446,7 +519,8 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
         decorateWare(w, v);
         nodes.push(w.el);
       }
-      if (benchVessels.length === 0) nodes.push(h('div', { class: 'hl-slot' }, t('bench.empty')));
+      if (benchVessels.length === 0)
+        nodes.push(h('div', { class: 'hl-slot app-slot--wide' }, t('bench.empty')));
     }
     nodes.push(h('div', { class: 'hl-bench__spacer' }));
     // Горелка: сосуд над ней — внутри station__on.
@@ -510,17 +584,19 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
     iconName: string,
     key: string,
     run: () => void,
-    opts: { cls?: string; disabled?: boolean; pressed?: boolean } = {},
+    opts: { cls?: string; why?: string | null; pressed?: boolean } = {},
   ): HTMLButtonElement {
+    // Недоступная кнопка остаётся в порядке фокуса и объясняет, почему недоступна.
     return h(
       'button',
       {
         class: `hl-act ${opts.cls ?? ''}`,
-        'aria-disabled': String(Boolean(opts.disabled)),
+        'aria-disabled': String(Boolean(opts.why)),
+        title: opts.why ?? undefined,
         'aria-pressed': opts.pressed === undefined ? undefined : String(opts.pressed),
         'aria-keyshortcuts': key,
         'data-key': key.toLowerCase(),
-        onclick: () => !opts.disabled && run(),
+        onclick: () => (opts.why ? c.set('toast', opts.why) : run()),
       },
       icon(iconName),
       h('span', {}, label),
@@ -541,6 +617,10 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
     const heating = v?.heat === 'burner';
     const cooling = v?.heat === 'ice_bath';
     const isTube = v?.equipmentId === 'test_tube';
+    const whyNone = none ? t('dock.why.none') : null;
+    const whyEmpty = whyNone ?? (empty ? t('dock.why.empty') : null);
+    const whyHot = heating ? t('dock.why.heating') : null;
+    const anyContents = c.state.lab.order.some((id) => (c.state.lab.vessels[id]?.origins.length ?? 0) > 0);
     const context = v
       ? h(
           'span',
@@ -558,90 +638,124 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
       if (v) void c.act({ type: 'magnify', vesselId: v.id });
       else if (jarSel) void c.act({ type: 'magnify', substanceId: c.jarSubstance(jarSel) ?? jarSel });
     };
-    const doRow = [
-      act(t('act.stir'), 'stir', 'M', run({ type: 'stir', vesselId: v?.id ?? '' }), { disabled: empty }),
-      act(
-        heating ? t('act.heat.stop') : t('act.heat'),
-        'heat',
-        'H',
-        run(
-          heating
-            ? { type: 'heat_stop', vesselId: v?.id ?? '' }
-            : { type: 'heat_start', vesselId: v?.id ?? '' },
-        ),
-        { cls: 'hl-act--heat', disabled: none, pressed: heating },
+    const stir = act(t('act.stir'), 'stir', 'M', run({ type: 'stir', vesselId: v?.id ?? '' }), {
+      why: whyEmpty,
+    });
+    const heat = act(
+      heating ? t('act.heat.stop') : t('act.heat'),
+      'heat',
+      'H',
+      run(
+        heating
+          ? { type: 'heat_stop', vesselId: v?.id ?? '' }
+          : { type: 'heat_start', vesselId: v?.id ?? '' },
       ),
-      ...(isMission
-        ? []
-        : [
-            act(
-              cooling ? t('act.cool.stop') : t('act.cool'),
-              'cool',
-              'C',
-              run(
-                cooling
-                  ? { type: 'cool_stop', vesselId: v?.id ?? '' }
-                  : { type: 'cool_start', vesselId: v?.id ?? '' },
-              ),
-              { cls: 'hl-act--cool', disabled: none || heating, pressed: cooling },
-            ),
-          ]),
-      act(t('act.wait'), 'wait', 'W', run({ type: 'wait' })),
-      act(
-        t('act.holder'),
-        'hand',
-        'D',
-        run(
-          v?.inHolder
-            ? { type: 'detach_holder', vesselId: v.id }
-            : { type: 'attach_holder', vesselId: v?.id ?? '' },
-        ),
-        { disabled: !isTube, pressed: Boolean(v?.inHolder) },
+      { cls: 'hl-act--heat', why: whyNone, pressed: heating },
+    );
+    const wait = act(t('act.wait'), 'wait', 'W', run({ type: 'wait' }), {
+      why: anyContents ? null : t('dock.why.wait'),
+    });
+    const holder = act(
+      t('act.holder'),
+      'hand',
+      'D',
+      run(
+        v?.inHolder
+          ? { type: 'detach_holder', vesselId: v.id }
+          : { type: 'attach_holder', vesselId: v?.id ?? '' },
       ),
-      ...(isMission
-        ? []
-        : [
-            act(
-              t('act.remove'),
-              'close',
-              'R',
-              () => v && (c.set('selected', null), void c.act({ type: 'remove', vesselId: v.id })),
-              { cls: 'hl-act--quiet', disabled: none || heating },
-            ),
-          ]),
-    ];
-    const observeRow = [
-      act(t('act.smell'), 'smell', 'S', run({ type: 'smell', vesselId: v?.id ?? '' }), {
-        cls: 'hl-act--observe',
-        disabled: empty,
-      }),
-      act(t('act.magnify'), 'magnify', 'L', magnify, { cls: 'hl-act--observe', disabled: empty && !jarSel }),
-      ...(isMission
-        ? []
-        : [
-            act(
-              t('act.temperature'),
-              'temperature',
-              'T',
-              run({ type: 'measure_temperature', vesselId: v?.id ?? '' }),
-              { cls: 'hl-act--observe', disabled: none },
-            ),
-            act(t('act.ph'), 'ph', 'P', run({ type: 'measure_ph', vesselId: v?.id ?? '' }), {
-              cls: 'hl-act--observe',
-              disabled: empty,
-            }),
-          ]),
-      act(t('act.undo'), 'undo', 'Z', () => c.undo(), {
-        cls: 'hl-act--quiet hl-dock__split',
-        disabled: c.state.history.length === 0,
-      }),
-      act(t('act.clear'), 'clear', 'X', run({ type: 'clear', vesselId: v?.id ?? '' }), {
-        cls: 'hl-act--quiet',
-        disabled: empty || heating,
-      }),
-    ];
+      { why: whyNone ?? (isTube ? null : t('dock.why.holder')), pressed: Boolean(v?.inHolder) },
+    );
+    const smell = act(t('act.smell'), 'smell', 'S', run({ type: 'smell', vesselId: v?.id ?? '' }), {
+      cls: 'hl-act--observe',
+      why: whyEmpty,
+    });
+    const lens = act(t('act.magnify'), 'magnify', 'L', magnify, {
+      cls: 'hl-act--observe',
+      why: empty && !jarSel ? (none ? t('dock.why.magnify') : t('dock.why.empty')) : null,
+    });
+    const undo = act(t('act.undo'), 'undo', 'Z', () => c.undo(), {
+      cls: 'hl-act--quiet hl-dock__split',
+      why: c.state.history.length === 0 ? t('dock.why.undo') : null,
+    });
+    const clear = act(t('act.clear'), 'clear', 'X', run({ type: 'clear', vesselId: v?.id ?? '' }), {
+      cls: 'hl-act--quiet',
+      why: whyEmpty ?? whyHot,
+    });
+    let doRow: HTMLButtonElement[];
+    let observeRow: HTMLButtonElement[];
+    if (isMission) {
+      // В миссии — только то, что нужно для загадки (docs/spec/04-lab-ux.md).
+      doRow = [stir, heat, wait, holder];
+      observeRow = [smell, lens, undo, clear];
+    } else {
+      const hasLiquid = Boolean(v && c.visual(v.id)?.hasLiquid);
+      const whyLiquid = whyEmpty ?? (hasLiquid ? null : t('dock.why.liquid'));
+      const sep = (
+        type: 'filter' | 'evaporate' | 'magnet' | 'blow',
+        iconName: string,
+        key: string,
+        why: string | null,
+      ): HTMLButtonElement => {
+        const b = act(t(`act.${type}`), iconName, key, run({ type, vesselId: v?.id ?? '' }), {
+          cls: type === 'blow' ? '' : 'hl-act--sep',
+          why,
+        });
+        b.setAttribute('aria-label', t(`act.${type}.long`));
+        return b;
+      };
+      doRow = [
+        stir,
+        heat,
+        act(
+          cooling ? t('act.cool.stop') : t('act.cool'),
+          'cool',
+          'C',
+          run(
+            cooling
+              ? { type: 'cool_stop', vesselId: v?.id ?? '' }
+              : { type: 'cool_start', vesselId: v?.id ?? '' },
+          ),
+          { cls: 'hl-act--cool', why: whyNone ?? whyHot, pressed: cooling },
+        ),
+        wait,
+        sep('blow', 'blow', 'B', whyLiquid ?? whyHot),
+        sep('filter', 'filter', 'F', whyLiquid ?? whyHot),
+        sep('evaporate', 'evaporate', 'E', whyLiquid ?? whyHot),
+        sep('magnet', 'magnet', 'G', whyEmpty ?? whyHot),
+      ];
+      observeRow = [
+        smell,
+        lens,
+        act(
+          t('act.temperature'),
+          'temperature',
+          'T',
+          run({ type: 'measure_temperature', vesselId: v?.id ?? '' }),
+          {
+            cls: 'hl-act--observe',
+            why: whyNone,
+          },
+        ),
+        act(t('act.ph'), 'ph', 'P', run({ type: 'measure_ph', vesselId: v?.id ?? '' }), {
+          cls: 'hl-act--observe',
+          why: whyEmpty,
+        }),
+        holder,
+        undo,
+        clear,
+        act(
+          t('act.remove'),
+          'close',
+          'R',
+          () => v && (c.set('selected', null), void c.act({ type: 'remove', vesselId: v.id })),
+          { cls: 'hl-act--quiet', why: whyNone ?? whyHot },
+        ),
+      ];
+    }
     const cols = Math.max(doRow.length, observeRow.length);
     dock.style.setProperty('--cols', String(cols));
+    dock.classList.toggle('app-dock--wide', cols > 6);
     replaceChildren(
       dock,
       h('div', { class: 'hl-dock__context' }, context),
@@ -666,6 +780,13 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
             'button',
             { class: 'hl-btn hl-btn--sm hl-btn--secondary', onclick: () => c.requestHint() },
             t('mission.hint.more'),
+          );
+        if (a === 'next')
+          return h(
+            'button',
+            { class: 'hl-btn hl-btn--sm hl-btn--primary', onclick: () => c.nextIntro() },
+            t('mission.next'),
+            icon('forward'),
           );
         if (a === 'start')
           return h(
@@ -769,7 +890,9 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
             ),
           ),
           h('h2', { class: 'hl-result__title', id: 'res-title' }, r.title),
-          r.lens ? h('div', { class: 'app-lens' }, asset(`lens/${r.lens}`, { label: '' })) : null,
+          r.lens && LENS_VIEWS.includes(r.lens)
+            ? h('div', { class: 'app-lens' }, asset(`lens/${r.lens}`, { label: '' }))
+            : null,
           h(
             'div',
             { class: 'hl-result__obs' },
@@ -882,6 +1005,8 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
   }
 
   function renderFinale(): HTMLElement {
+    const lessonInProgress = Object.entries(c.progress.lessons).find(([, l]) => !l.completed);
+    const lessonBack = lessonInProgress ? `#/lesson/${lessonInProgress[0].replace(/_/g, '-')}` : null;
     const m = c.state.mission;
     const rowsEl = c.mission.jars.map((jar) => {
       const s = m?.jarSubstance[jar] ?? '';
@@ -910,9 +1035,17 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
       h(
         'div',
         { class: 'hl-result__actions' },
+        lessonBack
+          ? h(
+              'a',
+              { class: 'hl-btn hl-btn--primary', href: lessonBack },
+              icon('back'),
+              t('lesson.mission.back'),
+            )
+          : null,
         h(
           'button',
-          { class: 'hl-btn hl-btn--primary', onclick: () => c.openMission(true) },
+          { class: 'hl-btn hl-btn--secondary', onclick: () => c.openMission(true) },
           t('mission.again'),
         ),
         h(

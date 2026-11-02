@@ -41,6 +41,7 @@ export function makeSchemas<T extends z.ZodTypeAny>(Text: T) {
     z.object({ role: z.literal('weak_acid'), pKa: z.number() }).strict(),
     z.object({ role: z.literal('amphiprotic'), pKa1: z.number(), pKa2: z.number() }).strict(),
     z.object({ role: z.literal('weak_base'), pKb: z.number() }).strict(),
+    z.object({ role: z.literal('strong_base'), equivalents: z.number().positive() }).strict(),
     z.object({ role: z.literal('conjugate_base'), of: Id, perMol: z.number().positive() }).strict(),
   ]);
 
@@ -238,12 +239,14 @@ export function makeSchemas<T extends z.ZodTypeAny>(Text: T) {
       })
       .strict(),
     z.object({ type: z.literal('crystallize') }).strict(),
+    z.object({ type: z.literal('crystallize_cooling'), bind: z.string() }).strict(),
     z.object({ type: z.literal('indicator'), bind: z.string() }).strict(),
     z
       .object({
         type: z.literal('observe_only'),
         once: z.enum(['vessel', 'heat_session']),
         fumeHood: z.boolean().default(false),
+        coolToC: z.number().optional(),
       })
       .strict(),
     z.object({ type: z.literal('stop') }).strict(),
@@ -301,6 +304,8 @@ export function makeSchemas<T extends z.ZodTypeAny>(Text: T) {
     .object({
       id: Id,
       label: Text,
+      /** Короткая подпись для клетки доски (слова не длиннее 9 букв). */
+      short: Text,
       icon: z.string().regex(/^result-[a-z-]+$/),
       match: z
         .array(
@@ -389,6 +394,186 @@ export function makeSchemas<T extends z.ZodTypeAny>(Text: T) {
     })
     .strict();
 
+  // ---------- уроки ----------
+  const Option = z.object({ id: Id, label: Text, reply: Text, correct: z.boolean().default(false) }).strict();
+  const SortCard = z.object({ id: Id, label: Text, shelf: Id, wrong: Text }).strict();
+  const Shelf = z.object({ id: Id, label: Text }).strict();
+  const LabAct = z
+    .object({
+      id: Id,
+      label: Text,
+      icon: z.string(),
+      vessel: z.number().int().min(0),
+      add: Id.optional(),
+      stir: z.boolean().optional(),
+      magnify: z.boolean().optional(),
+      smell: z.boolean().optional(),
+    })
+    .strict();
+  const Block = z.discriminatedUnion('type', [
+    z.object({ type: z.literal('jars'), letters: z.array(z.string()) }).strict(),
+    z.object({ type: z.literal('goggles'), prompt: Text }).strict(),
+    z
+      .object({
+        type: z.literal('choice'),
+        id: Id,
+        question: Text,
+        options: z.array(Option).min(2),
+        after: z.array(Text).optional(),
+        art: z.enum(['fan']).optional(),
+      })
+      .strict(),
+    z
+      .object({
+        type: z.literal('predict'),
+        id: Id,
+        question: Text,
+        options: z.array(z.object({ id: Id, label: Text }).strict()).min(2),
+      })
+      .strict(),
+    z
+      .object({
+        type: z.literal('sort'),
+        id: Id,
+        prompt: Text,
+        shelves: z.array(Shelf).min(2),
+        cards: z.array(SortCard).min(2),
+      })
+      .strict(),
+    z
+      .object({
+        type: z.literal('lab'),
+        id: Id,
+        vessels: z
+          .array(
+            z
+              .object({
+                label: z.string(),
+                contents: z.array(z.object({ substance: Id, n: z.number().int().positive() }).strict()),
+              })
+              .strict(),
+          )
+          .min(1),
+        actions: z.array(LabAct).min(1),
+        tip: Text.optional(),
+        done: z.array(Text).min(1),
+        predict: z.object({ from: Id, match: Id, yes: Text, no: Text }).strict().optional(),
+      })
+      .strict(),
+    z.object({ type: z.literal('rule'), title: Text, lines: z.array(Text).min(1) }).strict(),
+    z
+      .object({
+        type: z.literal('spot'),
+        id: Id,
+        cards: z
+          .array(z.object({ id: Id, art: Id, mistake: z.boolean(), label: Text, rule: Text }).strict())
+          .min(2),
+        done: z.array(Text).min(1),
+      })
+      .strict(),
+    z.object({ type: z.literal('mission'), missionId: Id }).strict(),
+    z.object({ type: z.literal('test') }).strict(),
+    z.object({ type: z.literal('home') }).strict(),
+    z.object({ type: z.literal('reward') }).strict(),
+  ]);
+  const Screen = z
+    .object({
+      id: Id,
+      stage: Id,
+      title: Text,
+      lead: Text.optional(),
+      guide: z
+        .object({ pose: z.enum(['explain', 'happy', 'thinking', 'warn']), lines: z.array(Text).min(1) })
+        .strict()
+        .optional(),
+      blocks: z.array(Block).min(1),
+      sci: z.array(Id).optional(),
+      deeper: z
+        .object({ title: Text, body: z.array(Text).min(1) })
+        .strict()
+        .optional(),
+      next: Text.optional(),
+    })
+    .strict();
+  const QOption = z
+    .object({ id: Id, label: Text, correct: z.boolean().default(false), explain: Text })
+    .strict();
+  const Question = z.discriminatedUnion('type', [
+    z.object({ id: Id, type: z.literal('single'), prompt: Text, options: z.array(QOption).min(2) }).strict(),
+    z
+      .object({
+        id: Id,
+        type: z.literal('predict'),
+        prompt: Text,
+        art: Id.optional(),
+        options: z.array(QOption).min(2),
+      })
+      .strict(),
+    z
+      .object({
+        id: Id,
+        type: z.literal('multi'),
+        prompt: Text,
+        partial: Text,
+        options: z.array(QOption).min(2),
+      })
+      .strict(),
+    z
+      .object({
+        id: Id,
+        type: z.literal('sort'),
+        prompt: Text,
+        shelves: z.array(Shelf).min(2),
+        cards: z.array(SortCard).min(2),
+      })
+      .strict(),
+    z
+      .object({
+        id: Id,
+        type: z.literal('match'),
+        prompt: Text,
+        pairs: z.array(z.object({ id: Id, left: Text, right: Text, wrong: Text }).strict()).min(2),
+      })
+      .strict(),
+  ]);
+  const Lesson = z
+    .object({
+      id: Id,
+      moduleId: Id,
+      order: z.number().int().positive(),
+      title: Text,
+      subtitle: Text,
+      minutes: z.number().positive(),
+      stages: z.array(z.object({ id: Id, label: Text }).strict()).min(2),
+      screens: z.array(Screen).min(1),
+      test: z.object({ intro: Text, summary: Text, questions: z.array(Question).min(1) }).strict(),
+      home: z
+        .object({
+          title: Text,
+          intro: Text,
+          meta: Text,
+          materials: z.array(Text).min(1),
+          steps: z.array(Text).min(1),
+          expectedTitle: Text,
+          columns: z.array(Text).min(2),
+          rows: z.array(z.array(Text)).min(1),
+          notes: z.array(Text),
+          safety: z.array(Text).min(1),
+        })
+        .strict(),
+      reward: z.object({ badge: z.string(), title: Text, text: Text, ideas: z.array(Text) }).strict(),
+    })
+    .strict();
+  const Module = z
+    .object({
+      id: Id,
+      order: z.number().int().positive(),
+      title: Text,
+      subtitle: Text.optional(),
+      lessons: z.array(z.object({ id: Id, title: Text, subtitle: Text }).strict()),
+    })
+    .strict();
+
   const Bundle = z
     .object({
       classes: z.array(ClassDef),
@@ -401,13 +586,22 @@ export function makeSchemas<T extends z.ZodTypeAny>(Text: T) {
       noReactions: z.array(NoReaction),
       effects: z.array(EffectDef),
       missions: z.array(Mission),
-      sandbox: z.object({ substances: z.array(Id), equipment: z.array(Id), ideas: z.array(Text) }).strict(),
+      lessons: z.array(Lesson),
+      modules: z.array(Module),
+      sandbox: z
+        .object({
+          starter: z.array(Id),
+          equipment: z.array(Id),
+          unlocks: z.array(z.object({ by: Id, substances: z.array(Id) }).strict()),
+          ideas: z.array(Text),
+        })
+        .strict(),
       strings: z.record(z.string(), Text),
       colors: z.record(z.string(), z.string()).default({}),
     })
     .strict();
 
-  return { Species, Substance, Equipment, Rule, NoReaction, Mission, Bundle };
+  return { Species, Substance, Equipment, Rule, NoReaction, Mission, Lesson, Module, Bundle };
 }
 
 /** Язык условий миссии (docs/spec/04-engine-and-content.md, раздел 8.2 — подмножество для прототипа). */

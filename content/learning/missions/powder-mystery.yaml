@@ -4,11 +4,9 @@ title: { ru: "Загадка белых порошков" }
 goalTitle: { ru: "Подпиши все 5 банок" }
 goalLabel: { ru: "Каждую надпись докажи опытом" }
 intro:
-  - { ru: "Вот мои пять банок: А, Б, В, Г, Д." }
-  - { ru: "В них соль, сахар, пищевая сода, крахмал и мел." }
-  - { ru: "Наклей на каждую правильную надпись. Но не наугад! Каждую надпись докажи опытом." }
-  - { ru: "Раствор йода — детектор крахмала. Йод — только в виртуальной лабе." }
-  - { ru: "Пробирку над горелкой держим только держателем." }
+  - { ru: "Вот мои пять банок: А, Б, В, Г, Д. В них соль, сахар, сода, крахмал и мел." }
+  - { ru: "Подпиши каждую банку. Но не наугад: каждую надпись докажи опытом!" }
+  - { ru: "Раствор йода — детектор крахмала. Пробирку над огнём держим только держателем." }
 jars: ["А", "Б", "В", "Г", "Д"]
 unknowns: [table_salt, sugar, baking_soda, starch, chalk]
 helpers: [water, vinegar, iodine_solution]
@@ -19,38 +17,38 @@ tests:
     label: { ru: "Лупа" }
     action: magnify
     chips:
-      - { id: cubes, label: { ru: "кубики" }, icon: result-crystals, match: [{ event: magnified, view: cubes }] }
-      - { id: crystals, label: { ru: "кристаллы, не кубики" }, icon: result-crystals, match: [{ event: magnified, view: crystals }] }
-      - { id: fine, label: { ru: "мелкий порошок" }, icon: result-precipitate, match: [{ event: magnified, view: fine_powder }] }
-      - { id: ultrafine, label: { ru: "очень мелкий порошок" }, icon: result-precipitate, match: [{ event: magnified, view: ultrafine_powder }] }
+      - { id: cubes, label: { ru: "кубики" }, short: { ru: "кубики" }, icon: result-crystals, match: [{ event: magnified, view: cubes }] }
+      - { id: crystals, label: { ru: "кристаллы, не кубики" }, short: { ru: "не кубики" }, icon: result-crystals, match: [{ event: magnified, view: crystals }] }
+      - { id: fine, label: { ru: "мелкий порошок" }, short: { ru: "мелкий" }, icon: result-precipitate, match: [{ event: magnified, view: fine_powder }] }
+      - { id: ultrafine, label: { ru: "очень мелкий порошок" }, short: { ru: "очень мелкий" }, icon: result-precipitate, match: [{ event: magnified, view: ultrafine_powder }] }
   - id: water
     label: { ru: "Вода" }
     reagent: water
     chips:
-      - { id: dissolved, label: { ru: "растворилось" }, icon: result-dissolve, match: [{ event: observation, kind: dissolve }] }
-      - { id: partly, label: { ru: "растворилось не всё" }, icon: result-dissolve, match: [{ event: observation, kind: dissolve, detail: saturated }] }
-      - { id: cloudy, label: { ru: "мутно" }, icon: result-turbid, match: [{ event: observation, kind: turbid }, { event: observation, kind: turbid, detail: settled }] }
+      - { id: dissolved, label: { ru: "растворилось" }, short: { ru: "прозрачно" }, icon: result-dissolve, match: [{ event: observation, kind: dissolve }] }
+      - { id: partly, label: { ru: "растворилось не всё" }, short: { ru: "осадок" }, icon: result-dissolve, match: [{ event: observation, kind: dissolve, detail: saturated }] }
+      - { id: cloudy, label: { ru: "мутно" }, short: { ru: "мутно" }, icon: result-turbid, match: [{ event: observation, kind: turbid }, { event: observation, kind: turbid, detail: settled }] }
   - id: vinegar
     label: { ru: "Уксус" }
     reagent: vinegar
     chips:
-      - { id: fizz_strong, label: { ru: "бурно шипит" }, icon: result-gas, match: [{ event: observation, kind: gas, intensity: strong }] }
-      - { id: fizz_weak, label: { ru: "шипит спокойно" }, icon: result-gas, match: [{ event: observation, kind: gas, intensity: weak }] }
-      - { id: nothing, label: { ru: "ничего" }, icon: result-nothing, match: [{ event: nothing_happened, reasonIds: [nr_salt_acid, nr_sugar_acid, nr_starch_acid] }] }
+      - { id: fizz_strong, label: { ru: "бурно шипит" }, short: { ru: "бурно шипит" }, icon: result-gas, match: [{ event: observation, kind: gas, intensity: strong }] }
+      - { id: fizz_weak, label: { ru: "шипит спокойно" }, short: { ru: "тихо шипит" }, icon: result-gas, match: [{ event: observation, kind: gas, intensity: weak }] }
+      - { id: nothing, label: { ru: "ничего" }, short: { ru: "ничего" }, icon: result-nothing, match: [{ event: nothing_happened, reasonIds: [nr_salt_acid, nr_sugar_acid, nr_starch_acid] }] }
   - id: iodine
     label: { ru: "Йод" }
     reagent: iodine_solution
     chips:
-      - { id: blue, label: { ru: "посинело" }, icon: result-color, match: [{ event: observation, kind: color, ruleId: starch_iodine_complex }] }
-      - { id: no_blue, label: { ru: "не посинело" }, icon: result-nothing, match: [{ event: nothing_happened, reasonIds: [nr_iodine_no_starch] }] }
+      - { id: blue, label: { ru: "посинело" }, short: { ru: "синий" }, icon: result-color, match: [{ event: observation, kind: color, ruleId: starch_iodine_complex }] }
+      - { id: no_blue, label: { ru: "не посинело" }, short: { ru: "не синий" }, icon: result-nothing, match: [{ event: nothing_happened, reasonIds: [nr_iodine_no_starch] }] }
   - id: heat
     label: { ru: "Нагрев" }
     action: heat
     chips:
-      - { id: caramel, label: { ru: "плавится, карамель" }, icon: result-melt, match: [{ event: observation, kind: melt }, { event: observation, kind: color, detail: caramel }] }
-      - { id: droplets, label: { ru: "капельки на стенках" }, icon: result-steam, match: [{ event: observation, kind: steam, detail: droplets_on_walls }] }
-      - { id: toasted, label: { ru: "желтеет, пахнет хлебом" }, icon: result-color, match: [{ event: observation, kind: color, detail: toasted }] }
-      - { id: nothing, label: { ru: "ничего не меняется" }, icon: result-nothing, match: [{ event: observation, kind: nothing, detail: crackle }, { event: nothing_happened, reasonIds: [nr_heat_stable] }] }
+      - { id: caramel, label: { ru: "плавится, карамель" }, short: { ru: "карамель" }, icon: result-melt, match: [{ event: observation, kind: melt }, { event: observation, kind: color, detail: caramel }] }
+      - { id: droplets, label: { ru: "капельки на стенках" }, short: { ru: "капли" }, icon: result-steam, match: [{ event: observation, kind: steam, detail: droplets_on_walls }] }
+      - { id: toasted, label: { ru: "желтеет, пахнет хлебом" }, short: { ru: "румяный" }, icon: result-color, match: [{ event: observation, kind: color, detail: toasted }] }
+      - { id: nothing, label: { ru: "ничего не меняется" }, short: { ru: "ничего" }, icon: result-nothing, match: [{ event: observation, kind: nothing, detail: crackle }, { event: nothing_happened, reasonIds: [nr_heat_stable] }] }
 
 signatures:
   table_salt: { magnify: cubes, water: dissolved, vinegar: nothing, iodine: no_blue, heat: nothing }

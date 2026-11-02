@@ -10,18 +10,8 @@ import { testIndex } from './test-helpers.ts';
 import type { EngineEvent, LabAction, LabState } from './types.ts';
 import { dissolveRoom, grams, sortedSpecies, totalGrams } from './vessel.ts';
 
-const SUBSTANCES = [
-  'water',
-  'vinegar',
-  'iodine_solution',
-  'red_cabbage',
-  'table_salt',
-  'sugar',
-  'baking_soda',
-  'starch',
-  'chalk',
-  'sand',
-];
+// Все вещества полки, включая лабораторные.
+const SUBSTANCES = [...testIndex().substances.keys()].sort();
 
 function randomAction(rnd: () => number, state: LabState): LabAction {
   const ix = testIndex();
@@ -43,7 +33,9 @@ function randomAction(rnd: () => number, state: LabState): LabAction {
   if (r < 0.74) return { type: 'cool_start', vesselId: v };
   if (r < 0.88) return { type: 'tick', seconds: 0.5 + Math.floor(rnd() * 6) };
   if (r < 0.92) return { type: 'wait', seconds: 30 };
-  if (r < 0.96) return { type: 'measure_ph', vesselId: v };
+  if (r < 0.94) return { type: 'measure_ph', vesselId: v };
+  if (r < 0.95) return { type: pick(['filter', 'magnet', 'blow'] as const), vesselId: v };
+  if (r < 0.96) return { type: 'evaporate', vesselId: v };
   return { type: 'clear', vesselId: v };
 }
 
@@ -85,7 +77,7 @@ describe('свойства движка', () => {
               );
             }
           }
-          assert.ok(v.temperatureC >= -0.001 && v.temperatureC <= 300.001, `температура ${v.temperatureC}`);
+          assert.ok(v.temperatureC >= -10.001 && v.temperatureC <= 300.001, `температура ${v.temperatureC}`);
         }
         const noLoss = gasAndVapourGrams(state, r.state, r.events) === 0;
         const touched = action.type === 'add' || action.type === 'stir' || action.type === 'measure_ph';

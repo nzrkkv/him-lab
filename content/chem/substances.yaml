@@ -213,3 +213,288 @@
     adult: { ru: "SiO₂." }
   sources: [lesson01]
   review: { status: self_checked }
+
+# ---------- расширение лабы (часть 3) ----------
+- id: citric_acid
+  name: { ru: "Лимонная кислота" }
+  shortName: { ru: "Лимонка" }
+  scientificName: { ru: "лимонная кислота" }
+  availability: home
+  safeForHome: true
+  container: bag
+  lidColor: color.lamp.300
+  form: crystals
+  composition: [{ species: citric_acid, phase: solid, massFraction: 1 }]
+  dosing: portion_solid
+  group: powders
+  card:
+    looks: { ru: "Белые кристаллики, похожи на сахар." }
+    properties: [{ ru: "Растворяется в воде. Раствор кислый." }, { ru: "С содой шипит, но только в воде." }]
+    foundAt: { ru: "На кухне — в пакетиках, в лимонах и апельсинах." }
+    adult: { ru: "C₆H₈O₇, трёхосновная слабая кислота (pKa₁ 3,1)." }
+  sources: [wiki_citric_acid]
+  review: { status: self_checked }
+
+- id: vegetable_oil
+  name: { ru: "Растительное масло" }
+  shortName: { ru: "Масло" }
+  scientificName: { ru: "растительный жир" }
+  availability: home
+  safeForHome: true
+  container: bottle
+  lidColor: color.substance.oil
+  form: liquid
+  composition: [{ species: vegetable_oil, phase: liquid, massFraction: 1 }]
+  density: 0.92
+  dosing: portion_liquid
+  group: liquids
+  card:
+    looks: { ru: "Жёлтая прозрачная жидкость, тягучая." }
+    properties: [{ ru: "Не смешивается с водой." }, { ru: "Легче воды — всплывает наверх." }]
+    foundAt: { ru: "На кухне. Его делают из семечек подсолнуха." }
+    adult: { ru: "Смесь триглицеридов, плотность около 0,92 г/мл, с водой не смешивается." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: milk
+  name: { ru: "Молоко" }
+  shortName: { ru: "Молоко" }
+  scientificName: { ru: "эмульсия жира и белков в воде" }
+  availability: home
+  safeForHome: true
+  container: bottle
+  lidColor: color.copper.300
+  form: liquid
+  composition:
+    - { species: water, phase: liquid, massFraction: 0.88 }
+    - { species: milk_protein, phase: suspended, massFraction: 0.12 }
+  density: 1.03
+  dosing: portion_liquid
+  group: liquids
+  card:
+    looks: { ru: "Белая непрозрачная жидкость." }
+    properties: [{ ru: "От кислоты сворачивается хлопьями." }, { ru: "При кипении убегает пеной." }]
+    foundAt: { ru: "В холодильнике." }
+    adult: { ru: "Эмульсия жира и коллоидный раствор белков; казеин свёртывается около pH 4,6." }
+  sources: [wiki_casein]
+  review: { status: self_checked }
+
+- id: dish_soap
+  name: { ru: "Жидкое мыло" }
+  shortName: { ru: "Мыло" }
+  scientificName: { ru: "моющее средство (ПАВ)" }
+  availability: home
+  safeForHome: true
+  container: bottle
+  lidColor: color.feedback.success.300
+  form: solution
+  composition:
+    - { species: soap, phase: dissolved, massFraction: 0.2 }
+    - { species: water, phase: liquid, massFraction: 0.8 }
+  density: 1.02
+  dosing: drop
+  group: liquids
+  card:
+    looks: { ru: "Густая прозрачная жидкость." }
+    properties: [{ ru: "Делает пену, если в жидкости есть газ." }]
+    foundAt: { ru: "У раковины." }
+    adult: { ru: "Поверхностно-активные вещества стабилизируют пузырьки газа." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: yeast
+  name: { ru: "Сухие дрожжи" }
+  shortName: { ru: "Дрожжи" }
+  scientificName: { ru: "дрожжевые грибки" }
+  availability: home
+  safeForHome: true
+  container: bag
+  lidColor: color.wood.400
+  form: powder
+  composition: [{ species: yeast_cells, phase: solid, massFraction: 1 }]
+  dosing: portion_solid
+  group: powders
+  card:
+    looks: { ru: "Бежевые гранулы." }
+    properties: [{ ru: "Это живые грибки! В тёплой сладкой воде выделяют газ." }]
+    foundAt: { ru: "На кухне — для теста." }
+    adult: { ru: "Saccharomyces cerevisiae. Сбраживают сахар; фермент каталаза разлагает перекись водорода." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: ice
+  name: { ru: "Лёд" }
+  shortName: { ru: "Лёд" }
+  scientificName: { ru: "твёрдая вода" }
+  availability: home
+  safeForHome: true
+  container: jar
+  lidColor: color.lab.cold
+  form: crystals
+  composition: [{ species: water, phase: solid, massFraction: 1 }]
+  dosing: portion_solid
+  group: powders
+  card:
+    looks: { ru: "Прозрачные холодные кусочки." }
+    properties: [{ ru: "Тает в тепле и охлаждает воду." }, { ru: "С солью тает быстрее и становится ещё холоднее." }]
+    foundAt: { ru: "В морозилке." }
+    adult: { ru: "H₂O, плавится при 0 °C, теплота плавления 334 Дж/г." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: iron_filings
+  name: { ru: "Железные опилки" }
+  shortName: { ru: "Опилки" }
+  scientificName: { ru: "железо" }
+  availability: lab_only
+  safeForHome: false
+  container: jar
+  lidColor: color.substance.iron
+  form: powder
+  composition: [{ species: iron, phase: solid, massFraction: 1 }]
+  dosing: portion_solid
+  group: powders
+  card:
+    looks: { ru: "Тёмно-серый тяжёлый порошок." }
+    properties: [{ ru: "Притягивается магнитом." }, { ru: "Не растворяется в воде." }]
+    foundAt: { ru: "В мастерской после распила железа." }
+    warning: { ru: "Мелкие острые частицы: руками и в глаза — нельзя." }
+    adult: { ru: "Fe. Вытесняет медь из раствора сульфата меди." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: lime_water
+  name: { ru: "Известковая вода" }
+  shortName: { ru: "Известк. вода" }
+  scientificName: { ru: "раствор гидроксида кальция" }
+  availability: lab_only
+  safeForHome: false
+  container: bottle
+  lidColor: color.substance.lime-water
+  form: solution
+  composition:
+    - { species: calcium_hydroxide, phase: dissolved, massFraction: 0.0016 }
+    - { species: water, phase: liquid, massFraction: 0.9984 }
+  density: 1.0
+  dosing: portion_liquid
+  group: liquids
+  card:
+    looks: { ru: "Прозрачная жидкость без цвета." }
+    properties: [{ ru: "Мутнеет от углекислого газа." }, { ru: "Щелочная." }]
+    foundAt: { ru: "Только в виртуальной лабе." }
+    warning: { ru: "Щёлочь раздражает кожу и глаза." }
+    adult: { ru: "Насыщенный раствор Ca(OH)₂ (около 0,16 %), pH около 12,4. Реактив на углекислый газ." }
+  sources: [wiki_calcium_hydroxide]
+  review: { status: self_checked }
+
+- id: litmus
+  name: { ru: "Раствор лакмуса" }
+  shortName: { ru: "Лакмус" }
+  scientificName: { ru: "лакмус" }
+  availability: lab_only
+  safeForHome: false
+  container: bottle
+  lidColor: color.substance.litmus
+  form: solution
+  composition:
+    - { species: litmus_dye, phase: dissolved, massFraction: 0.001 }
+    - { species: water, phase: liquid, massFraction: 0.999 }
+  density: 1.0
+  dosing: drop
+  group: liquids
+  card:
+    looks: { ru: "Фиолетовая жидкость." }
+    properties: [{ ru: "Индикатор: в кислом — красный, в щелочном — синий." }]
+    foundAt: { ru: "Его делают из лишайников." }
+    adult: { ru: "Смесь красителей лишайников; переход примерно pH 4,5–8,3." }
+  sources: [wiki_litmus]
+  review: { status: self_checked }
+
+- id: phenolphthalein
+  name: { ru: "Фенолфталеин" }
+  shortName: { ru: "Фенолфталеин" }
+  scientificName: { ru: "фенолфталеин" }
+  availability: lab_only
+  safeForHome: false
+  container: bottle
+  lidColor: color.substance.phenolphthalein-base
+  form: solution
+  composition:
+    - { species: phenolphthalein_dye, phase: dissolved, massFraction: 0.01 }
+    - { species: water, phase: liquid, massFraction: 0.99 }
+  density: 1.0
+  dosing: drop
+  group: liquids
+  card:
+    looks: { ru: "Бесцветная жидкость." }
+    properties: [{ ru: "Индикатор щёлочи: в щелочном растворе становится малиновым." }]
+    foundAt: { ru: "Только в виртуальной лабе." }
+    adult: { ru: "Переход окраски pH 8,2–10. В лабе раствор условно водный (обычно спиртовой)." }
+  sources: [wiki_phenolphthalein]
+  review: { status: self_checked }
+
+- id: copper_sulfate
+  name: { ru: "Медный купорос" }
+  shortName: { ru: "Купорос" }
+  scientificName: { ru: "пятиводный сульфат меди" }
+  availability: lab_only
+  safeForHome: false
+  container: jar
+  lidColor: color.substance.copper-sulfate
+  form: crystals
+  composition: [{ species: copper_sulfate_pentahydrate, phase: solid, massFraction: 1 }]
+  dosing: portion_solid
+  group: powders
+  card:
+    looks: { ru: "Ярко-голубые кристаллы." }
+    properties: [{ ru: "Растворяется — вода становится голубой." }, { ru: "От жара белеет, от воды снова синеет." }]
+    foundAt: { ru: "Только в виртуальной лабе." }
+    warning: { ru: "Ядовит, если проглотить. Дома не используем." }
+    adult: { ru: "CuSO₄·5H₂O. Теряет кристаллизационную воду при нагревании." }
+  sources: [wiki_copper_sulfate]
+  review: { status: self_checked }
+
+- id: hydrogen_peroxide
+  name: { ru: "Перекись водорода 3 %" }
+  shortName: { ru: "Перекись" }
+  scientificName: { ru: "раствор пероксида водорода" }
+  availability: lab_only
+  safeForHome: false
+  container: bottle
+  lidColor: color.substance.peroxide
+  form: solution
+  composition:
+    - { species: hydrogen_peroxide, phase: liquid, massFraction: 0.03 }
+    - { species: water, phase: liquid, massFraction: 0.97 }
+  density: 1.01
+  dosing: portion_liquid
+  group: liquids
+  card:
+    looks: { ru: "Прозрачная жидкость без цвета." }
+    properties: [{ ru: "С помощником (дрожжами) быстро выделяет кислород." }]
+    foundAt: { ru: "В аптечке — у взрослых." }
+    warning: { ru: "Обесцвечивает и раздражает кожу и глаза. Дома не трогаем." }
+    adult: { ru: "3 % H₂O₂. Разлагается на воду и кислород; каталаза дрожжей ускоряет разложение." }
+  sources: [wiki_peroxide]
+  review: { status: self_checked }
+
+- id: permanganate
+  name: { ru: "Марганцовка" }
+  shortName: { ru: "Марганцовка" }
+  scientificName: { ru: "перманганат калия" }
+  availability: lab_only
+  safeForHome: false
+  container: jar
+  lidColor: color.substance.permanganate
+  form: crystals
+  composition: [{ species: potassium_permanganate, phase: solid, massFraction: 1 }]
+  dosing: portion_solid
+  group: powders
+  card:
+    looks: { ru: "Тёмно-фиолетовые блестящие кристаллики." }
+    properties: [{ ru: "Крошка окрашивает воду в фиолетовый." }, { ru: "Сильный окислитель." }]
+    foundAt: { ru: "Только в виртуальной лабе." }
+    warning: { ru: "Обжигает кожу, опасна для глаз. Дома не используем." }
+    adult: { ru: "KMnO₄, сильный окислитель. В лабе — только разбавленные растворы." }
+  sources: [wiki_permanganate]
+  review: { status: self_checked }

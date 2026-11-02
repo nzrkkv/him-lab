@@ -48,6 +48,8 @@ export function readSourceBundle(): unknown {
     noReactions: readYaml(join(CONTENT, 'chem', 'no-reaction.yaml')),
     effects: readYaml(join(CONTENT, 'chem', 'effects.yaml')),
     missions: listYaml(join(CONTENT, 'learning', 'missions')).map(readYaml),
+    lessons: listYaml(join(CONTENT, 'learning', 'lessons')).map(readYaml),
+    modules: readYaml(join(CONTENT, 'learning', 'modules.yaml')),
     sandbox: readYaml(join(CONTENT, 'learning', 'sandbox.yaml')),
     strings: readYaml(join(CONTENT, 'ui', 'strings.yaml')),
   };

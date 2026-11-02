@@ -10,6 +10,8 @@
 - { id: settled, kind: turbid, detail: settled, fxClasses: [fx-settle], durationMs: 3200, icon: result-precipitate, title: { ru: "Муть осела" } }
 - { id: thicken, kind: turbid, detail: thicken, fxClasses: [fx-stir], durationMs: 1600, icon: result-turbid, title: { ru: "Загустело" } }
 - { id: turbid, kind: turbid, fxClasses: [fx-stir], durationMs: 1600, icon: result-turbid, title: { ru: "Стало мутным" } }
+- { id: curdle, kind: precipitate, detail: curdle, fxClasses: [fx-settle], durationMs: 2400, icon: result-precipitate, title: { ru: "Свернулось хлопьями" } }
+- { id: flakes, kind: precipitate, detail: flakes, fxClasses: [fx-settle], durationMs: 2400, icon: result-precipitate, title: { ru: "Выпал осадок" } }
 - { id: sank, kind: precipitate, fxClasses: [fx-settle], durationMs: 1600, icon: result-precipitate, title: { ru: "Легло на дно" } }
 - { id: fade, kind: color, detail: fade, fxClasses: [], durationMs: 1600, icon: result-color, title: { ru: "Цвет пропал" } }
 - { id: caramel, kind: color, detail: caramel, fxClasses: [], durationMs: 1600, icon: result-melt, title: { ru: "Карамель" } }
@@ -24,5 +26,6 @@
 - { id: smell, kind: smell, fxClasses: [], durationMs: 1600, icon: result-smell, title: { ru: "Запах" } }
 - { id: cold, kind: cold, fxClasses: [], durationMs: 1600, icon: result-cold, title: { ru: "Стало холоднее" } }
 - { id: warm, kind: warm, fxClasses: [], durationMs: 1600, icon: result-warm, title: { ru: "Стало теплее" } }
+- { id: layers, kind: nothing, detail: layers, fxClasses: [], durationMs: 1600, icon: result-nothing, title: { ru: "Два слоя" } }
 - { id: crackle, kind: nothing, detail: crackle, fxClasses: [], durationMs: 1600, icon: result-nothing, title: { ru: "Потрескивает" } }
 - { id: nothing, kind: nothing, fxClasses: [], durationMs: 1200, icon: result-nothing, title: { ru: "Ничего не изменилось" } }

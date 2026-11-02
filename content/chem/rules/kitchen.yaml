@@ -1,0 +1,165 @@
+# Кухонные явления: молоко, масло, мыло, лёд, дрожжи, кристаллы при остывании.
+- id: milk_curdle
+  kind: reaction
+  priority: 70
+  when:
+    reactants:
+      - { bind: m, match: { class: milk_protein }, phases: [suspended, sediment] }
+      - { bind: a, match: { class: acid }, phases: [dissolved, liquid] }
+    medium: aqueous
+  effect: { type: transform, bind: m, to: curd }
+  observe: [{ kind: precipitate, detail: curdle }]
+  text:
+    what: { ru: "Молоко свернулось: появились белые хлопья" }
+    why: { ru: "Кислота заставила белок молока слипнуться в хлопья. Так из молока делают творог." }
+    deeper: { ru: "Хлопья можно отделить через фильтр — останется прозрачная сыворотка." }
+    adult: { ru: "Казеин коагулирует при pH около 4,6. Это безопасный домашний опыт: молоко с лимонным соком или уксусом." }
+  sources: [wiki_casein]
+  review: { status: self_checked }
+
+- id: milk_boil_over
+  kind: sensory
+  priority: 30
+  when:
+    reactants: [{ bind: m, match: { class: milk_protein }, phases: [suspended] }]
+    heating: true
+    temperature: { minC: 95 }
+  effect: { type: observe_only, once: heat_session }
+  observe: [{ kind: foam, detail: overflow }]
+  text:
+    what: { ru: "Молоко вспенилось и убежало!" }
+    why: { ru: "На горячем молоке появляется плёнка. Пар не может выйти и поднимает пену." }
+    deeper: { ru: "Поэтому за молоком на плите следят и помешивают." }
+    adult: { ru: "Белковая плёнка удерживает пар, пена поднимается быстро. На кухне — только со взрослыми." }
+  sources: [wiki_milk]
+  review: { status: self_checked }
+
+- id: oil_water_layers
+  kind: physical
+  priority: 25
+  when:
+    reactants: [{ bind: o, match: { class: oil }, phases: [liquid] }]
+    medium: aqueous
+  effect: { type: observe_only, once: vessel }
+  observe: [{ kind: nothing, detail: layers }]
+  text:
+    what: { ru: "Масло всплыло и лежит слоем сверху" }
+    why: { ru: "Масло не растворяется в воде. Оно легче воды, поэтому всплывает." }
+    deeper: { ru: "Две жидкости, которые не смешиваются, всегда расходятся слоями. Сверху — та, что легче." }
+    adult: { ru: "Растительное масло неполярно и не смешивается с водой; плотность около 0,92 г/мл." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: oil_soap_emulsion
+  kind: physical
+  priority: 26
+  when:
+    trigger: [stir]
+    reactants:
+      - { bind: o, match: { class: oil }, phases: [liquid] }
+      - { bind: s, match: { class: surfactant }, phases: [dissolved] }
+    medium: aqueous
+  effect: { type: observe_only, once: vessel }
+  observe: [{ kind: turbid }]
+  text:
+    what: { ru: "Масло разбилось на мелкие капельки, вода помутнела" }
+    why: { ru: "Мыло обнимает капельки масла и не даёт им слипнуться. Так мыло и отмывает жир." }
+    adult: { ru: "Поверхностно-активные вещества образуют эмульсию масла в воде." }
+  sources: [wiki_soap]
+  review: { status: self_checked }
+
+- id: soap_foam
+  kind: physical
+  priority: 24
+  when:
+    trigger: [stir, blow]
+    reactants: [{ bind: s, match: { class: surfactant }, phases: [dissolved] }]
+    medium: aqueous
+  effect: { type: observe_only, once: vessel }
+  observe: [{ kind: foam }]
+  text:
+    what: { ru: "Сверху появилась пена" }
+    why: { ru: "Мыльная вода держит пузырьки воздуха. Из них и получается пена." }
+    adult: { ru: "Пена — воздух в тонких плёнках мыльного раствора; это не новое вещество." }
+  sources: [wiki_soap]
+  review: { status: self_checked }
+
+- id: ice_melting
+  kind: physical
+  priority: 22
+  when:
+    reactants: [{ bind: i, match: { species: water }, phases: [solid] }]
+    medium: aqueous
+  effect: { type: observe_only, once: vessel }
+  observe: [{ kind: melt }]
+  text:
+    what: { ru: "Лёд тает, вода вокруг холодная" }
+    why: { ru: "Лёд — это та же вода, только твёрдая. Он забирает тепло и превращается в жидкую воду." }
+    deeper: { ru: "Пока лёд не растает, вода рядом держится около нуля градусов." }
+    adult: { ru: "Плавление льда — физическое явление; теплота плавления 334 Дж/г." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: salt_ice_cold
+  kind: physical
+  priority: 23
+  when:
+    reactants:
+      - { bind: i, match: { species: water }, phases: [solid] }
+      - { bind: s, match: { species: sodium_chloride } }
+  effect: { type: observe_only, once: vessel, coolToC: -5 }
+  observe: [{ kind: cold }]
+  text:
+    what: { ru: "Стало ещё холоднее, чем лёд!" }
+    why: { ru: "Солёный лёд тает при морозе. Он забирает тепло — и смесь становится холоднее нуля." }
+    deeper: { ru: "Поэтому зимой дороги посыпают солью: лёд тает даже в мороз." }
+    adult: { ru: "Смесь льда и соли — охлаждающая смесь, в лабе ниже нуля; это и есть «ледяная баня»." }
+  sources: [wiki_frigorific_mixture]
+  review: { status: self_checked }
+
+- id: yeast_fermentation
+  kind: reaction
+  priority: 60
+  when:
+    reactants:
+      - { bind: y, match: { species: yeast_cells } }
+      - { bind: s, match: { species: sucrose }, phases: [dissolved] }
+      - { bind: w, match: { species: water }, phases: [liquid] }
+    medium: aqueous
+    temperature: { minC: 18, maxC: 45 }
+  effect: { type: react }
+  observe: [{ kind: gas, intensity: weak }]
+  variants:
+    - id: sugar
+      bind: { y: yeast_cells, s: sucrose, w: water }
+      reactants: [{ bind: s, coeff: 1 }, { bind: w, coeff: 1 }]
+      products:
+        - { species: ethanol, coeff: 4, phase: dissolved }
+        - { species: carbon_dioxide, coeff: 4, phase: gas }
+      kinetics: { mode: over_time, durationS: 300 }
+      intensity: weak
+      foamMlPerMlGas: 0.05
+      equation: "C12H22O11 + H2O -> 4C2H5OH + 4CO2^"
+  text:
+    what: { ru: "Пошли мелкие пузырьки, пахнет хлебом" }
+    why: { ru: "Дрожжи живые. Они едят сахар и выдыхают углекислый газ. От этого газа поднимается тесто!" }
+    deeper: { ru: "В слишком горячей воде дрожжи погибают, а в холодной засыпают." }
+    adult: { ru: "Спиртовое брожение; в лабе ускорено, в жизни идёт десятки минут. Безопасный домашний опыт: дрожжи, сахар, тёплая вода." }
+  sources: [wiki_fermentation]
+  review: { status: self_checked }
+
+- id: crystallize_on_cooling
+  kind: physical
+  priority: 12
+  when:
+    reactants: [{ bind: a, match: { class: soluble }, phases: [dissolved] }]
+    medium: aqueous
+  effect: { type: crystallize_cooling, bind: a }
+  observe: [{ kind: crystals }]
+  text:
+    what: { ru: "В растворе выросли кристаллики" }
+    why: { ru: "Воды стало меньше или она остыла. Лишнее вещество больше не помещается и собирается в кристаллы." }
+    deeper: { ru: "Медленно остывший раствор даёт большие красивые кристаллы." }
+    adult: { ru: "Растворимость падает при охлаждении; избыток выделяется из пересыщенного раствора кристаллами." }
+  sources: [wiki_crystallization]
+  review: { status: self_checked }

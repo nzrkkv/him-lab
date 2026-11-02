@@ -1,0 +1,264 @@
+# Медный купорос, перекись водорода, марганцовка. Всё — только в виртуальной лабе.
+- id: copper_sulfate_color
+  kind: sensory
+  priority: 20
+  when:
+    reactants: [{ bind: c, match: { species: copper_sulfate_pentahydrate }, phases: [dissolved] }]
+    medium: aqueous
+  effect: { type: observe_only, once: vessel }
+  observe: [{ kind: color }]
+  text:
+    what: { ru: "Вода стала голубой и осталась прозрачной" }
+    why: { ru: "Медный купорос растворился. Его раствор голубой — по этому цвету медь и узнают." }
+    adult: { ru: "Голубой цвет дают ионы меди в воде. Купорос ядовит при проглатывании, поэтому он только в виртуальной лабе." }
+  sources: [wiki_copper_sulfate]
+  review: { status: self_checked }
+
+- id: copper_hydroxide_precipitate
+  kind: reaction
+  priority: 80
+  when:
+    reactants:
+      - { bind: cu, match: { species: copper_sulfate_pentahydrate }, phases: [dissolved] }
+      - { bind: base, match: { species: calcium_hydroxide }, phases: [dissolved] }
+    medium: aqueous
+  effect: { type: react }
+  observe: [{ kind: precipitate, detail: flakes }]
+  variants:
+    - id: lime
+      bind: { cu: copper_sulfate_pentahydrate, base: calcium_hydroxide }
+      reactants: [{ bind: cu, coeff: 1 }, { bind: base, coeff: 1 }]
+      products:
+        - { species: copper_hydroxide, coeff: 1, phase: suspended }
+        - { species: calcium_sulfate, coeff: 1, phase: dissolved }
+        - { species: water, coeff: 5, phase: liquid }
+      equation: "CuSO4(H2O)5 + Ca(OH)2 -> Cu(OH)2 + CaSO4 + 5H2O"
+  text:
+    what: { ru: "Появились голубые хлопья" }
+    why: { ru: "Щёлочь забрала медь из раствора. Получилось новое вещество — оно не растворяется и выпадает хлопьями." }
+    deeper: { ru: "Хлопья, которые выпадают из прозрачного раствора, — осадок. Это верный признак реакции." }
+    adult: { ru: "Cu²⁺ + 2OH⁻ → Cu(OH)₂↓ — голубой студенистый осадок." }
+  sources: [wiki_copper_hydroxide]
+  review: { status: self_checked }
+
+- id: copper_carbonate_precipitate
+  kind: reaction
+  priority: 80
+  when:
+    reactants:
+      - { bind: cu, match: { species: copper_sulfate_pentahydrate }, phases: [dissolved] }
+      - { bind: soda, match: { class: weak_base }, phases: [dissolved, solid] }
+    medium: aqueous
+  effect: { type: react }
+  observe: [{ kind: precipitate, detail: flakes }, { kind: gas, intensity: from_variant }]
+  variants:
+    - id: bicarbonate
+      bind: { cu: copper_sulfate_pentahydrate, soda: sodium_bicarbonate }
+      reactants: [{ bind: cu, coeff: 2 }, { bind: soda, coeff: 4 }]
+      products:
+        - { species: basic_copper_carbonate, coeff: 1, phase: suspended }
+        - { species: sodium_sulfate, coeff: 2, phase: dissolved }
+        - { species: carbon_dioxide, coeff: 3, phase: gas }
+        - { species: water, coeff: 11, phase: liquid }
+      intensity: weak
+      equation: "2CuSO4(H2O)5 + 4NaHCO3 -> Cu2(OH)2CO3 + 2Na2SO4 + 3CO2^ + 11H2O"
+    - id: carbonate
+      bind: { cu: copper_sulfate_pentahydrate, soda: sodium_carbonate }
+      reactants: [{ bind: cu, coeff: 2 }, { bind: soda, coeff: 2 }]
+      products:
+        - { species: basic_copper_carbonate, coeff: 1, phase: suspended }
+        - { species: sodium_sulfate, coeff: 2, phase: dissolved }
+        - { species: carbon_dioxide, coeff: 1, phase: gas }
+        - { species: water, coeff: 9, phase: liquid }
+      intensity: weak
+      equation: "2CuSO4(H2O)5 + 2Na2CO3 -> Cu2(OH)2CO3 + 2Na2SO4 + CO2^ + 9H2O"
+  text:
+    what: { ru: "Выпал зелёно-голубой осадок, поднялись пузырьки" }
+    why: { ru: "Сода и медный купорос поменялись «деталями». Получился зелёный осадок — такого же цвета бывает старая медная крыша." }
+    deeper: { ru: "Зелёный налёт на медных памятниках — родственник этого осадка." }
+    adult: { ru: "Образуется основный карбонат меди (малахит по составу), часть CO₂ выделяется." }
+  sources: [wiki_basic_copper_carbonate]
+  review: { status: self_checked }
+
+- id: copper_iron_displacement
+  kind: reaction
+  priority: 75
+  when:
+    reactants:
+      - { bind: fe, match: { species: iron }, phases: [solid, sediment] }
+      - { bind: cu, match: { species: copper_sulfate_pentahydrate }, phases: [dissolved] }
+    medium: aqueous
+  effect: { type: react }
+  observe: [{ kind: color, detail: fade }, { kind: precipitate, detail: flakes }]
+  variants:
+    - id: iron
+      bind: { fe: iron, cu: copper_sulfate_pentahydrate }
+      reactants: [{ bind: fe, coeff: 1 }, { bind: cu, coeff: 1 }]
+      products:
+        - { species: iron_sulfate, coeff: 1, phase: dissolved }
+        - { species: copper, coeff: 1, phase: sediment }
+        - { species: water, coeff: 5, phase: liquid }
+      kinetics: { mode: over_time, durationS: 90 }
+      intensity: weak
+      equation: "Fe + CuSO4(H2O)5 -> FeSO4 + Cu + 5H2O"
+  text:
+    what: { ru: "Опилки покрылись рыжим налётом, голубой цвет бледнеет" }
+    why: { ru: "Железо вытолкнуло медь из раствора. Рыжий налёт — это настоящая медь!" }
+    deeper: { ru: "Железо «сильнее» меди: оно занимает её место, а медь остаётся одна." }
+    adult: { ru: "Fe + Cu²⁺ → Fe²⁺ + Cu. Раствор из голубого становится бледно-зелёным." }
+  sources: [wiki_copper_sulfate]
+  review: { status: self_checked }
+
+- id: copper_sulfate_dehydrate
+  kind: reaction
+  priority: 45
+  when:
+    reactants: [{ bind: c, match: { species: copper_sulfate_pentahydrate }, phases: [solid] }]
+    medium: dry
+    heating: true
+    temperature: { minC: 120 }
+    holdS: 3
+  effect: { type: react }
+  observe: [{ kind: color, detail: fade }, { kind: steam, detail: droplets_on_walls }]
+  variants:
+    - id: dry
+      bind: { c: copper_sulfate_pentahydrate }
+      reactants: [{ bind: c, coeff: 1 }]
+      products:
+        - { species: copper_sulfate_anhydrous, coeff: 1, phase: solid }
+        - { species: water, coeff: 5, phase: gas }
+      kinetics: { mode: over_time, durationS: 15 }
+      intensity: weak
+      equation: "CuSO4(H2O)5 -> CuSO4 + 5H2O^"
+  text:
+    what: { ru: "Синие кристаллы побелели, на стенках капельки" }
+    why: { ru: "В синих кристаллах пряталась вода. Жар её выгнал — и порошок стал белым." }
+    deeper: { ru: "Капни потом воды на белый порошок — он снова посинеет и потеплеет." }
+    adult: { ru: "Пентагидрат теряет кристаллизационную воду примерно при 100–250 °C. Безводный CuSO₄ белый." }
+  sources: [wiki_copper_sulfate]
+  review: { status: self_checked }
+
+- id: copper_sulfate_hydrate
+  kind: reaction
+  priority: 46
+  when:
+    reactants:
+      - { bind: c, match: { species: copper_sulfate_anhydrous }, phases: [solid] }
+      - { bind: w, match: { species: water }, phases: [liquid] }
+  effect: { type: react }
+  observe: [{ kind: color }]
+  variants:
+    - id: water
+      bind: { c: copper_sulfate_anhydrous, w: water }
+      reactants: [{ bind: c, coeff: 1 }, { bind: w, coeff: 5 }]
+      products: [{ species: copper_sulfate_pentahydrate, coeff: 1, phase: solid }]
+      heatJPerMol: -78000
+      equation: "CuSO4 + 5H2O -> CuSO4(H2O)5"
+  text:
+    what: { ru: "Белый порошок снова посинел и нагрелся" }
+    why: { ru: "Порошок забрал воду обратно в свои кристаллы. При этом выделилось тепло." }
+    deeper: { ru: "Так белым купоросом проверяют, есть ли вода: он синеет даже от капли." }
+    adult: { ru: "Гидратация безводного CuSO₄ экзотермична (около −78 кДж/моль)." }
+  sources: [wiki_copper_sulfate]
+  review: { status: self_checked }
+
+- id: peroxide_catalyst_oxygen
+  kind: reaction
+  priority: 70
+  when:
+    reactants:
+      - { bind: p, match: { species: hydrogen_peroxide }, phases: [liquid, dissolved] }
+      - { bind: cat, match: { class: catalyst_o2 } }
+  effect: { type: react }
+  observe: [{ kind: gas, intensity: from_variant }]
+  variants:
+    - id: yeast
+      bind: { p: hydrogen_peroxide, cat: yeast_cells }
+      reactants: [{ bind: p, coeff: 2 }]
+      products:
+        - { species: water, coeff: 2, phase: liquid }
+        - { species: oxygen, coeff: 1, phase: gas }
+      kinetics: { mode: over_time, durationS: 25 }
+      intensity: strong
+      foamMlPerMlGas: 0.3
+      equation: "2H2O2 -> 2H2O + O2^"
+    - id: manganese_dioxide
+      bind: { p: hydrogen_peroxide, cat: manganese_dioxide }
+      reactants: [{ bind: p, coeff: 2 }]
+      products:
+        - { species: water, coeff: 2, phase: liquid }
+        - { species: oxygen, coeff: 1, phase: gas }
+      kinetics: { mode: over_time, durationS: 15 }
+      intensity: strong
+      foamMlPerMlGas: 0.2
+      equation: "2H2O2 -> 2H2O + O2^"
+  text:
+    what: { ru: "Бурлит! Много пузырьков и пена" }
+    why: { ru: "Перекись распадается на воду и кислород. Дрожжи ускоряют это в тысячи раз, а сами не тратятся." }
+    deeper: { ru: "Помощник, который ускоряет реакцию и остаётся целым, называется катализатором. С мылом пены будет гора — это «зубная паста для слона»." }
+    adult: { ru: "Каталаза дрожжей (или MnO₂) разлагает H₂O₂. Опыт «паста для слона» — только виртуально: концентрированная перекись обжигает кожу." }
+  sources: [acs_elephant_toothpaste]
+  review: { status: self_checked }
+
+- id: permanganate_color
+  kind: sensory
+  priority: 20
+  when:
+    reactants: [{ bind: k, match: { species: potassium_permanganate }, phases: [dissolved] }]
+    medium: aqueous
+  effect: { type: observe_only, once: vessel }
+  observe: [{ kind: color }]
+  text:
+    what: { ru: "Вся вода стала малиново-фиолетовой" }
+    why: { ru: "Совсем немного порошка окрасило всю воду. Его частицы разбежались по воде во все стороны." }
+    deeper: { ru: "Частицы всё время движутся и перемешиваются сами. Это называется диффузия." }
+    adult: { ru: "Перманганат калия окрашивает воду даже в очень малой концентрации. Это сильный окислитель, дома с детьми не используется." }
+  sources: [wiki_permanganate]
+  review: { status: self_checked }
+
+- id: permanganate_peroxide
+  kind: reaction
+  priority: 85
+  when:
+    reactants:
+      - { bind: k, match: { species: potassium_permanganate }, phases: [dissolved] }
+      - { bind: p, match: { species: hydrogen_peroxide }, phases: [liquid, dissolved] }
+    medium: aqueous
+  effect: { type: react }
+  observe: [{ kind: color, detail: fade }, { kind: gas, intensity: from_variant }]
+  variants:
+    - id: neutral
+      bind: { k: potassium_permanganate, p: hydrogen_peroxide }
+      reactants: [{ bind: k, coeff: 2 }, { bind: p, coeff: 3 }]
+      products:
+        - { species: manganese_dioxide, coeff: 2, phase: suspended }
+        - { species: potassium_hydroxide, coeff: 2, phase: dissolved }
+        - { species: oxygen, coeff: 3, phase: gas }
+        - { species: water, coeff: 2, phase: liquid }
+      intensity: strong
+      foamMlPerMlGas: 0.1
+      equation: "2KMnO4 + 3H2O2 -> 2MnO2 + 2KOH + 3O2^ + 2H2O"
+  text:
+    what: { ru: "Фиолетовый цвет пропал, пошли пузырьки и бурая муть" }
+    why: { ru: "Марганцовка и перекись прореагировали. Вышел кислород, а бурая муть — новое вещество." }
+    deeper: { ru: "Бурая муть ещё и ускоряет распад остальной перекиси. Пузырьков становится больше!" }
+    adult: { ru: "В нейтральной среде KMnO₄ восстанавливается до MnO₂; MnO₂ катализирует разложение избытка H₂O₂." }
+  sources: [wiki_permanganate]
+  review: { status: self_checked }
+
+- id: hz_permanganate_heat
+  kind: hazard_stop
+  priority: 1000
+  when:
+    trigger: [heat_start, tick, add, pour]
+    reactants: [{ bind: k, match: { species: potassium_permanganate }, phases: [solid] }]
+    medium: dry
+    heating: true
+  effect: { type: stop }
+  text:
+    what: { ru: "Стоп!" }
+    why: { ru: "Сухую марганцовку не греем: она разлетается и может поджечь то, что рядом. Лаба остановила опыт." }
+    deeper: { ru: "Марганцовку растворяют в воде, и то только в лаборатории." }
+    adult: { ru: "Перманганат калия — сильный окислитель; при нагревании разлагается с выделением кислорода, со многими веществами смесь пожароопасна. Только предупреждение, без условий опыта." }
+  sources: [wiki_permanganate]
+  review: { status: self_checked }

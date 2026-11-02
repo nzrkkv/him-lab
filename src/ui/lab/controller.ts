@@ -19,13 +19,8 @@ import {
   type JarCheck,
   type MissionState,
 } from '../../core/mission/mission.ts';
-import {
-  emptyProgress,
-  loadProgress,
-  type ProgressV1,
-  type SandboxLogLine,
-} from '../../core/progress/progress.ts';
-import { debouncedWriter, readKey, writeKey } from '../../platform/storage.ts';
+import { awardBadge, type ProgressV1, type SandboxLogLine } from '../../core/progress/progress.ts';
+import { availableSubstances, progress, saveProgress } from '../progress-store.ts';
 import { bundle, ix, plural, t } from '../content.ts';
 
 export type Mode = 'sandbox' | 'mission';
@@ -49,8 +44,12 @@ export interface Speech {
   text: string;
   pose: Pose;
   hint?: HintView;
-  actions?: Array<'more_hint' | 'close' | 'start' | 'wash'>;
+  actions?: Array<'more_hint' | 'close' | 'start' | 'wash' | 'next'>;
   checks?: string[];
+  /** Короткая реплика: при появлении другого слоя исчезает, а не ждёт в очереди. */
+  transient?: boolean;
+  /** Шаг вступления миссии (кнопка «Дальше»). */
+  introStep?: number;
 }
 export interface Readout {
   vesselId: string;
@@ -81,8 +80,6 @@ export interface LabUiState {
   mixedWarned: boolean;
 }
 
-const PROGRESS_KEY = 'progress';
-
 export class LabController {
   state: LabUiState;
   progress: ProgressV1;
@@ -91,11 +88,8 @@ export class LabController {
   private save: () => void;
 
   constructor(mode: Mode) {
-    const loaded = loadProgress(readKey(PROGRESS_KEY));
-    if (!loaded.ok && loaded.reason === 'corrupt')
-      writeKey(`backup:${Date.now()}`, readKey(PROGRESS_KEY) ?? '');
-    this.progress = loaded.ok ? loaded.progress : emptyProgress();
-    this.save = debouncedWriter(PROGRESS_KEY, () => JSON.stringify(this.progress));
+    this.progress = progress();
+    this.save = saveProgress;
     this.mission = bundle.missions[0] as Mission;
     this.state = {
       mode,
@@ -118,7 +112,13 @@ export class LabController {
       mixedWarned: false,
     };
     if (mode === 'mission') this.openMission(false);
-    else this.state.speech = { text: t('guide.welcome.sandbox'), pose: 'happy', actions: ['close'] };
+    else
+      this.state.speech = {
+        text: t('guide.welcome.sandbox'),
+        pose: 'happy',
+        actions: ['close'],
+        transient: true,
+      };
     document.documentElement.classList.toggle('reduce-motion', this.progress.settings.calm);
   }
 
@@ -127,7 +127,80 @@ export class LabController {
   }
 
   private emit(full = true): void {
+    this.normalizeLayers();
     for (const fn of this.listeners) fn(full);
+  }
+
+  /** Очередь реплик Пипы, которые ждут, пока закроется другой всплывающий слой. */
+  speechQueue: Speech[] = [];
+  private prevLayers: Record<string, unknown> = {};
+  private reopenJournal = false;
+
+  /**
+   * Правило слоёв: одновременно виден только один всплывающий слой
+   * (стоп, надпись, количество, выезжающий журнал, результат, реплика).
+   * Новый слой закрывает старые; реплика Пипы не теряется, а встаёт в очередь.
+   */
+  private normalizeLayers(): void {
+    const s = this.state;
+    const narrow = typeof window !== 'undefined' && window.innerWidth < 1280;
+    const layers: Record<string, unknown> = {
+      stop: s.stop,
+      labelPicker: s.labelPicker,
+      qty: s.qty,
+      journal: narrow && s.journalOpen ? true : null,
+      result: s.result,
+      speech: s.speech,
+    };
+    const order = ['stop', 'labelPicker', 'qty', 'journal', 'result', 'speech'];
+    const open = order.filter((k) => layers[k]);
+    const fresh = open.filter((k) => layers[k] !== this.prevLayers[k]);
+    const winner = fresh[0] ?? open[0];
+    // Надпись выбирают с доски в выезжающем журнале: после выбора журнал возвращается.
+    if (winner === 'labelPicker' && layers['journal']) this.reopenJournal = true;
+    if (winner !== 'labelPicker' && winner !== undefined) this.reopenJournal = false;
+    if (!winner && this.reopenJournal) {
+      this.reopenJournal = false;
+      s.journalOpen = true;
+    }
+    for (const k of open) {
+      if (k === winner) continue;
+      if (k === 'speech' && s.speech) {
+        if (!s.speech.transient && !this.speechQueue.some((q) => q.text === s.speech?.text))
+          this.speechQueue.push(s.speech);
+        s.speech = null;
+      } else if (k === 'journal') s.journalOpen = false;
+      else if (k === 'stop') s.stop = null;
+      else if (k === 'labelPicker') s.labelPicker = null;
+      else if (k === 'qty') s.qty = null;
+      else if (k === 'result') s.result = null;
+    }
+    if (!winner && !s.journalOpen && this.speechQueue.length) s.speech = this.speechQueue.shift() ?? null;
+    this.prevLayers = {
+      stop: s.stop,
+      labelPicker: s.labelPicker,
+      qty: s.qty,
+      journal: narrow && s.journalOpen ? true : null,
+      result: s.result,
+      speech: s.speech,
+    };
+  }
+
+  /** Вступление миссии по шагам: 2–3 коротких реплики вместо стены текста. */
+  private introSpeech(step: number): Speech {
+    const last = step >= this.mission.intro.length - 1;
+    return {
+      text: this.mission.intro[step] ?? '',
+      pose: 'explain',
+      actions: [last ? 'start' : 'next'],
+      introStep: step,
+    };
+  }
+
+  nextIntro(): void {
+    const step = (this.state.speech?.introStep ?? 0) + 1;
+    this.state.speech = this.introSpeech(step);
+    this.emit();
   }
 
   private persist(): void {
@@ -151,8 +224,9 @@ export class LabController {
       this.state.lab = step(this.state.lab, { type: 'place', equipmentId: 'test_tube' }, ix).state;
     this.state.speech =
       m.status === 'briefing'
-        ? { text: this.mission.intro.join(' '), pose: 'explain', actions: ['start'] }
-        : { text: t('mission.resume'), pose: 'happy', actions: ['close'] };
+        ? this.introSpeech(0)
+        : { text: t('mission.resume'), pose: 'happy', actions: ['close'], transient: true };
+    this.speechQueue = [];
     this.persist();
     this.emit();
   }
@@ -251,9 +325,15 @@ export class LabController {
     if (this.state.mission.status === 'completed' && !this.progress.missionsCompleted.includes(m.missionId)) {
       this.progress.missionsCompleted.push(m.missionId);
     }
+    if (this.state.mission.status === 'completed') awardBadge(this.progress, 'powder-detective');
     this.state.speech = null;
     this.persist();
     this.emit();
+  }
+
+  /** Вещества песочницы: стартовый набор + открытые за пройденные уроки и миссии. */
+  availableSubstances(): string[] {
+    return availableSubstances(this.progress);
   }
 
   // ---------- выбор и количество ----------
@@ -306,6 +386,7 @@ export class LabController {
 
   closeOverlays(): void {
     Object.assign(this.state, { qty: null, result: null, stop: null, labelPicker: null, readout: null });
+    if (window.innerWidth < 1280) this.state.journalOpen = false;
     if (
       this.state.speech &&
       !this.state.speech.actions?.includes('start') &&
@@ -472,7 +553,12 @@ export class LabController {
           break;
         }
         case 'blocked':
-          this.state.speech = { text: t(`blocked.${e.reason}`), pose: 'warn', actions: ['close'] };
+          this.state.speech = {
+            text: t(`blocked.${e.reason}`),
+            pose: 'warn',
+            actions: ['close'],
+            transient: true,
+          };
           announce.push(t(`blocked.${e.reason}`));
           break;
         case 'measurement': {
@@ -510,6 +596,30 @@ export class LabController {
           why = odor ?? t('result.smell.none');
           deeper = t('result.smell.hint');
           lines.push({ icon: 'result-smell', title: why, tone: odor ? 'change' : 'nothing' });
+          break;
+        }
+        case 'separated': {
+          // Разделение смеси перекрывает наблюдения по пути (кипение при выпаривании и т. п.).
+          vesselId = e.vesselId;
+          const names = e.speciesIds.map((sp) => this.speciesName(sp)).join(', ');
+          const m = e.method;
+          title = t(`result.sep.${m}.title`);
+          why =
+            m === 'filter'
+              ? names
+                ? t('result.sep.filter.kept', {
+                    names,
+                    to: this.vesselName(e.toVesselId ?? '').toLowerCase(),
+                  })
+                : t('result.sep.filter.none')
+              : m === 'magnet'
+                ? t('result.sep.magnet.why', { names })
+                : names
+                  ? t('result.sep.evaporate.why', { names })
+                  : t('result.sep.evaporate.empty');
+          deeper = t(`result.sep.${m}.deeper`);
+          lines.unshift({ icon: m, title: t(`result.sep.${m}.line`), tone: 'change' });
+          if (m === 'filter' && e.toVesselId) this.state.selected = { kind: 'vessel', id: e.toVesselId };
           break;
         }
         case 'discovery': {
@@ -567,6 +677,13 @@ export class LabController {
     });
     if (list.length > 50) list.splice(0, list.length - 50);
     this.save();
+  }
+
+  /** Имя частицы для ребёнка: имя вещества с полки, если оно из одной частицы, иначе научное. */
+  speciesName(sp: string): string {
+    for (const sub of ix.substances.values())
+      if (sub.composition[0]?.species === sp && sub.composition.length === 1) return this.originName(sub.id);
+    return ix.species.get(sp)?.names.scientific ?? sp;
   }
 
   /** pH для шкалы показаний. */

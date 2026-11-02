@@ -24,6 +24,19 @@ import lensFine from '../../design/assets/lens/lens-fine.svg';
 import logo from '../../design/assets/brand/logo-mark.svg';
 import badgeDetective from '../../design/assets/badges/powder-detective.svg';
 
+import vintik from '../../design/assets/character/vintik.svg';
+import sink from '../../design/assets/equipment/sink.svg';
+import fumeHood from '../../design/assets/equipment/fume-hood.svg';
+import fanHand from '../../design/assets/fx/fan-hand.svg';
+import foamOverflow from '../../design/assets/fx/foam-overflow.svg';
+import cookie from '../../design/assets/fx/cookie.svg';
+import puddle from '../../design/assets/fx/puddle.svg';
+import badgeFirst from '../../design/assets/badges/first-experiment.svg';
+import badgeSafety from '../../design/assets/badges/safety-pro.svg';
+import badgeObserver from '../../design/assets/badges/observer.svg';
+import badgeDiscoverer from '../../design/assets/badges/discoverer.svg';
+import badgeSolution from '../../design/assets/badges/solution-master.svg';
+
 const SOURCES: Record<string, string> = {
   'equipment/beaker': beaker,
   'equipment/test-tube': testTube,
@@ -46,6 +59,18 @@ const SOURCES: Record<string, string> = {
   'lens/ultrafine_powder': lensFine,
   'brand/logo-mark': logo,
   'badges/powder-detective': badgeDetective,
+  'badges/first-experiment': badgeFirst,
+  'badges/safety-pro': badgeSafety,
+  'badges/observer': badgeObserver,
+  'badges/discoverer': badgeDiscoverer,
+  'badges/solution-master': badgeSolution,
+  'character/vintik': vintik,
+  'equipment/sink': sink,
+  'equipment/fume-hood': fumeHood,
+  'fx/fan-hand': fanHand,
+  'fx/foam-overflow': foamOverflow,
+  'fx/cookie': cookie,
+  'fx/puddle': puddle,
 };
 
 let counter = 0;

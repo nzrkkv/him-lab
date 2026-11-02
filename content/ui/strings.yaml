@@ -46,6 +46,7 @@ rail.place: { ru: "{name}: нажми, чтобы поставить на сто
 bench.empty: { ru: "Поставь на стол стакан или пробирку — и начинай опыт" }
 bench.slot: { ru: "Свободное место" }
 bench.vessel: { ru: "{name} {no}" }
+bench.short.dish: { ru: "Чашка" }
 bench.empty.vessel: { ru: "пусто" }
 bench.hint.select: { ru: "Выбери сосуд на столе — и вещество попадёт в него" }
 
@@ -68,6 +69,16 @@ act.weigh: { ru: "Весы" }
 act.undo: { ru: "Отменить" }
 act.clear: { ru: "Помыть" }
 act.remove: { ru: "Убрать" }
+act.blow: { ru: "Подуть" }
+act.blow.long: { ru: "Подуть через трубочку" }
+act.filter: { ru: "Фильтр" }
+act.filter.long: { ru: "Профильтровать через воронку" }
+act.evaporate: { ru: "Выпарить" }
+act.evaporate.long: { ru: "Выпарить в чашке на горелке" }
+act.magnet: { ru: "Магнит" }
+act.magnet.long: { ru: "Поднести магнит" }
+dock.why.liquid: { ru: "Тут нет жидкости. Сначала налей воды." }
+dock.sep: { ru: "Разделить" }
 
 qty.title: { ru: "Сколько добавить?" }
 qty.add: { ru: "Добавить" }
@@ -85,7 +96,7 @@ result.sci: { ru: "по-научному" }
 result.close: { ru: "Понятно" }
 result.nothing.title: { ru: "Ничего не произошло" }
 result.nothing.sub: { ru: "Это тоже результат" }
-result.indicator: { ru: "Отвар стал {color}" }
+result.indicator: { ru: "Индикатор стал {color}" }
 result.temp: { ru: "Температура: {value} °C" }
 result.ph: { ru: "pH около {value}: {word}" }
 result.ph.acid: { ru: "кислое" }
@@ -110,7 +121,8 @@ blocked.capacity: { ru: "Больше не поместится. Возьми с
 blocked.no_return_to_jar: { ru: "Обратно в банку ничего не возвращаем. Так можно испортить всё вещество в банке." }
 blocked.not_available: { ru: "Этого пока нет на полке." }
 blocked.empty_vessel: { ru: "Сосуд пустой. Положи в него что-нибудь для опыта." }
-blocked.needs_liquid: { ru: "Тут нет жидкости. pH меряют в растворе." }
+blocked.needs_liquid: { ru: "Тут нет жидкости. Для этого опыта нужен раствор — налей воды." }
+blocked.bench_full: { ru: "На столе нет места для второго стакана. Убери или помой сосуд." }
 blocked.station_busy: { ru: "Горелка уже занята. Сначала погаси её." }
 
 nothing.generic.add: { ru: "Ничего нового не появилось." }
@@ -119,6 +131,22 @@ nothing.generic.stir: { ru: "Перемешали — ничего нового.
 nothing.generic.heat_stop: { ru: "Нагрели — ничего не изменилось." }
 nothing.generic.cool_stop: { ru: "Охладили — ничего не изменилось." }
 nothing.generic.wait: { ru: "Подождали — ничего не изменилось." }
+nothing.generic.blow: { ru: "Пузырьки воздуха вышли — ничего не изменилось." }
+nothing.generic.magnet: { ru: "Магнит ничего не притянул." }
+result.sep.filter.title: { ru: "Профильтровали" }
+result.sep.filter.kept: { ru: "На фильтре осталось: {names}. Прозрачная жидкость стекла в {to}." }
+result.sep.filter.none: { ru: "Всё прошло через фильтр: крупинок не было. Растворённое вещество фильтр не задерживает." }
+result.sep.filter.line: { ru: "Фильтр задержал крупинки" }
+result.sep.filter.deeper: { ru: "Фильтр — как сито с очень мелкими дырочками. Крупинки застревают, а вода и растворённое проходят." }
+result.sep.magnet.title: { ru: "Магнит притянул железо" }
+result.sep.magnet.why: { ru: "Магнит забрал: {names}. Остальное осталось в сосуде — магнит его не тянет." }
+result.sep.magnet.line: { ru: "Железо отделилось" }
+result.sep.magnet.deeper: { ru: "Так разделяют смеси: у каждого вещества свои свойства. Железо тянется к магниту, а песок и соль — нет." }
+result.sep.evaporate.title: { ru: "Выпарили досуха" }
+result.sep.evaporate.why: { ru: "Вода ушла паром. В чашке осталось: {names}." }
+result.sep.evaporate.empty: { ru: "Вода ушла паром. В чашке ничего не осталось: в воде ничего не было растворено." }
+result.sep.evaporate.line: { ru: "Вода испарилась" }
+result.sep.evaporate.deeper: { ru: "Растворённое вещество не исчезает. Когда вода уходит, оно возвращается." }
 
 journal.title: { ru: "Журнал" }
 journal.count: { ru: "Записей: {count}" }
@@ -171,3 +199,80 @@ mission.badge: { ru: "Значок «Сыщик порошков»" }
 readout.temperature: { ru: "{value} °C" }
 readout.ph: { ru: "pH {value}" }
 readout.mass: { ru: "{value} г" }
+mission.next: { ru: "Дальше" }
+dock.why.none: { ru: "Сначала выбери сосуд на столе." }
+dock.why.empty: { ru: "Сосуд пустой. Положи в него что-нибудь." }
+dock.why.heating: { ru: "Сначала погаси горелку." }
+dock.why.wait: { ru: "Ждать пока нечего: все сосуды пустые." }
+dock.why.holder: { ru: "Держатель нужен только пробирке." }
+dock.why.magnify: { ru: "Выбери банку на полке или сосуд на столе." }
+dock.why.undo: { ru: "Пока нечего отменять." }
+shelf.scroll: { ru: "Листай полку" }
+shelf.locked: { ru: "Скоро откроются" }
+shelf.unlock.m1_l01: { ru: "Откроется, когда пройдёшь урок 1" }
+shelf.unlock.powder_mystery: { ru: "Откроется за миссию «Загадка белых порошков»" }
+shelf.unlock.short.m1_l01: { ru: "Урок 1" }
+shelf.unlock.short.powder_mystery: { ru: "Миссия" }
+lesson.scene: { ru: "Опыт" }
+lesson.talk: { ru: "Разговор" }
+lesson.close: { ru: "К карте уроков" }
+lesson.step: { ru: "Урок 1 · шаг {n} из {total}: {stage}" }
+lesson.steps: { ru: "Шаги урока" }
+lesson.fan: { ru: "Ладонь подгоняет воздух от колбы к носу" }
+lesson.predict.saved: { ru: "Запомнили! Проверим опытом." }
+lesson.goggles.put: { ru: "Надеть очки" }
+lesson.goggles.on: { ru: "Очки надеты" }
+lesson.sci: { ru: "Научные названия" }
+lesson.back: { ru: "Назад" }
+lesson.next: { ru: "Дальше" }
+lesson.todo: { ru: "Сначала выполни задание на экране." }
+lesson.finish: { ru: "К карте уроков" }
+lesson.sort.how: { ru: "Выбери карточку, потом полку." }
+lesson.sort.cards: { ru: "Карточки" }
+lesson.sort.done: { ru: "Все карточки на месте!" }
+lesson.sort.put: { ru: "Положить на полку «{shelf}»" }
+lesson.sort.pick: { ru: "Сначала выбери карточку." }
+lesson.sort.right: { ru: "Верно!" }
+lesson.match.pick: { ru: "Сначала выбери прибор слева." }
+lesson.spot.count: { ru: "Найдено ошибок: {n} из {total}" }
+lesson.mission.done: { ru: "Миссия пройдена! Все надписи доказаны." }
+lesson.mission.open: { ru: "Открыть миссию" }
+lesson.mission.back: { ru: "Вернуться к уроку" }
+lesson.jars: { ru: "Пять банок без надписей: {list}" }
+lesson.lab.waiting: { ru: "ждёт опыта" }
+lesson.lab.predict_first: { ru: "Сначала выбери предсказание справа — потом опыт." }
+lesson.test.after: { ru: "Ошибки — это нормально: так учёные и учатся. Дальше — опыт для дома." }
+lesson.test.progress: { ru: "Вопрос {n} из {total}" }
+lesson.test.retry: { ru: "Попробуй ещё раз." }
+lesson.test.next: { ru: "Следующий вопрос" }
+lesson.test.finish: { ru: "Итог" }
+lesson.home.safety: { ru: "Безопасность" }
+lesson.home.materials: { ru: "Что понадобится" }
+lesson.home.steps: { ru: "Шаги" }
+lesson.home.print: { ru: "Распечатать" }
+lesson.reward.unlocked: { ru: "Открылись в песочнице:" }
+home.badges: { ru: "Значки" }
+home.lessons: { ru: "Уроки" }
+home.module: { ru: "Модуль {n}" }
+home.done.count: { ru: "Пройдено {n} из {total}" }
+home.continue.title: { ru: "Продолжить" }
+home.start: { ru: "Начать урок" }
+home.lesson.step: { ru: "Шаг {n} из {total}" }
+home.lesson.done: { ru: "Урок пройден" }
+home.here: { ru: "Ты здесь" }
+home.soon: { ru: "Скоро" }
+home.modules: { ru: "Все модули" }
+home.lessons.count: { ru: "{n} урока" }
+home.sandbox.open: { ru: "Открыто веществ: {n}" }
+home.locked: { ru: "Откроется позже" }
+home.mission.link: { ru: "Миссия отдельно" }
+badge.first-experiment: { ru: "Первый опыт" }
+badge.safety-pro: { ru: "Знаток безопасности" }
+badge.powder-detective: { ru: "Сыщик порошков" }
+badge.observer: { ru: "Наблюдатель" }
+badge.discoverer: { ru: "Первооткрыватель" }
+badge.solution-master: { ru: "Мастер растворов" }
+parents.title: { ru: "Для родителей" }
+home.sections: { ru: "Разделы" }
+parents.home: { ru: "В каждом уроке есть опыт «Попробуй дома со взрослыми»: только безопасные бытовые вещества, без огня. Вещества с пометкой «только в виртуальной лабе» дома не используем." }
+home.lesson.n: { ru: "Урок {n}" }

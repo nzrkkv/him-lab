@@ -96,3 +96,97 @@
   text:
     why: { ru: "Перемешали. Всё уже перемешано — нового ничего нет." }
     adult: { ru: "Состав не изменился." }
+
+- id: nr_dry_acid_carbonate
+  priority: 60
+  when:
+    trigger: [add, pour, stir]
+    reactants:
+      - { bind: a, match: { class: acid }, phases: [solid] }
+      - { bind: c, match: { class: carbonate_like }, phases: [solid] }
+    medium: dry
+  text:
+    why: { ru: "Сухие порошки не реагируют: им нужна вода. Добавь воды — и посмотри." }
+    adult: { ru: "Кислота и карбонат реагируют в растворе; поэтому шипучие таблетки хранят сухими." }
+
+- id: nr_mixed_powders
+  priority: 15
+  when:
+    trigger: [add]
+    reactants:
+      - { bind: a, match: { class: powder }, phases: [solid] }
+      - { bind: b, match: { class: powder }, phases: [solid] }
+    medium: dry
+  text:
+    why: { ru: "Порошки просто перемешались. Это смесь: каждое вещество осталось собой. Смесь можно разделить." }
+    deeper: { ru: "Соль отделяют водой и фильтром, железо — магнитом." }
+    adult: { ru: "Механическая смесь; компоненты сохраняют свойства." }
+
+- id: nr_peroxide_alone
+  priority: 35
+  when:
+    trigger: [add, pour, stir]
+    reactants: [{ bind: p, match: { species: hydrogen_peroxide } }]
+  text:
+    why: { ru: "Перекись распадается очень-очень медленно — пузырьков не видно. Нужен помощник, который ускорит." }
+    adult: { ru: "Без катализатора разложение 3 % перекиси при комнатной температуре почти незаметно." }
+
+- id: nr_salt_copper
+  priority: 50
+  when:
+    trigger: [add, pour, stir]
+    reactants:
+      - { bind: s, match: { species: sodium_chloride } }
+      - { bind: c, match: { species: copper_sulfate_pentahydrate } }
+  text:
+    why: { ru: "Соль с медным купоросом не реагирует. Раствор просто голубой." }
+    adult: { ru: "Обмен ионами не даёт ни осадка, ни газа." }
+
+- id: nr_phenolphthalein_no_base
+  priority: 25
+  when:
+    trigger: [add, pour, stir]
+    reactants: [{ bind: i, match: { species: phenolphthalein_dye }, phases: [dissolved] }]
+  observe: [{ kind: color }]
+  text:
+    why: { ru: "Фенолфталеин остался бесцветным. Значит, щёлочи здесь нет." }
+    adult: { ru: "Фенолфталеин бесцветен при pH ниже 8,2 — в кислой и нейтральной среде." }
+
+- id: nr_iron_water
+  priority: 20
+  when:
+    trigger: [add, pour, stir]
+    reactants:
+      - { bind: f, match: { species: iron } }
+      - { bind: w, match: { species: water }, phases: [liquid] }
+  text:
+    why: { ru: "Железные опилки лежат на дне и не растворяются." }
+    deeper: { ru: "Если оставить их в воде надолго, они заржавеют. Но это очень медленно." }
+    adult: { ru: "Коррозия железа в воде идёт сутками." }
+
+- id: nr_oil_stir
+  priority: 20
+  when:
+    trigger: [stir]
+    reactants: [{ bind: o, match: { class: oil }, phases: [liquid] }]
+  text:
+    why: { ru: "Масло разбилось на капли, а потом снова собралось сверху. С водой оно не смешивается." }
+    adult: { ru: "Без эмульгатора эмульсия масла в воде быстро расслаивается." }
+
+- id: nr_magnet_nothing
+  priority: 10
+  when:
+    trigger: [magnet]
+    reactants: [{ bind: x, match: {} }]
+  text:
+    why: { ru: "Магнит ничего не притянул. Он тянет железо, а железа здесь нет." }
+    adult: { ru: "Из веществ лабы магнитом притягиваются только железные опилки." }
+
+- id: nr_blow_no_lime
+  priority: 10
+  when:
+    trigger: [blow]
+    reactants: [{ bind: w, match: { species: water }, phases: [liquid] }]
+  text:
+    why: { ru: "Пузырьки воздуха вышли — и всё. Чтобы увидеть углекислый газ из выдоха, нужна известковая вода." }
+    adult: { ru: "В выдохе около 4 % CO₂; без реактива его не заметить." }

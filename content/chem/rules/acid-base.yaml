@@ -1,0 +1,179 @@
+# Кислоты и щёлочи: нейтрализация, известковая вода, индикаторы, кислота и железо.
+- id: neutralization
+  kind: reaction
+  priority: 90
+  when:
+    reactants:
+      - { bind: acid, match: { class: acid }, phases: [dissolved, liquid] }
+      - { bind: base, match: { class: strong_base }, phases: [dissolved] }
+    medium: aqueous
+  effect: { type: react }
+  observe: [{ kind: nothing }]
+  variants:
+    - id: acetic_lime
+      bind: { acid: acetic_acid, base: calcium_hydroxide }
+      reactants: [{ bind: acid, coeff: 2 }, { bind: base, coeff: 1 }]
+      products:
+        - { species: calcium_acetate, coeff: 1, phase: dissolved }
+        - { species: water, coeff: 2, phase: liquid }
+      equation: "2CH3COOH + Ca(OH)2 -> Ca(CH3COO)2 + 2H2O"
+      heatJPerMol: -56000
+    - id: acetic_sodium_hydroxide
+      bind: { acid: acetic_acid, base: sodium_hydroxide }
+      reactants: [{ bind: acid, coeff: 1 }, { bind: base, coeff: 1 }]
+      products:
+        - { species: sodium_acetate, coeff: 1, phase: dissolved }
+        - { species: water, coeff: 1, phase: liquid }
+      equation: "CH3COOH + NaOH -> CH3COONa + H2O"
+      heatJPerMol: -56000
+    - id: acetic_potassium_hydroxide
+      bind: { acid: acetic_acid, base: potassium_hydroxide }
+      reactants: [{ bind: acid, coeff: 1 }, { bind: base, coeff: 1 }]
+      products:
+        - { species: potassium_acetate, coeff: 1, phase: dissolved }
+        - { species: water, coeff: 1, phase: liquid }
+      equation: "CH3COOH + KOH -> CH3COOK + H2O"
+      heatJPerMol: -56000
+    - id: citric_lime
+      bind: { acid: citric_acid, base: calcium_hydroxide }
+      reactants: [{ bind: acid, coeff: 2 }, { bind: base, coeff: 3 }]
+      products:
+        - { species: calcium_citrate, coeff: 1, phase: dissolved }
+        - { species: water, coeff: 6, phase: liquid }
+      equation: "2C6H8O7 + 3Ca(OH)2 -> Ca3(C6H5O7)2 + 6H2O"
+      heatJPerMol: -150000
+    - id: citric_sodium_hydroxide
+      bind: { acid: citric_acid, base: sodium_hydroxide }
+      reactants: [{ bind: acid, coeff: 1 }, { bind: base, coeff: 3 }]
+      products:
+        - { species: sodium_citrate, coeff: 1, phase: dissolved }
+        - { species: water, coeff: 3, phase: liquid }
+      equation: "C6H8O7 + 3NaOH -> Na3C6H5O7 + 3H2O"
+      heatJPerMol: -150000
+  text:
+    what: { ru: "Снаружи ничего не видно" }
+    why: { ru: "Кислота и щёлочь погасили друг друга. Получились соль и вода. Капни индикатор — и увидишь, кто победил." }
+    deeper: { ru: "Это называется нейтрализация. Так работает лекарство от изжоги: щёлочь гасит лишнюю кислоту." }
+    adult: { ru: "Кислота + основание → соль + вода. В пробирке тепловой эффект меньше градуса, поэтому реакцию показывает только индикатор." }
+  sources: [wiki_neutralization]
+  review: { status: self_checked, notes: "Теплота нейтрализации слабой кислоты около 56 кДж/моль" }
+
+- id: lime_water_co2
+  kind: reaction
+  priority: 80
+  when:
+    reactants:
+      - { bind: lime, match: { species: calcium_hydroxide }, phases: [dissolved] }
+      - { bind: gas, match: { species: carbon_dioxide }, phases: [dissolved] }
+    medium: aqueous
+  effect: { type: react }
+  observe: [{ kind: turbid }]
+  variants:
+    - id: co2
+      bind: { lime: calcium_hydroxide, gas: carbon_dioxide }
+      reactants: [{ bind: lime, coeff: 1 }, { bind: gas, coeff: 1 }]
+      products:
+        - { species: calcium_carbonate, coeff: 1, phase: suspended }
+        - { species: water, coeff: 1, phase: liquid }
+      equation: "Ca(OH)2 + CO2 -> CaCO3 + H2O"
+  text:
+    what: { ru: "Прозрачная вода помутнела, стала белой" }
+    why: { ru: "В выдохе есть углекислый газ. Он встретил известковую воду — и получился мел! Крошечные крупинки мела и делают воду мутной." }
+    deeper: { ru: "Это главный способ найти углекислый газ: его не видно и не слышно, а известковая вода мутнеет." }
+    adult: { ru: "Ca(OH)₂ + CO₂ → CaCO₃↓ + H₂O. При долгом пропускании CO₂ муть снова растворяется: образуется Ca(HCO₃)₂ (в лабе не моделируем)." }
+  sources: [wiki_limewater]
+  review: { status: self_checked }
+
+- id: lime_water_carbonate
+  kind: reaction
+  priority: 80
+  when:
+    reactants:
+      - { bind: lime, match: { species: calcium_hydroxide }, phases: [dissolved] }
+      - { bind: soda, match: { class: weak_base }, phases: [dissolved] }
+    medium: aqueous
+  effect: { type: react }
+  observe: [{ kind: turbid }]
+  variants:
+    - id: bicarbonate
+      bind: { lime: calcium_hydroxide, soda: sodium_bicarbonate }
+      reactants: [{ bind: lime, coeff: 1 }, { bind: soda, coeff: 1 }]
+      products:
+        - { species: calcium_carbonate, coeff: 1, phase: suspended }
+        - { species: sodium_hydroxide, coeff: 1, phase: dissolved }
+        - { species: water, coeff: 1, phase: liquid }
+      equation: "Ca(OH)2 + NaHCO3 -> CaCO3 + NaOH + H2O"
+    - id: carbonate
+      bind: { lime: calcium_hydroxide, soda: sodium_carbonate }
+      reactants: [{ bind: lime, coeff: 1 }, { bind: soda, coeff: 1 }]
+      products:
+        - { species: calcium_carbonate, coeff: 1, phase: suspended }
+        - { species: sodium_hydroxide, coeff: 2, phase: dissolved }
+      equation: "Ca(OH)2 + Na2CO3 -> CaCO3 + 2NaOH"
+  text:
+    what: { ru: "Раствор помутнел, появилась белая муть" }
+    why: { ru: "В соде есть та же «деталь», что в меле. Известковая вода её поймала — и выпал мел." }
+    deeper: { ru: "Нерастворимое вещество, которое появилось в растворе, учёные называют осадком." }
+    adult: { ru: "Ионы Ca²⁺ и CO₃²⁻ дают нерастворимый CaCO₃. Попутно образуется NaOH — раствор становится сильнее щелочным." }
+  sources: [wiki_limewater]
+  review: { status: self_checked }
+
+- id: litmus_indicator
+  kind: indicator
+  priority: 60
+  when:
+    reactants: [{ bind: i, match: { species: litmus_dye }, phases: [dissolved] }]
+    medium: aqueous
+  effect: { type: indicator, bind: i }
+  observe: [{ kind: color }]
+  text:
+    what: { ru: "Лакмус поменял цвет" }
+    why: { ru: "Лакмус — индикатор. В кислом он красный, в щелочном синий, а в чистой воде фиолетовый." }
+    deeper: { ru: "Лакмус добывают из лишайников. Им пользуются уже несколько сотен лет." }
+    adult: { ru: "Переход окраски лакмуса — примерно pH 4,5–8,3. Он показывает «кислое или щелочное», но не точное значение pH." }
+  sources: [wiki_litmus]
+  review: { status: self_checked }
+
+- id: phenolphthalein_indicator
+  kind: indicator
+  priority: 60
+  when:
+    reactants: [{ bind: i, match: { species: phenolphthalein_dye }, phases: [dissolved] }]
+    medium: aqueous
+  effect: { type: indicator, bind: i }
+  observe: [{ kind: color }]
+  text:
+    what: { ru: "Раствор стал малиновым" }
+    why: { ru: "Фенолфталеин краснеет только в щёлочи. В кислом и в воде он бесцветный." }
+    deeper: { ru: "Один индикатор — один вопрос. Фенолфталеин спрашивает: «Здесь есть щёлочь?»" }
+    adult: { ru: "Переход окраски примерно pH 8,2–10. Раньше его использовали как слабительное, сейчас — только как реактив." }
+  sources: [wiki_phenolphthalein]
+  review: { status: self_checked }
+
+- id: iron_acid_hydrogen
+  kind: reaction
+  priority: 70
+  when:
+    reactants:
+      - { bind: metal, match: { species: iron }, phases: [solid, sediment] }
+      - { bind: acid, match: { species: acetic_acid }, phases: [dissolved] }
+    medium: aqueous
+  effect: { type: react }
+  observe: [{ kind: gas, intensity: weak }]
+  variants:
+    - id: acetic
+      bind: { metal: iron, acid: acetic_acid }
+      reactants: [{ bind: metal, coeff: 1 }, { bind: acid, coeff: 2 }]
+      products:
+        - { species: iron_acetate, coeff: 1, phase: dissolved }
+        - { species: hydrogen, coeff: 1, phase: gas }
+      kinetics: { mode: over_time, durationS: 300 }
+      intensity: weak
+      equation: "Fe + 2CH3COOH -> Fe(CH3COO)2 + H2^"
+  text:
+    what: { ru: "На опилках появились редкие пузырьки" }
+    why: { ru: "Уксус медленно растворяет железо. Пузырьки — это другой газ, водород." }
+    deeper: { ru: "Поэтому железные вещи не хранят в кислом: они портятся." }
+    adult: { ru: "Fe + 2CH₃COOH → Fe(CH₃COO)₂ + H₂↑, медленно. Водород горюч — в лабе только наблюдаем." }
+  sources: [wiki_iron]
+  review: { status: self_checked }

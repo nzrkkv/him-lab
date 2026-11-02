@@ -20,3 +20,15 @@
 - { id: heat_stable }
 - { id: chars, note: "обугливается при перегреве" }
 - { id: chlorine_cleaner, note: "только для стоп-правил модуля 8, на полке MVP нет" }
+- { id: strong_base }
+- { id: copper_salt }
+- { id: magnetic }
+- { id: surfactant }
+- { id: catalyst_o2, note: "ускоряет разложение перекиси (дрожжи)" }
+- { id: peroxide }
+- { id: oxidizer }
+- { id: milk_protein }
+- { id: oil }
+- { id: metal }
+- { id: yeast }
+- { id: alcohol }

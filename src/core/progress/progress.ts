@@ -21,6 +21,14 @@ export interface SandboxLogLine {
   tone: 'change' | 'nothing' | 'caution' | 'discovery';
 }
 
+export interface LessonProgress {
+  screen: number;
+  answers: Record<string, unknown>;
+  /** Вопрос теста → верно ли с первой попытки. */
+  testFirst: Record<string, boolean>;
+  completed: boolean;
+}
+
 export interface ProgressV1 {
   schemaVersion: 1;
   settings: Settings;
@@ -28,6 +36,8 @@ export interface ProgressV1 {
   missionsCompleted: string[];
   discoveries: string[];
   sandboxLog: SandboxLogLine[];
+  lessons: Record<string, LessonProgress>;
+  badges: string[];
 }
 
 export const DEFAULT_SETTINGS: Settings = { hints: true, deeper: false, calm: false, sound: false };
@@ -40,6 +50,8 @@ export function emptyProgress(): ProgressV1 {
     missionsCompleted: [],
     discoveries: [],
     sandboxLog: [],
+    lessons: {},
+    badges: [],
   };
 }
 
@@ -92,9 +104,41 @@ export function loadProgress(raw: string | null): LoadResult {
       mission,
       missionsCompleted: strings(data['missionsCompleted']),
       discoveries: strings(data['discoveries']),
+      lessons: lessonsOf(data['lessons']),
+      badges: strings(data['badges']),
       sandboxLog: Array.isArray(data['sandboxLog'])
         ? (data['sandboxLog'] as SandboxLogLine[]).slice(-50)
         : [],
     },
   };
+}
+
+/** Поля, добавленные после первого релиза v1, читаются с безопасными значениями по умолчанию. */
+function lessonsOf(x: unknown): Record<string, LessonProgress> {
+  const out: Record<string, LessonProgress> = {};
+  if (!isObj(x)) return out;
+  for (const [id, v] of Object.entries(x)) {
+    if (!isObj(v)) continue;
+    out[id] = {
+      screen: typeof v['screen'] === 'number' && v['screen'] >= 0 ? Math.floor(v['screen']) : 0,
+      answers: isObj(v['answers']) ? v['answers'] : {},
+      testFirst: isObj(v['testFirst'])
+        ? (Object.fromEntries(
+            Object.entries(v['testFirst']).filter(([, b]) => typeof b === 'boolean'),
+          ) as Record<string, boolean>)
+        : {},
+      completed: v['completed'] === true,
+    };
+  }
+  return out;
+}
+
+export function lessonProgress(p: ProgressV1, lessonId: string): LessonProgress {
+  return (p.lessons[lessonId] ??= { screen: 0, answers: {}, testFirst: {}, completed: false });
+}
+
+export function awardBadge(p: ProgressV1, badge: string): boolean {
+  if (p.badges.includes(badge)) return false;
+  p.badges.push(badge);
+  return true;
 }

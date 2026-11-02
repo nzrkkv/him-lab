@@ -17,7 +17,9 @@
     "thermometer",
     "ph-strip",
     "test-tube-rack",
-    "test-tube-holder"
+    "test-tube-holder",
+    "sink",
+    "fume-hood"
   ],
   "containers": [
     "jar",
@@ -35,7 +37,11 @@
     "heat-waves",
     "frost",
     "splash",
-    "fizz"
+    "fizz",
+    "fan-hand",
+    "foam-overflow",
+    "cookie",
+    "puddle"
   ],
   "badges": [
     "first-experiment",
@@ -49,7 +55,8 @@
     "guide-explain",
     "guide-happy",
     "guide-thinking",
-    "guide-warn"
+    "guide-warn",
+    "vintik"
   ],
   "brand": [
     "logo-mark"
@@ -117,6 +124,7 @@
     "result-crystals": "Появились кристаллы",
     "result-melt": "Расплавилось",
     "result-nothing": "Ничего не изменилось",
-    "result-turbid": "Стало мутным"
+    "result-turbid": "Стало мутным",
+    "blow": "Подуть через трубочку"
   }
 }

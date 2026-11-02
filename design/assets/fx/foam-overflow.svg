@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 90" width="120" height="90" class="hl-fx" data-asset="fx-foam-overflow" role="img" aria-label="Пена переливается через край">
+<title>Пена переливается через край</title>
+<g data-layer="foam" fill="#FFFFFF" stroke="#16213F" stroke-width="2.5" stroke-opacity="0.6"><circle cx="30" cy="34" r="14"/><circle cx="52" cy="24" r="16"/><circle cx="76" cy="28" r="15"/><circle cx="96" cy="38" r="12"/><circle cx="60" cy="44" r="14"/><circle cx="16" cy="50" r="10"/><circle cx="104" cy="56" r="9"/></g>
+<g data-layer="drips" fill="#FFFFFF" stroke="#16213F" stroke-width="2.5" stroke-opacity="0.6"><path d="M10 56 Q8 72 14 80 Q20 72 18 56 Z"/><path d="M100 62 Q98 76 104 84 Q110 76 108 62 Z"/></g>
+</svg>

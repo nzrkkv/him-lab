@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 44" width="120" height="44" class="hl-fx" data-asset="fx-puddle" role="img" aria-label="Лужица на столе">
+<title>Лужица на столе</title>
+<path d="M14 26 Q8 14 26 12 Q40 4 58 10 Q78 4 94 12 Q114 14 108 28 Q104 40 80 36 Q62 42 44 36 Q20 40 14 26 Z" style="fill:var(--liquid-color, #CDE9FB)" stroke="#16213F" stroke-width="3" stroke-linejoin="round"/>
+<path d="M32 20 Q40 16 48 18" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+</svg>

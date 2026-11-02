@@ -8,7 +8,7 @@
   stateAt20C: liquid
   density: 1.0
   names: { scientific: { ru: "вода" } }
-  color: { solution: color.substance.water }
+  color: { solution: color.substance.water, powder: color.substance.ice }
   specificHeat: 4.18
   hazard: none
   sources: [lesson01]
@@ -274,4 +274,425 @@
   specificHeat: 0.74
   hazard: none
   sources: [lesson01]
+  review: { status: self_checked }
+
+# ---------- расширение лабы (часть 3). Все числа — черновик для проверки химиком ----------
+- id: citric_acid
+  formula: C6H8O7
+  molarMass: 192.12
+  classes: [acid, weak_acid, soluble, powder]
+  stateAt20C: solid
+  names: { scientific: { ru: "лимонная кислота" } }
+  solubility: { table: [[0, 96], [20, 147], [80, 382]], stirsToDissolve: 1, noStirFractionPerMin: 0.4 }
+  color: { powder: color.substance.powder-sugar }
+  magnifierView: crystals
+  specificHeat: 1.2
+  acidBase: { role: weak_acid, pKa: 3.13 }
+  hazard: low
+  sources: [wiki_citric_acid]
+  review: { status: self_checked }
+
+- id: sodium_citrate
+  formula: Na3C6H5O7
+  molarMass: 258.07
+  classes: [salt, soluble]
+  stateAt20C: solid
+  names: { scientific: { ru: "цитрат натрия" } }
+  solubility: { table: [[20, 72], [100, 167]], stirsToDissolve: 1, noStirFractionPerMin: 0.5 }
+  color: { powder: color.substance.powder-salt }
+  specificHeat: 1.2
+  acidBase: { role: conjugate_base, of: citric_acid, perMol: 1 }
+  hazard: none
+  sources: [wiki_citric_acid]
+  review: { status: self_checked }
+
+- id: calcium_citrate
+  formula: Ca3(C6H5O7)2
+  molarMass: 498.4
+  classes: [salt, soluble]
+  stateAt20C: solid
+  names: { scientific: { ru: "цитрат кальция" } }
+  solubility: { table: [[20, 0.085]], stirsToDissolve: 1, noStirFractionPerMin: 0.5 }
+  color: { powder: color.substance.powder-salt }
+  specificHeat: 1.2
+  hazard: none
+  sources: [wiki_citric_acid]
+  review: { status: self_checked, notes: "Малорастворим: в больших количествах выпадает в осадок — в прототипе не моделируется" }
+
+- id: calcium_hydroxide
+  formula: Ca(OH)2
+  molarMass: 74.09
+  classes: [strong_base, soluble]
+  stateAt20C: solid
+  names: { scientific: { ru: "гидроксид кальция" } }
+  solubility: { table: [[0, 0.189], [20, 0.173], [100, 0.066]], stirsToDissolve: 1, noStirFractionPerMin: 0.5 }
+  color: { powder: color.substance.powder-salt }
+  specificHeat: 1.2
+  acidBase: { role: strong_base, equivalents: 2 }
+  hazard: caution
+  sources: [wiki_calcium_hydroxide]
+  review: { status: self_checked }
+
+- id: sodium_hydroxide
+  formula: NaOH
+  molarMass: 40.0
+  classes: [strong_base, soluble]
+  stateAt20C: solid
+  names: { scientific: { ru: "гидроксид натрия" } }
+  solubility: { table: [[20, 109]], stirsToDissolve: 1, noStirFractionPerMin: 0.8 }
+  color: { powder: color.substance.powder-salt }
+  specificHeat: 1.5
+  acidBase: { role: strong_base, equivalents: 1 }
+  hazard: high
+  sources: [wiki_naoh]
+  review: { status: self_checked, notes: "Появляется только как продукт в разбавленном растворе, на полке его нет" }
+
+- id: sodium_sulfate
+  formula: Na2SO4
+  molarMass: 142.04
+  classes: [salt, soluble]
+  stateAt20C: solid
+  names: { scientific: { ru: "сульфат натрия" } }
+  solubility: { table: [[20, 19.5], [40, 48.8], [100, 42.5]], stirsToDissolve: 1, noStirFractionPerMin: 0.5 }
+  color: { powder: color.substance.powder-salt }
+  specificHeat: 1.0
+  hazard: none
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: calcium_sulfate
+  formula: CaSO4
+  molarMass: 136.14
+  classes: [salt, soluble]
+  stateAt20C: solid
+  names: { scientific: { ru: "сульфат кальция (гипс)" } }
+  solubility: { table: [[20, 0.24]], stirsToDissolve: 1, noStirFractionPerMin: 0.5 }
+  color: { powder: color.substance.powder-chalk }
+  specificHeat: 1.1
+  hazard: none
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: copper_sulfate_pentahydrate
+  formula: CuSO4(H2O)5
+  molarMass: 249.69
+  classes: [copper_salt, salt, soluble, powder]
+  stateAt20C: solid
+  names: { scientific: { ru: "медный купорос (пятиводный сульфат меди)" } }
+  solubility: { table: [[0, 23.1], [20, 32.0], [60, 61.8], [100, 114]], stirsToDissolve: 2, noStirFractionPerMin: 0.2 }
+  color: { powder: color.substance.copper-sulfate, solution: color.substance.copper-sulfate, tint: 60 }
+  magnifierView: crystals
+  specificHeat: 1.1
+  acidBase: { role: weak_acid, pKa: 7.5 }
+  hazard: caution
+  sources: [wiki_copper_sulfate]
+  review: { status: self_checked, notes: "Растворимость пятиводной соли; pH раствора около 4" }
+
+- id: copper_sulfate_anhydrous
+  formula: CuSO4
+  molarMass: 159.61
+  classes: [copper_salt, powder]
+  stateAt20C: solid
+  names: { scientific: { ru: "безводный сульфат меди" } }
+  color: { powder: color.substance.powder-chalk }
+  specificHeat: 0.8
+  hazard: caution
+  discoverable:
+    name: { ru: "Белый купорос" }
+    text: { ru: "Синие кристаллы от жара отдали воду и побелели. Капни воды — посинеют снова!" }
+  sources: [wiki_copper_sulfate]
+  review: { status: self_checked }
+
+- id: copper_hydroxide
+  formula: Cu(OH)2
+  molarMass: 97.56
+  classes: [insoluble]
+  stateAt20C: solid
+  names: { scientific: { ru: "гидроксид меди" } }
+  insoluble: { form: suspension, settleTimeS: 50, turbidity: 2.0 }
+  color: { powder: color.copper.300 }
+  specificHeat: 1.0
+  hazard: caution
+  discoverable:
+    name: { ru: "Голубой осадок" }
+    text: { ru: "Из двух прозрачных жидкостей получился голубой осадок — новое вещество!" }
+  sources: [wiki_copper_hydroxide]
+  review: { status: self_checked }
+
+- id: basic_copper_carbonate
+  formula: Cu2(OH)2CO3
+  molarMass: 221.12
+  classes: [insoluble]
+  stateAt20C: solid
+  names: { scientific: { ru: "основный карбонат меди (как в малахите)" } }
+  insoluble: { form: suspension, settleTimeS: 50, turbidity: 2.0 }
+  color: { powder: color.ph.9 }
+  specificHeat: 1.0
+  hazard: low
+  discoverable:
+    name: { ru: "Малахитовый осадок" }
+    text: { ru: "Голубой купорос и сода дали зелёно-голубой осадок. Похожее вещество есть в камне малахите." }
+  sources: [wiki_basic_copper_carbonate]
+  review: { status: self_checked }
+
+- id: copper
+  formula: Cu
+  molarMass: 63.55
+  classes: [metal, insoluble, sinks]
+  stateAt20C: solid
+  names: { scientific: { ru: "медь" } }
+  insoluble: { form: sediment, settleTimeS: 2, turbidity: 0.2 }
+  color: { powder: color.substance.caramel }
+  specificHeat: 0.39
+  hazard: none
+  discoverable:
+    name: { ru: "Медь из раствора" }
+    text: { ru: "На железе появился рыжий налёт — это медь, которую железо «вытащило» из раствора." }
+  sources: [wiki_copper_sulfate]
+  review: { status: self_checked }
+
+- id: iron
+  formula: Fe
+  molarMass: 55.85
+  classes: [metal, magnetic, insoluble, sinks, powder]
+  stateAt20C: solid
+  names: { scientific: { ru: "железо" } }
+  insoluble: { form: sediment, settleTimeS: 2, turbidity: 0.2 }
+  color: { powder: color.substance.iron }
+  magnifierView: fine_powder
+  specificHeat: 0.45
+  hazard: low
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: iron_sulfate
+  formula: FeSO4
+  molarMass: 151.91
+  classes: [salt, soluble]
+  stateAt20C: solid
+  names: { scientific: { ru: "сульфат железа (II)" } }
+  solubility: { table: [[20, 29.5], [60, 54]], stirsToDissolve: 1, noStirFractionPerMin: 0.5 }
+  color: { powder: color.feedback.success.300, solution: color.feedback.success.300, tint: 10 }
+  specificHeat: 0.9
+  hazard: low
+  sources: [wiki_copper_sulfate]
+  review: { status: self_checked }
+
+- id: iron_acetate
+  formula: Fe(CH3COO)2
+  molarMass: 173.93
+  classes: [salt, soluble]
+  stateAt20C: solid
+  names: { scientific: { ru: "ацетат железа (II)" } }
+  solubility: { table: [[20, 50]], stirsToDissolve: 1, noStirFractionPerMin: 0.5 }
+  color: { powder: color.feedback.success.300, solution: color.feedback.success.300, tint: 6 }
+  specificHeat: 1.0
+  acidBase: { role: conjugate_base, of: acetic_acid, perMol: 2 }
+  hazard: low
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: hydrogen
+  formula: H2
+  molarMass: 2.016
+  classes: []
+  stateAt20C: gas
+  names: { scientific: { ru: "водород" } }
+  hazard: low
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: oxygen
+  formula: O2
+  molarMass: 32.0
+  classes: []
+  stateAt20C: gas
+  names: { scientific: { ru: "кислород" } }
+  hazard: none
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: hydrogen_peroxide
+  formula: H2O2
+  molarMass: 34.01
+  classes: [peroxide, oxidizer]
+  stateAt20C: liquid
+  density: 1.45
+  names: { scientific: { ru: "пероксид водорода" } }
+  specificHeat: 2.6
+  hazard: caution
+  sources: [wiki_peroxide]
+  review: { status: self_checked }
+
+- id: potassium_permanganate
+  formula: KMnO4
+  molarMass: 158.03
+  classes: [oxidizer, soluble, powder]
+  stateAt20C: solid
+  names: { scientific: { ru: "перманганат калия" } }
+  solubility: { table: [[0, 2.8], [20, 6.4], [60, 22.1]], stirsToDissolve: 1, noStirFractionPerMin: 0.5 }
+  color: { powder: color.substance.permanganate, solution: color.substance.permanganate, tint: 4000 }
+  magnifierView: crystals
+  specificHeat: 0.8
+  hazard: high
+  sources: [wiki_permanganate]
+  review: { status: self_checked }
+
+- id: manganese_dioxide
+  formula: MnO2
+  molarMass: 86.94
+  classes: [insoluble, catalyst_o2]
+  stateAt20C: solid
+  names: { scientific: { ru: "оксид марганца (IV)" } }
+  insoluble: { form: suspension, settleTimeS: 40, turbidity: 2.5 }
+  color: { powder: color.wood.700 }
+  specificHeat: 0.6
+  hazard: low
+  discoverable:
+    name: { ru: "Бурый осадок" }
+    text: { ru: "Фиолетовый цвет исчез, а вместо него — бурые хлопья. Это новое вещество!" }
+  sources: [wiki_permanganate]
+  review: { status: self_checked }
+
+- id: potassium_hydroxide
+  formula: KOH
+  molarMass: 56.11
+  classes: [strong_base, soluble]
+  stateAt20C: solid
+  names: { scientific: { ru: "гидроксид калия" } }
+  solubility: { table: [[20, 121]], stirsToDissolve: 1, noStirFractionPerMin: 0.8 }
+  color: { powder: color.substance.powder-salt }
+  specificHeat: 1.2
+  acidBase: { role: strong_base, equivalents: 1 }
+  hazard: high
+  sources: [wiki_permanganate]
+  review: { status: self_checked, notes: "Только продукт в разбавленном растворе" }
+
+- id: potassium_acetate
+  formula: CH3COOK
+  molarMass: 98.14
+  classes: [salt, soluble]
+  stateAt20C: solid
+  names: { scientific: { ru: "ацетат калия" } }
+  solubility: { table: [[20, 256]], stirsToDissolve: 1, noStirFractionPerMin: 0.5 }
+  color: { powder: color.substance.powder-salt }
+  specificHeat: 1.2
+  acidBase: { role: conjugate_base, of: acetic_acid, perMol: 1 }
+  hazard: none
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: yeast_cells
+  formula: mixture
+  molarMass: null
+  classes: [yeast, catalyst_o2, insoluble, powder]
+  stateAt20C: solid
+  names: { scientific: { ru: "дрожжи (живые грибки)" } }
+  insoluble: { form: suspension, settleTimeS: 60, turbidity: 1.2 }
+  color: { powder: color.wood.200 }
+  magnifierView: ultrafine_powder
+  specificHeat: 1.5
+  hazard: none
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: ethanol
+  formula: C2H5OH
+  molarMass: 46.07
+  classes: [alcohol]
+  stateAt20C: liquid
+  density: 0.79
+  names: { scientific: { ru: "этиловый спирт" } }
+  specificHeat: 2.4
+  hazard: caution
+  sources: [lesson01]
+  review: { status: self_checked, notes: "Появляется в крошечных количествах при брожении, в интерфейсе ребёнку не называется" }
+
+- id: soap
+  formula: mixture
+  molarMass: null
+  classes: [surfactant, soluble]
+  stateAt20C: liquid
+  density: 1.02
+  names: { scientific: { ru: "моющее вещество (ПАВ)" } }
+  solubility: { table: [[20, 100]], stirsToDissolve: 1, noStirFractionPerMin: 1 }
+  specificHeat: 2.0
+  hazard: low
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: vegetable_oil
+  formula: mixture
+  molarMass: null
+  classes: [oil]
+  stateAt20C: liquid
+  density: 0.92
+  names: { scientific: { ru: "растительный жир (масло)" } }
+  color: { solution: color.substance.oil }
+  specificHeat: 2.0
+  hazard: none
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: milk_protein
+  formula: mixture
+  molarMass: null
+  classes: [milk_protein, insoluble]
+  stateAt20C: solid
+  names: { scientific: { ru: "белки и жир молока (казеин)" } }
+  insoluble: { form: suspension, settleTimeS: 100000, turbidity: 4.0 }
+  color: { powder: color.substance.milk }
+  specificHeat: 2.0
+  hazard: none
+  sources: [wiki_casein]
+  review: { status: self_checked, notes: "Молоко — устойчивая эмульсия, сама не оседает" }
+
+- id: curd
+  formula: mixture
+  molarMass: null
+  classes: [insoluble]
+  stateAt20C: solid
+  names: { scientific: { ru: "свернувшийся казеин (творожок)" } }
+  insoluble: { form: suspension, settleTimeS: 30, turbidity: 1.5 }
+  color: { powder: color.substance.milk }
+  specificHeat: 2.0
+  hazard: none
+  discoverable:
+    name: { ru: "Творожок" }
+    text: { ru: "Кислота свернула белок молока — получились хлопья. Так делают творог и сыр." }
+  sources: [wiki_casein]
+  review: { status: self_checked }
+
+- id: litmus_dye
+  formula: mixture
+  molarMass: null
+  classes: [indicator]
+  stateAt20C: solid
+  names: { scientific: { ru: "лакмус" } }
+  color: { solution: color.substance.litmus, tint: 1500 }
+  indicator:
+    colors:
+      - { phMax: 4.5, color: color.ph.2, name: { ru: "красным" } }
+      - { phMax: 8.3, color: color.substance.litmus, name: { ru: "фиолетовым" } }
+      - { phMax: 14.1, color: color.ph.10, name: { ru: "синим" } }
+  specificHeat: 1.0
+  hazard: none
+  sources: [wiki_litmus]
+  review: { status: self_checked }
+
+- id: phenolphthalein_dye
+  formula: C20H14O4
+  molarMass: 318.32
+  classes: [indicator]
+  stateAt20C: solid
+  names: { scientific: { ru: "фенолфталеин" } }
+  color: { solution: color.substance.water, tint: 0 }
+  indicator:
+    colors:
+      - { phMax: 8.2, color: color.substance.water, name: { ru: "бесцветным" } }
+      - { phMax: 10, color: color.ph-cabbage.4, name: { ru: "розовым" } }
+      - { phMax: 14.1, color: color.substance.phenolphthalein-base, name: { ru: "малиновым" } }
+  specificHeat: 1.0
+  hazard: low
+  sources: [wiki_phenolphthalein]
   review: { status: self_checked }
