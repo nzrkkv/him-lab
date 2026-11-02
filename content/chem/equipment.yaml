@@ -14,3 +14,5 @@
 - { id: thermometer, asset: equipment/thermometer, name: { ru: "Термометр" }, kind: tool }
 - { id: ph_strip, asset: equipment/ph-strip, name: { ru: "pH-полоска" }, kind: tool }
 - { id: scales, asset: equipment/scales, name: { ru: "Весы" }, kind: station }
+- { id: funnel, asset: equipment/funnel, name: { ru: "Воронка с фильтром" }, kind: tool, tip: { ru: "Фильтр задерживает крупинки, а жидкость проходит." } }
+- { id: magnet, asset: equipment/magnet, name: { ru: "Магнит" }, kind: tool, tip: { ru: "Магнит притягивает железо." } }

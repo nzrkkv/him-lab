@@ -1,0 +1,486 @@
+# Табличные тесты расширения лабы: кислоты и щёлочи, медь, перекись, кухня, разделение смесей.
+
+- id: x01_citric_soda_needs_water
+  rules: [nr_dry_acid_carbonate]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: citric_acid, n: 1 }
+    - add: { v: v1, s: baking_soda, n: 1 }
+  expect:
+    events:
+      include: [{ type: nothing_happened, reasonId: nr_dry_acid_carbonate }]
+      exclude: [{ type: observation, kind: gas }]
+
+- id: x02_citric_soda_fizz_with_water
+  rules: [acid_carbonate_gas, dissolve_soluble]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: citric_acid, n: 1 }
+    - add: { v: v1, s: baking_soda, n: 1 }
+    - add: { v: v1, s: water, n: 2 }
+    - stir: { v: v1, times: 3 }
+  expect:
+    events:
+      include: [{ type: observation, kind: gas, ruleId: acid_carbonate_gas }]
+    vessels:
+      v1: { grams: { sodium_citrate: { gt: 0.01 } } }
+
+- id: x03_citric_chalk_slow
+  rules: [acid_carbonate_gas]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: citric_acid, n: 1 }
+    - add: { v: v1, s: water, n: 2 }
+    - stir: v1
+    - add: { v: v1, s: chalk, n: 1 }
+    - wait: 60
+  expect:
+    events:
+      include: [{ type: process, ruleId: acid_carbonate_gas, phase: started }]
+    vessels:
+      v1: { grams: { calcium_citrate: { gt: 0.01 } } }
+
+- id: x04_vinegar_lime_neutralization
+  rules: [neutralization]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: lime_water, n: 1 }
+    - add: { v: v1, s: vinegar, n: 1 }
+  expect:
+    events:
+      include: [{ type: observation, kind: nothing, ruleId: neutralization }]
+    vessels:
+      v1: { grams: { calcium_hydroxide: { lt: 0.0001 }, calcium_acetate: { gt: 0.001 } } }
+
+- id: x05_phenolphthalein_lime_crimson_then_vinegar
+  rules: [phenolphthalein_indicator, neutralization]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: lime_water, n: 1 }
+    - add: { v: v1, s: phenolphthalein, n: 2 }
+    - add: { v: v1, s: vinegar, n: 1 }
+  expect:
+    events:
+      include:
+        - { type: observation, kind: color, ruleId: phenolphthalein_indicator, colorName: "малиновым" }
+        - { type: observation, kind: color, ruleId: phenolphthalein_indicator, colorName: "бесцветным" }
+
+- id: x06_phenolphthalein_in_acid_stays_colorless
+  rules: [nr_phenolphthalein_no_base]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: vinegar, n: 1 }
+    - add: { v: v1, s: phenolphthalein, n: 2 }
+  expect:
+    events:
+      include: [{ type: nothing_happened, reasonId: nr_phenolphthalein_no_base }]
+      exclude: [{ type: observation, ruleId: phenolphthalein_indicator }]
+
+- id: x07_litmus_red_in_vinegar_blue_in_lime
+  rules: [litmus_indicator]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: vinegar, n: 1 }
+    - add: { v: v1, s: litmus, n: 2 }
+    - place: test_tube
+    - add: { v: v2, s: lime_water, n: 1 }
+    - add: { v: v2, s: litmus, n: 2 }
+  expect:
+    events:
+      include:
+        - { type: observation, vesselId: v1, ruleId: litmus_indicator, colorName: "красным" }
+        - { type: observation, vesselId: v2, ruleId: litmus_indicator, colorName: "синим" }
+
+- id: x08_cabbage_and_litmus_together_settle
+  rules: [cabbage_indicator, litmus_indicator]
+  actions:
+    - place: beaker
+    - add: { v: v1, s: red_cabbage, n: 1 }
+    - add: { v: v1, s: litmus, n: 2 }
+    - add: { v: v1, s: vinegar, n: 1 }
+  expect:
+    events:
+      include:
+        - { type: observation, ruleId: cabbage_indicator }
+        - { type: observation, ruleId: litmus_indicator }
+
+- id: x09_blow_into_lime_water
+  rules: [lime_water_co2]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: lime_water, n: 2 }
+    - blow: v1
+  expect:
+    events:
+      include: [{ type: observation, kind: turbid, ruleId: lime_water_co2 }]
+    vessels:
+      v1: { phases: { calcium_carbonate: { suspended: { gt: 0.005 } } }, grams: { carbon_dioxide: 0 } }
+
+- id: x10_blow_into_water_nothing
+  rules: [nr_blow_no_lime]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: water, n: 2 }
+    - blow: v1
+  expect:
+    events:
+      include: [{ type: nothing_happened, reasonId: nr_blow_no_lime }]
+    vessels:
+      v1: { grams: { carbon_dioxide: 0 } }
+
+- id: x11_lime_water_and_soda
+  rules: [lime_water_carbonate]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: baking_soda, n: 1 }
+    - add: { v: v1, s: water, n: 1 }
+    - stir: { v: v1, times: 3 }
+    - add: { v: v1, s: lime_water, n: 2 }
+  expect:
+    events:
+      include: [{ type: observation, kind: turbid, ruleId: lime_water_carbonate }]
+    vessels:
+      v1: { grams: { calcium_carbonate: { gt: 0.005 }, sodium_hydroxide: { gt: 0.001 } } }
+
+- id: x12_copper_sulfate_blue_solution
+  rules: [copper_sulfate_color]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: copper_sulfate, n: 1 }
+    - add: { v: v1, s: water, n: 2 }
+    - stir: { v: v1, times: 2 }
+  expect:
+    events:
+      include: [{ type: observation, kind: color, ruleId: copper_sulfate_color }]
+
+- id: x13_copper_lime_blue_flakes
+  rules: [copper_hydroxide_precipitate]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: copper_sulfate, n: 1 }
+    - add: { v: v1, s: water, n: 2 }
+    - stir: { v: v1, times: 2 }
+    - add: { v: v1, s: lime_water, n: 1 }
+  expect:
+    events:
+      include: [{ type: observation, kind: precipitate, detail: flakes, ruleId: copper_hydroxide_precipitate }]
+    vessels:
+      v1: { grams: { copper_hydroxide: { gt: 0.005 } } }
+
+- id: x14_copper_soda_green_precipitate
+  rules: [copper_carbonate_precipitate]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: copper_sulfate, n: 1 }
+    - add: { v: v1, s: water, n: 2 }
+    - stir: { v: v1, times: 2 }
+    - add: { v: v1, s: baking_soda, n: 1 }
+  expect:
+    events:
+      include: [{ type: observation, kind: precipitate, ruleId: copper_carbonate_precipitate }]
+    vessels:
+      v1: { grams: { basic_copper_carbonate: { gt: 0.05 } } }
+
+- id: x15_iron_takes_copper_place
+  rules: [copper_iron_displacement]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: copper_sulfate, n: 1 }
+    - add: { v: v1, s: water, n: 2 }
+    - stir: { v: v1, times: 2 }
+    - add: { v: v1, s: iron_filings, n: 1 }
+    - wait: 120
+  expect:
+    events:
+      include: [{ type: process, ruleId: copper_iron_displacement, phase: started }]
+    vessels:
+      v1: { grams: { copper: { gt: 0.03 }, iron_sulfate: { gt: 0.05 } } }
+
+- id: x16_copper_sulfate_white_on_heat_blue_with_water
+  rules: [copper_sulfate_dehydrate, copper_sulfate_hydrate]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: copper_sulfate, n: 1 }
+    - holder: v1
+    - heat_start: v1
+    - tick: 60
+    - heat_stop: v1
+    - wait: 120
+    - add: { v: v1, s: water, n: 1 }
+  expect:
+    events:
+      include:
+        - { type: observation, kind: color, detail: fade, ruleId: copper_sulfate_dehydrate }
+        - { type: observation, kind: color, ruleId: copper_sulfate_hydrate }
+        - { type: observation, kind: warm, ruleId: copper_sulfate_hydrate }
+    vessels:
+      v1: { grams: { copper_sulfate_anhydrous: { lt: 0.001 } } }
+
+- id: x17_salt_and_copper_nothing
+  rules: [nr_salt_copper]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: copper_sulfate, n: 1 }
+    - add: { v: v1, s: water, n: 2 }
+    - stir: { v: v1, times: 2 }
+    - add: { v: v1, s: table_salt, n: 1 }
+  expect:
+    events:
+      include: [{ type: nothing_happened, reasonId: nr_salt_copper }]
+
+- id: x18_peroxide_alone_slow
+  rules: [nr_peroxide_alone]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: water, n: 1 }
+    - add: { v: v1, s: hydrogen_peroxide, n: 1 }
+  expect:
+    events:
+      include: [{ type: nothing_happened, reasonId: nr_peroxide_alone }]
+
+- id: x19_peroxide_yeast_oxygen
+  rules: [peroxide_catalyst_oxygen]
+  actions:
+    - place: beaker
+    - add: { v: v1, s: hydrogen_peroxide, n: 2 }
+    - add: { v: v1, s: yeast, n: 1 }
+    - wait: 60
+  expect:
+    events:
+      include: [{ type: observation, kind: gas, ruleId: peroxide_catalyst_oxygen }]
+    vessels:
+      v1: { grams: { hydrogen_peroxide: { lt: 0.01 }, yeast_cells: { approx: 0.2 } } }
+
+- id: x20_elephant_toothpaste_virtual
+  rules: [peroxide_catalyst_oxygen, soap_foam]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: hydrogen_peroxide, n: 2 }
+    - add: { v: v1, s: dish_soap, n: 2 }
+    - add: { v: v1, s: yeast, n: 1 }
+  expect:
+    events:
+      include: [{ type: observation, kind: foam, detail: overflow }]
+
+- id: x21_permanganate_colors_water
+  rules: [permanganate_color]
+  actions:
+    - place: beaker
+    - add: { v: v1, s: water, n: 4 }
+    - add: { v: v1, s: permanganate, n: 1 }
+    - stir: v1
+  expect:
+    events:
+      include: [{ type: observation, kind: color, ruleId: permanganate_color }]
+
+- id: x22_permanganate_peroxide
+  rules: [permanganate_peroxide]
+  actions:
+    - place: beaker
+    - add: { v: v1, s: water, n: 4 }
+    - add: { v: v1, s: permanganate, n: 1 }
+    - stir: v1
+    - add: { v: v1, s: hydrogen_peroxide, n: 2 }
+  expect:
+    events:
+      include:
+        - { type: observation, kind: color, detail: fade, ruleId: permanganate_peroxide }
+        - { type: observation, kind: gas, ruleId: permanganate_peroxide }
+    vessels:
+      v1: { grams: { manganese_dioxide: { gt: 0.01 } } }
+
+- id: x23_permanganate_dry_heat_stops
+  rules: [hz_permanganate_heat]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: permanganate, n: 1 }
+    - holder: v1
+    - heat_start: v1
+  expect:
+    events:
+      include: [{ type: safety_stop, ruleId: hz_permanganate_heat }]
+    vessels:
+      v1: { heat: none }
+
+- id: x24_milk_and_lemon_curdle
+  rules: [milk_curdle]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: milk, n: 2 }
+    - add: { v: v1, s: citric_acid, n: 1 }
+    - stir: v1
+  expect:
+    events:
+      include: [{ type: observation, kind: precipitate, detail: curdle, ruleId: milk_curdle }]
+    vessels:
+      v1: { grams: { curd: { gt: 0.5 }, milk_protein: 0 } }
+
+- id: x25_milk_boils_over
+  rules: [milk_boil_over]
+  actions:
+    - place: beaker
+    - add: { v: v1, s: milk, n: 2 }
+    - heat_start: v1
+    - tick: 240
+  expect:
+    events:
+      include: [{ type: observation, kind: foam, detail: overflow, ruleId: milk_boil_over }]
+
+- id: x26_oil_floats
+  rules: [oil_water_layers, nr_oil_stir]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: water, n: 1 }
+    - add: { v: v1, s: vegetable_oil, n: 1 }
+    - stir: v1
+  expect:
+    events:
+      include:
+        - { type: observation, kind: nothing, detail: layers, ruleId: oil_water_layers }
+        - { type: nothing_happened, reasonId: nr_oil_stir }
+
+- id: x27_soap_breaks_oil
+  rules: [oil_soap_emulsion, soap_foam]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: water, n: 1 }
+    - add: { v: v1, s: vegetable_oil, n: 1 }
+    - add: { v: v1, s: dish_soap, n: 2 }
+    - stir: v1
+  expect:
+    events:
+      include:
+        - { type: observation, kind: turbid, ruleId: oil_soap_emulsion }
+        - { type: observation, kind: foam, ruleId: soap_foam }
+
+- id: x28_ice_melts_in_water
+  rules: [ice_melting]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: water, n: 1 }
+    - add: { v: v1, s: ice, n: 25 }
+    - wait: 30
+  expect:
+    events:
+      include: [{ type: observation, kind: melt, ruleId: ice_melting }]
+    vessels:
+      v1: { temperatureC: { lt: 1 } }
+
+- id: x29_salt_makes_ice_colder
+  rules: [salt_ice_cold]
+  actions:
+    - place: beaker
+    - add: { v: v1, s: ice, n: 10 }
+    - add: { v: v1, s: table_salt, n: 2 }
+  expect:
+    events:
+      include: [{ type: observation, kind: cold, ruleId: salt_ice_cold }]
+    vessels:
+      v1: { temperatureC: { lt: -1 } }
+
+- id: x30_yeast_eats_sugar
+  rules: [yeast_fermentation]
+  actions:
+    - place: beaker
+    - add: { v: v1, s: water, n: 4 }
+    - add: { v: v1, s: sugar, n: 2 }
+    - stir: { v: v1, times: 2 }
+    - add: { v: v1, s: yeast, n: 1 }
+    - wait: 120
+  expect:
+    events:
+      include: [{ type: process, ruleId: yeast_fermentation, phase: started }]
+    vessels:
+      v1: { grams: { ethanol: { gt: 0.01 } } }
+
+- id: x31_iron_in_vinegar_slow_bubbles
+  rules: [iron_acid_hydrogen]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: vinegar, n: 2 }
+    - add: { v: v1, s: iron_filings, n: 1 }
+    - wait: 60
+  expect:
+    events:
+      include: [{ type: observation, kind: gas, ruleId: iron_acid_hydrogen }]
+    vessels:
+      v1: { grams: { iron_acetate: { gt: 0.001 } } }
+
+- id: x32_iron_in_water_nothing
+  rules: [nr_iron_water]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: water, n: 2 }
+    - add: { v: v1, s: iron_filings, n: 1 }
+  expect:
+    events:
+      include: [{ type: nothing_happened, reasonId: nr_iron_water }]
+
+- id: x33_crystals_grow_on_cooling
+  rules: [crystallize_on_cooling]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: copper_sulfate, n: 10 }
+    - add: { v: v1, s: water, n: 1 }
+    - holder: v1
+    - heat_start: v1
+    - stir: { v: v1, times: 3 }
+    - tick: 30
+    - stir: { v: v1, times: 3 }
+    - heat_stop: v1
+    - wait: 300
+  expect:
+    events:
+      include: [{ type: observation, kind: crystals, ruleId: crystallize_on_cooling }]
+    vessels:
+      v1: { phases: { copper_sulfate_pentahydrate: { solid: { gt: 0.3 } } } }
+
+- id: x34_sand_and_salt_mix_then_separate
+  rules: [nr_mixed_powders, dissolve_soluble, sink_insoluble, evaporate_to_residue]
+  actions:
+    - place: beaker
+    - add: { v: v1, s: sand, n: 2 }
+    - add: { v: v1, s: table_salt, n: 2 }
+    - add: { v: v1, s: water, n: 2 }
+    - stir: { v: v1, times: 2 }
+    - filter: v1
+    - evaporate: v2
+  expect:
+    events:
+      include:
+        - { type: nothing_happened, reasonId: nr_mixed_powders }
+        - { type: separated, method: filter, vesselId: v1, toVesselId: v2 }
+        - { type: separated, method: evaporate, vesselId: v2 }
+    vessels:
+      v1: { grams: { silicon_dioxide: { approx: 0.4 }, sodium_chloride: 0, water: 0 } }
+      v2: { equipmentId: evaporating_dish, grams: { sodium_chloride: { approx: 0.4 }, silicon_dioxide: 0, water: 0 } }
+
+- id: x35_magnet_pulls_iron_from_sand
+  rules: [nr_magnet_nothing]
+  actions:
+    - place: test_tube
+    - add: { v: v1, s: sand, n: 1 }
+    - add: { v: v1, s: iron_filings, n: 1 }
+    - magnet: v1
+    - magnet: v1
+  expect:
+    events:
+      include:
+        - { type: separated, method: magnet, vesselId: v1 }
+        - { type: nothing_happened, reasonId: nr_magnet_nothing }
+    vessels:
+      v1: { grams: { iron: 0, silicon_dioxide: { approx: 0.2 } } }
+
+- id: x36_filter_milk_curd
+  rules: [milk_curdle]
+  actions:
+    - place: beaker
+    - add: { v: v1, s: milk, n: 2 }
+    - add: { v: v1, s: vinegar, n: 1 }
+    - filter: v1
+  expect:
+    events:
+      include: [{ type: separated, method: filter, toVesselId: v2 }]
+    vessels:
+      v1: { grams: { curd: { gt: 0.5 } } }
+      v2: { grams: { curd: 0, water: { gt: 8 } } }

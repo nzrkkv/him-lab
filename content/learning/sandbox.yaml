@@ -1,10 +1,14 @@
 # Песочница: стартовый набор сразу (Q-09, рабочее решение), остальное открывается за урок 1 и миссию.
-starter: [water, table_salt, sugar, sand, baking_soda, vinegar, red_cabbage]
-equipment: [beaker, test_tube, evaporating_dish, tube_holder, burner, ice_bath, stirrer, magnifier, thermometer, ph_strip, scales]
+starter: [water, table_salt, sugar, sand, baking_soda, vinegar, red_cabbage, citric_acid, vegetable_oil, milk, dish_soap, yeast, ice]
+equipment: [beaker, test_tube, evaporating_dish, tube_holder, burner, ice_bath, stirrer, magnifier, thermometer, ph_strip, scales, funnel, magnet]
 unlocks:
-  - { by: m1_l01, substances: [chalk] }
-  - { by: powder_mystery, substances: [starch, iodine_solution] }
+  - { by: m1_l01, substances: [chalk, iron_filings, lime_water, litmus, phenolphthalein] }
+  - { by: powder_mystery, substances: [starch, iodine_solution, copper_sulfate, hydrogen_peroxide, permanganate] }
 ideas:
   - { ru: "Смешай крахмал с водой и нагрей. Что получится?" }
   - { ru: "Выпари солёную воду. Вернётся ли соль?" }
   - { ru: "Налей отвар капусты и капни уксус. А если насыпать соду?" }
+  - { ru: "Смешай песок с солью. Как теперь их разделить?" }
+  - { ru: "Налей в молоко немного уксуса. Что стало с молоком?" }
+  - { ru: "Налей известковую воду и подуй через трубочку." }
+  - { ru: "Брось железные опилки в голубой раствор купороса и подожди." }

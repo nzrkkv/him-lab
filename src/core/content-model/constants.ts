@@ -28,6 +28,11 @@ export const OBSERVATION_DETAILS = [
   'caramel',
   'clearing',
   'toasted',
+  'layers',
+  'curdle',
+  'filtered',
+  'magnet',
+  'flakes',
 ] as const;
 export const ACTION_TYPES = [
   'place',
@@ -50,5 +55,9 @@ export const ACTION_TYPES = [
   'weigh',
   'clear',
   'return_to_jar',
+  'filter',
+  'evaporate',
+  'magnet',
+  'blow',
 ] as const;
 export const MAGNIFIER_VIEWS = ['cubes', 'crystals', 'fine_powder', 'ultrafine_powder'] as const;

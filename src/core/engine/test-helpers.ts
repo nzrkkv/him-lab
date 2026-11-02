@@ -35,7 +35,12 @@ export type ShortAction =
   | { measure_ph: string }
   | { measure_temperature: string }
   | { return_to_jar: { v: string; s: string } }
-  | { clear: string };
+  | { clear: string }
+  | { pour: { from: string; to: string } }
+  | { filter: string }
+  | { evaporate: string }
+  | { magnet: string }
+  | { blow: string };
 
 export function expand(ix: ContentIndex, a: ShortAction): LabAction[] {
   if ('place' in a) return [{ type: 'place', equipmentId: a.place }];
@@ -65,6 +70,11 @@ export function expand(ix: ContentIndex, a: ShortAction): LabAction[] {
   if ('measure_temperature' in a) return [{ type: 'measure_temperature', vesselId: a.measure_temperature }];
   if ('return_to_jar' in a)
     return [{ type: 'return_to_jar', vesselId: a.return_to_jar.v, substanceId: a.return_to_jar.s }];
+  if ('pour' in a) return [{ type: 'pour', from: a.pour.from, to: a.pour.to }];
+  if ('filter' in a) return [{ type: 'filter', vesselId: a.filter }];
+  if ('evaporate' in a) return [{ type: 'evaporate', vesselId: a.evaporate }];
+  if ('magnet' in a) return [{ type: 'magnet', vesselId: a.magnet }];
+  if ('blow' in a) return [{ type: 'blow', vesselId: a.blow }];
   return [{ type: 'clear', vesselId: a.clear }];
 }
 

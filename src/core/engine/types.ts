@@ -40,7 +40,8 @@ export interface VesselState {
   processes: Process[];
   /** Вещества с полки, попавшие в сосуд, по порядку. */
   origins: SubstanceId[];
-  indicatorBand: number | null;
+  /** Полоса цвета каждого индикатора в сосуде (id частицы → номер полосы). */
+  indicatorBand: Record<string, number>;
   /** Ключи «один раз»: для сосуда и для текущего нагрева. */
   seen: string[];
   heatSeen: string[];
@@ -81,7 +82,11 @@ export type LabAction =
   | { type: 'measure_ph'; vesselId: VesselId }
   | { type: 'weigh'; vesselId: VesselId }
   | { type: 'clear'; vesselId: VesselId }
-  | { type: 'return_to_jar'; vesselId: VesselId; substanceId: SubstanceId };
+  | { type: 'return_to_jar'; vesselId: VesselId; substanceId: SubstanceId }
+  | { type: 'filter'; vesselId: VesselId }
+  | { type: 'evaporate'; vesselId: VesselId }
+  | { type: 'magnet'; vesselId: VesselId }
+  | { type: 'blow'; vesselId: VesselId };
 
 // Проверка, что типы действий движка совпадают со списком в схеме контента.
 type _CheckActions = LabAction['type'] extends ActionType ? true : never;
@@ -94,6 +99,7 @@ export type BlockReason =
   | 'not_available'
   | 'empty_vessel'
   | 'needs_liquid'
+  | 'bench_full'
   | 'station_busy'
   | 'unknown_vessel';
 
@@ -130,6 +136,13 @@ export type EngineEvent =
   | { type: 'fume_hood'; on: boolean }
   | { type: 'discovery'; vesselId: VesselId; speciesId: SpeciesId }
   | { type: 'placed'; vesselId: VesselId }
+  | {
+      type: 'separated';
+      vesselId: VesselId;
+      method: 'filter' | 'magnet' | 'evaporate';
+      toVesselId?: VesselId;
+      speciesIds: SpeciesId[];
+    }
   | { type: 'process'; vesselId: VesselId; ruleId: string; phase: 'started' | 'finished' };
 
 export interface StepResult {

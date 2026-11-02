@@ -46,6 +46,43 @@
       intensity: strong
       foamMlPerMlGas: 0.1
       equation: "Na2CO3 + 2CH3COOH -> 2CH3COONa + H2O + CO2^"
+    - id: citric_bicarbonate
+      bind: { acid: citric_acid, carbonate: sodium_bicarbonate }
+      reactants: [{ bind: acid, coeff: 1 }, { bind: carbonate, coeff: 3 }]
+      products:
+        - { species: sodium_citrate, coeff: 1, phase: dissolved }
+        - { species: water, coeff: 3, phase: liquid }
+        - { species: carbon_dioxide, coeff: 3, phase: gas }
+      kinetics: { mode: instant }
+      intensity: strong
+      heatJPerMol: 60000
+      foamMlPerMlGas: 0.15
+      equation: "C6H8O7 + 3NaHCO3 -> Na3C6H5O7 + 3H2O + 3CO2^"
+      text:
+        why: { ru: "Лимонная кислота тоже кислота! С содой она шипит, как уксус. Так работают шипучие таблетки." }
+    - id: citric_calcium_carbonate
+      bind: { acid: citric_acid, carbonate: calcium_carbonate }
+      reactants: [{ bind: acid, coeff: 2 }, { bind: carbonate, coeff: 3 }]
+      products:
+        - { species: calcium_citrate, coeff: 1, phase: dissolved }
+        - { species: water, coeff: 3, phase: liquid }
+        - { species: carbon_dioxide, coeff: 3, phase: gas }
+      kinetics: { mode: over_time, durationS: 30 }
+      intensity: weak
+      equation: "2C6H8O7 + 3CaCO3 -> Ca3(C6H5O7)2 + 3H2O + 3CO2^"
+      text:
+        why: { ru: "Лимонная кислота растворяет мел. Так чистят чайник от накипи — накипь родственница мела." }
+    - id: citric_sodium_carbonate
+      bind: { acid: citric_acid, carbonate: sodium_carbonate }
+      reactants: [{ bind: acid, coeff: 2 }, { bind: carbonate, coeff: 3 }]
+      products:
+        - { species: sodium_citrate, coeff: 2, phase: dissolved }
+        - { species: water, coeff: 3, phase: liquid }
+        - { species: carbon_dioxide, coeff: 3, phase: gas }
+      kinetics: { mode: instant }
+      intensity: strong
+      foamMlPerMlGas: 0.1
+      equation: "2C6H8O7 + 3Na2CO3 -> 2Na3C6H5O7 + 3H2O + 3CO2^"
   text:
     what: { ru: "Шипение, пузырьки газа" }
     why: { ru: "Вещества превратились в новые. Одно из них — газ, он и надувает пузырьки. Это химическая реакция!" }
@@ -218,7 +255,7 @@
   kind: indicator
   priority: 60
   when:
-    reactants: [{ bind: i, match: { class: indicator }, phases: [dissolved] }]
+    reactants: [{ bind: i, match: { species: cabbage_anthocyanins }, phases: [dissolved] }]
     medium: aqueous
   effect: { type: indicator, bind: i }
   observe: [{ kind: color }]

@@ -112,6 +112,14 @@ export function dissolveRoom(v: VesselState, ix: ContentIndex, species: string):
   return Math.max(0, max - grams(v, species, ['dissolved']));
 }
 
+/** Сколько растворённого «лишнее» при текущей температуре (пересыщенный раствор), г. */
+export function dissolveExcess(v: VesselState, ix: ContentIndex, species: string): number {
+  const sol = ix.species.get(species)?.solubility;
+  if (!sol) return 0;
+  const max = (solubilityGPer100g(sol.table, v.temperatureC) * waterGrams(v)) / 100;
+  return Math.max(0, grams(v, species, ['dissolved']) - max);
+}
+
 export function heatCapacity(v: VesselState, ix: ContentIndex): number {
   let c = v.heatCapacityJPerK;
   for (const id of sortedSpecies(v)) c += grams(v, id) * (ix.species.get(id)?.specificHeat ?? 1);
@@ -119,8 +127,36 @@ export function heatCapacity(v: VesselState, ix: ContentIndex): number {
 }
 
 /** Один шаг тепловой модели. Возвращает выкипевшую воду, г. */
+/** Температура тающего льда: с растворённой солью — ниже нуля (упрощение: −5 °C). */
+function iceHoldC(v: VesselState): number {
+  return grams(v, 'sodium_chloride') > 1e-3 ? -5 : 0;
+}
+
+/** Лёд в сосуде: тепло уходит на таяние (334 Дж/г), температура держится у точки таяния. */
+function meltIce(v: VesselState, ix: ContentIndex, energy: number): number {
+  const ice = grams(v, 'water', ['solid']);
+  if (ice <= EPS || energy <= 0) return energy;
+  const melted = Math.min(ice, energy / 334);
+  addGrams(v, 'water', 'solid', -melted);
+  addGrams(v, 'water', 'liquid', melted);
+  void ix;
+  return energy - melted * 334;
+}
+
 export function stepTemperature(v: VesselState, ix: ContentIndex, dt: number): number {
   const ph = ix.bundle.physics;
+  if (grams(v, 'water', ['solid']) > EPS) {
+    const hold = iceHoldC(v);
+    const c = heatCapacity(v, ix);
+    // Тепло самой жидкости выше точки таяния и тепло от горелки или комнаты идут на таяние льда.
+    let energy = Math.max(0, v.temperatureC - hold) * c;
+    if (v.heat === 'burner') energy += ph.burnerPowerW * dt;
+    else if (v.heat === 'none')
+      energy += c * (ph.ambientC - hold) * (1 - Math.exp(-ph.coolingPerS * dt)) * 0.2;
+    const left = meltIce(v, ix, energy);
+    v.temperatureC = grams(v, 'water', ['solid']) > EPS ? hold : round6(hold + left / heatCapacity(v, ix));
+    return 0;
+  }
   if (v.heat === 'burner') {
     const energy = ph.burnerPowerW * dt;
     const water = waterGrams(v);

@@ -41,6 +41,7 @@ export function makeSchemas<T extends z.ZodTypeAny>(Text: T) {
     z.object({ role: z.literal('weak_acid'), pKa: z.number() }).strict(),
     z.object({ role: z.literal('amphiprotic'), pKa1: z.number(), pKa2: z.number() }).strict(),
     z.object({ role: z.literal('weak_base'), pKb: z.number() }).strict(),
+    z.object({ role: z.literal('strong_base'), equivalents: z.number().positive() }).strict(),
     z.object({ role: z.literal('conjugate_base'), of: Id, perMol: z.number().positive() }).strict(),
   ]);
 
@@ -238,12 +239,14 @@ export function makeSchemas<T extends z.ZodTypeAny>(Text: T) {
       })
       .strict(),
     z.object({ type: z.literal('crystallize') }).strict(),
+    z.object({ type: z.literal('crystallize_cooling'), bind: z.string() }).strict(),
     z.object({ type: z.literal('indicator'), bind: z.string() }).strict(),
     z
       .object({
         type: z.literal('observe_only'),
         once: z.enum(['vessel', 'heat_session']),
         fumeHood: z.boolean().default(false),
+        coolToC: z.number().optional(),
       })
       .strict(),
     z.object({ type: z.literal('stop') }).strict(),

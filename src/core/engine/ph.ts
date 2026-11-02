@@ -20,6 +20,7 @@ export function computePh(v: VesselState, ix: ContentIndex): number | null {
   let acid: { pKa: number; c: number; id: string } | null = null;
   let amphiprotic: { pKa1: number; pKa2: number } | null = null;
   let base: { pKb: number; c: number } | null = null;
+  let strongBase = 0;
   const conjugate = new Map<string, number>();
   for (const id of sortedSpecies(v)) {
     const ab = ix.species.get(id)?.acidBase;
@@ -28,6 +29,7 @@ export function computePh(v: VesselState, ix: ContentIndex): number | null {
     if (ab.role === 'weak_acid' && (!acid || c > acid.c)) acid = { pKa: ab.pKa, c, id };
     else if (ab.role === 'amphiprotic') amphiprotic = { pKa1: ab.pKa1, pKa2: ab.pKa2 };
     else if (ab.role === 'weak_base' && (!base || c > base.c)) base = { pKb: ab.pKb, c };
+    else if (ab.role === 'strong_base') strongBase += c * ab.equivalents;
     else if (ab.role === 'conjugate_base') conjugate.set(ab.of, (conjugate.get(ab.of) ?? 0) + c * ab.perMol);
   }
   if (acid) {
@@ -36,6 +38,8 @@ export function computePh(v: VesselState, ix: ContentIndex): number | null {
     if (cb > 1e-6) return acid.pKa + Math.log10(cb / acid.c);
     return 0.5 * (acid.pKa - Math.log10(acid.c));
   }
+  // Сильное основание (известковая вода): pOH = −lg[OH⁻].
+  if (strongBase > 1e-7) return Math.min(14, KW_PKW + Math.log10(strongBase));
   if (base) return KW_PKW - 0.5 * (base.pKb - Math.log10(base.c));
   if (amphiprotic) return 0.5 * (amphiprotic.pKa1 + amphiprotic.pKa2);
   for (const [acidId, cb] of [...conjugate.entries()].sort()) {

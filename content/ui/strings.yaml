@@ -46,6 +46,7 @@ rail.place: { ru: "{name}: нажми, чтобы поставить на сто
 bench.empty: { ru: "Поставь на стол стакан или пробирку — и начинай опыт" }
 bench.slot: { ru: "Свободное место" }
 bench.vessel: { ru: "{name} {no}" }
+bench.short.dish: { ru: "Чашка" }
 bench.empty.vessel: { ru: "пусто" }
 bench.hint.select: { ru: "Выбери сосуд на столе — и вещество попадёт в него" }
 
@@ -68,6 +69,16 @@ act.weigh: { ru: "Весы" }
 act.undo: { ru: "Отменить" }
 act.clear: { ru: "Помыть" }
 act.remove: { ru: "Убрать" }
+act.blow: { ru: "Подуть" }
+act.blow.long: { ru: "Подуть через трубочку" }
+act.filter: { ru: "Фильтр" }
+act.filter.long: { ru: "Профильтровать через воронку" }
+act.evaporate: { ru: "Выпарить" }
+act.evaporate.long: { ru: "Выпарить в чашке на горелке" }
+act.magnet: { ru: "Магнит" }
+act.magnet.long: { ru: "Поднести магнит" }
+dock.why.liquid: { ru: "Тут нет жидкости. Сначала налей воды." }
+dock.sep: { ru: "Разделить" }
 
 qty.title: { ru: "Сколько добавить?" }
 qty.add: { ru: "Добавить" }
@@ -85,7 +96,7 @@ result.sci: { ru: "по-научному" }
 result.close: { ru: "Понятно" }
 result.nothing.title: { ru: "Ничего не произошло" }
 result.nothing.sub: { ru: "Это тоже результат" }
-result.indicator: { ru: "Отвар стал {color}" }
+result.indicator: { ru: "Индикатор стал {color}" }
 result.temp: { ru: "Температура: {value} °C" }
 result.ph: { ru: "pH около {value}: {word}" }
 result.ph.acid: { ru: "кислое" }
@@ -110,7 +121,8 @@ blocked.capacity: { ru: "Больше не поместится. Возьми с
 blocked.no_return_to_jar: { ru: "Обратно в банку ничего не возвращаем. Так можно испортить всё вещество в банке." }
 blocked.not_available: { ru: "Этого пока нет на полке." }
 blocked.empty_vessel: { ru: "Сосуд пустой. Положи в него что-нибудь для опыта." }
-blocked.needs_liquid: { ru: "Тут нет жидкости. pH меряют в растворе." }
+blocked.needs_liquid: { ru: "Тут нет жидкости. Для этого опыта нужен раствор — налей воды." }
+blocked.bench_full: { ru: "На столе нет места для второго стакана. Убери или помой сосуд." }
 blocked.station_busy: { ru: "Горелка уже занята. Сначала погаси её." }
 
 nothing.generic.add: { ru: "Ничего нового не появилось." }
@@ -119,6 +131,22 @@ nothing.generic.stir: { ru: "Перемешали — ничего нового.
 nothing.generic.heat_stop: { ru: "Нагрели — ничего не изменилось." }
 nothing.generic.cool_stop: { ru: "Охладили — ничего не изменилось." }
 nothing.generic.wait: { ru: "Подождали — ничего не изменилось." }
+nothing.generic.blow: { ru: "Пузырьки воздуха вышли — ничего не изменилось." }
+nothing.generic.magnet: { ru: "Магнит ничего не притянул." }
+result.sep.filter.title: { ru: "Профильтровали" }
+result.sep.filter.kept: { ru: "На фильтре осталось: {names}. Прозрачная жидкость стекла в {to}." }
+result.sep.filter.none: { ru: "Всё прошло через фильтр: крупинок не было. Растворённое вещество фильтр не задерживает." }
+result.sep.filter.line: { ru: "Фильтр задержал крупинки" }
+result.sep.filter.deeper: { ru: "Фильтр — как сито с очень мелкими дырочками. Крупинки застревают, а вода и растворённое проходят." }
+result.sep.magnet.title: { ru: "Магнит притянул железо" }
+result.sep.magnet.why: { ru: "Магнит забрал: {names}. Остальное осталось в сосуде — магнит его не тянет." }
+result.sep.magnet.line: { ru: "Железо отделилось" }
+result.sep.magnet.deeper: { ru: "Так разделяют смеси: у каждого вещества свои свойства. Железо тянется к магниту, а песок и соль — нет." }
+result.sep.evaporate.title: { ru: "Выпарили досуха" }
+result.sep.evaporate.why: { ru: "Вода ушла паром. В чашке осталось: {names}." }
+result.sep.evaporate.empty: { ru: "Вода ушла паром. В чашке ничего не осталось: в воде ничего не было растворено." }
+result.sep.evaporate.line: { ru: "Вода испарилась" }
+result.sep.evaporate.deeper: { ru: "Растворённое вещество не исчезает. Когда вода уходит, оно возвращается." }
 
 journal.title: { ru: "Журнал" }
 journal.count: { ru: "Записей: {count}" }

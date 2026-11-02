@@ -396,7 +396,7 @@
     events:
       include: [{ type: observation, kind: color, ruleId: cabbage_indicator, colorName: "красно-розовым" }]
     vessels:
-      v1: { indicatorBand: 0 }
+      v1: { indicatorBand.cabbage_anthocyanins: 0 }
 
 - id: t23_cabbage_turns_blue_with_soda
   rules: [cabbage_indicator]
@@ -409,7 +409,7 @@
     events:
       include: [{ type: observation, kind: color, colorName: "синим" }]
     vessels:
-      v1: { indicatorBand: 4 }
+      v1: { indicatorBand.cabbage_anthocyanins: 4 }
 
 - id: t24_neutralize_blue_to_pink
   rules: [cabbage_indicator, acid_carbonate_gas]
@@ -425,7 +425,7 @@
         - { type: observation, kind: gas, ruleId: acid_carbonate_gas }
         - { type: observation, kind: color, colorName: "розово-фиолетовым" }
     vessels:
-      v1: { indicatorBand: 1 }
+      v1: { indicatorBand.cabbage_anthocyanins: 1 }
 
 - id: t25_iodine_heat_dry_stopped
   rules: [hz_iodine_heat_dry]

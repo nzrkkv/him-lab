@@ -94,9 +94,13 @@ for (const file of readdirSync(DIR)
           }
           for (const [field, m] of Object.entries(exp)) {
             if (field === 'grams' || field === 'phases') continue;
+            // Поле может быть путём: indicatorBand.cabbage_anthocyanins.
+            const actual: unknown = field
+              .split('.')
+              .reduce<unknown>((o, k) => (o as Record<string, unknown> | undefined)?.[k], v);
             assert.ok(
-              matchValue((v as unknown as Record<string, unknown>)[field], m as ValueMatcher),
-              `${vid}.${field}: ${String((v as unknown as Record<string, unknown>)[field])} ≠ ${JSON.stringify(m)}`,
+              matchValue(actual, m as ValueMatcher),
+              `${vid}.${field}: ${String(actual)} ≠ ${JSON.stringify(m)}`,
             );
           }
         }

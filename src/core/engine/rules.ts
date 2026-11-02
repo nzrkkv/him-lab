@@ -15,6 +15,7 @@ import {
   EPS,
   addGrams,
   consumeGrams,
+  dissolveExcess,
   dissolveRoom,
   grams,
   heatCapacity,
@@ -262,27 +263,17 @@ export function applyMatch(
           changed: true,
           events: [
             ...observations(m, v),
+            ...foamEvents(v, ix, m, gasOf(ix, variant, extent)),
             { type: 'process', vesselId: v.id, ruleId: m.rule.id, phase: 'started' },
           ],
         };
       }
       const r = applyExtent(state, v, ix, m, extent);
-      const events = [...observations(m, v, { gasMl: r.gasMl }), ...r.events];
-      if (variant.foamMlPerMlGas > 0 && r.gasMl > 0) {
-        const foamMl = r.gasMl * variant.foamMlPerMlGas;
-        const overflow = foamMl > v.capacityMl - liquidMl(v, ix);
-        if (overflow) v.overflowed = true;
-        const ev: EngineEvent = {
-          type: 'observation',
-          vesselId: v.id,
-          kind: 'foam',
-          intensity: variant.intensity,
-          ruleId: m.rule.id,
-          variantId: variant.id,
-        };
-        if (overflow) ev.detail = 'overflow';
-        events.push(ev);
-      }
+      const events = [
+        ...observations(m, v, { gasMl: r.gasMl }),
+        ...r.events,
+        ...foamEvents(v, ix, m, r.gasMl),
+      ];
       if (r.deltaC <= -1)
         events.push({
           type: 'observation',
@@ -360,23 +351,37 @@ export function applyMatch(
       if (e.fumeHood) events.push(...setFumeHood(state));
       return { changed: true, events };
     }
+    case 'crystallize_cooling': {
+      // Насыщенный раствор остыл или выпарился: лишнее выпадает кристаллами.
+      const sp = bound(e.bind);
+      const excess = dissolveExcess(v, ix, sp);
+      if (excess < 1e-3) return NONE;
+      movePhase(v, sp, ['dissolved'], 'solid', excess);
+      // О кристаллах сообщаем один раз на сосуд, а не на каждом тике выпаривания.
+      const key = `cryst:${sp}`;
+      if (v.seen.includes(key)) return { changed: true, events: [] };
+      v.seen.push(key);
+      return { changed: true, events: observations(m, v) };
+    }
     case 'crystallize': {
       let moved = 0;
       for (const sp of sortedSpecies(v)) moved += movePhase(v, sp, ['dissolved'], 'solid');
       return moved > EPS ? { changed: true, events: observations(m, v) } : NONE;
     }
     case 'indicator': {
-      const ind = ix.species.get(bound(e.bind))?.indicator;
+      const indId = bound(e.bind);
+      const ind = ix.species.get(indId)?.indicator;
       const ph = computePh(v, ix);
       if (!ind || ph === null) return NONE;
       const band = Math.max(
         0,
         ind.colors.findIndex((c) => ph <= c.phMax),
       );
-      if (v.indicatorBand === band) return NONE;
+      const prev = v.indicatorBand[indId];
+      if (prev === band) return NONE;
       const neutralBand = ind.colors.findIndex((c) => 7 <= c.phMax);
-      const silent = v.indicatorBand === null && band === neutralBand;
-      v.indicatorBand = band;
+      const silent = prev === undefined && band === neutralBand;
+      v.indicatorBand = { ...v.indicatorBand, [indId]: band };
       if (silent) return { changed: true, events: [] };
       const colorName = ind.colors[band]?.name;
       return { changed: true, events: observations(m, v, colorName ? { colorName } : {}) };
@@ -385,11 +390,39 @@ export function applyMatch(
       const list = e.once === 'vessel' ? v.seen : v.heatSeen;
       if (list.includes(m.rule.id)) return NONE;
       list.push(m.rule.id);
+      if (e.coolToC !== undefined && v.temperatureC > e.coolToC) v.temperatureC = e.coolToC;
       return { changed: true, events: [...observations(m, v), ...(e.fumeHood ? setFumeHood(state) : [])] };
     }
     case 'stop':
       return NONE;
   }
+}
+
+function gasOf(ix: ContentIndex, variant: RuleVariant, extent: number): number {
+  return variant.products
+    .filter((p) => p.phase === 'gas')
+    .reduce((a, p) => a + extent * p.coeff * ix.bundle.physics.gasMlPerMol, 0);
+}
+
+/** Пена: от газа реакции; мыло в сосуде делает пены впятеро больше (так устроена «слоновья зубная паста»). */
+function foamEvents(v: VesselState, ix: ContentIndex, m: RuleMatch, gasMl: number): EngineEvent[] {
+  const variant = m.variant;
+  if (!variant || gasMl <= 0) return [];
+  const soapy = sortedSpecies(v).some((id) => speciesHasClass(ix, id, 'surfactant') && grams(v, id) > 1e-4);
+  const perMl = (variant.foamMlPerMlGas || (soapy ? 0.05 : 0)) * (soapy ? 5 : 1);
+  if (perMl <= 0) return [];
+  const overflow = gasMl * perMl > v.capacityMl - liquidMl(v, ix);
+  if (overflow) v.overflowed = true;
+  const ev: EngineEvent = {
+    type: 'observation',
+    vesselId: v.id,
+    kind: 'foam',
+    intensity: soapy ? 'strong' : variant.intensity,
+    ruleId: m.rule.id,
+    variantId: variant.id,
+  };
+  if (overflow) ev.detail = 'overflow';
+  return [ev];
 }
 
 /** Цикл правил до устойчивого состояния. */
