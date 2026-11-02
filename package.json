@@ -22,7 +22,7 @@
     "build": "tsx scripts/build.ts",
     "dev": "tsx scripts/dev.ts",
     "preview": "tsx scripts/serve.ts dist",
-    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "typecheck": "tsx scripts/content/build.ts && tsc --noEmit -p tsconfig.json",
     "lint": "tsx scripts/lint.ts && prettier --check .",
     "format": "prettier --write .",
     "test": "node --import tsx --test --test-reporter=spec \"src/**/*.test.ts\"",
