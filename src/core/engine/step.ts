@@ -2,261 +2,30 @@
  * Шаг движка: step(state, action, index) → { state', events }.
  * Чистая функция: входное состояние не меняется, время и случайность не используются.
  * Алгоритм — docs/spec/04-engine-and-content.md, раздел 5.2.
+ * Помощники — lab-state.ts, ход времени — time.ts, разделение смесей — separation.ts.
  */
-import type { ActionType, MagnifierView, Phase } from '../content-model/types.ts';
-import { speciesHasClass, type ContentIndex } from './content-index.ts';
+import type { ContentIndex } from './content-index.ts';
+import {
+  addSubstance,
+  blocked,
+  doseAmount,
+  hazardFor,
+  magnifyView,
+  needsTicks,
+  newVessel,
+  nothingEvent,
+  observedIn,
+  smellOf,
+  stirVessel,
+} from './lab-state.ts';
 import { computePh } from './ph.ts';
-import {
-  applyExtent,
-  applyMatch,
-  conditionsHold,
-  findBindings,
-  matchRules,
-  maxExtent,
-  settle,
-  type RuleMatch,
-} from './rules.ts';
-import type {
-  BlockReason,
-  Dose,
-  EngineEvent,
-  LabAction,
-  LabState,
-  StepResult,
-  VesselId,
-  VesselState,
-} from './types.ts';
-import {
-  EPS,
-  addGrams,
-  grams,
-  liquidMl,
-  round6,
-  sortedSpecies,
-  stepTemperature,
-  totalGrams,
-  waterGrams,
-} from './vessel.ts';
+import { settle } from './rules.ts';
+import { separate } from './separation.ts';
+import { advanceTime } from './time.ts';
+import type { EngineEvent, LabAction, LabState, StepResult, VesselId, VesselState } from './types.ts';
+import { EPS, addGrams, liquidMl, round6, sortedSpecies, totalGrams } from './vessel.ts';
 
-/** Сколько сосудов помещается на столе (фильтрат требует ещё одного). */
-export const MAX_VESSELS = 5;
-
-/** Убрать из списка «что налили» вещества, от которых в сосуде ничего не осталось. */
-function pruneOrigins(v: VesselState, ix: ContentIndex): void {
-  v.origins = v.origins.filter((o) =>
-    ix.substances.get(o)?.composition.some((c) => grams(v, c.species) > 1e-6),
-  );
-}
-
-export function createLab(): LabState {
-  return { timeS: 0, vessels: {}, order: [], fumeHoodOn: false, nextVesselNo: 1 };
-}
-
-function newVessel(ix: ContentIndex, equipmentId: string, no: number): VesselState {
-  const eq = ix.equipment.get(equipmentId);
-  return {
-    id: `v${no}`,
-    no,
-    equipmentId,
-    capacityMl: eq?.capacityMl ?? 100,
-    heatCapacityJPerK: eq?.heatCapacityJPerK ?? 20,
-    contents: {},
-    temperatureC: ix.bundle.physics.ambientC,
-    heat: 'none',
-    inHolder: false,
-    stirsSinceAdd: 0,
-    dissolveBudget: {},
-    holds: {},
-    processes: [],
-    origins: [],
-    indicatorBand: {},
-    seen: [],
-    heatSeen: [],
-    heatObserved: false,
-    overflowed: false,
-  };
-}
-
-const blocked = (state: LabState, reason: BlockReason, vesselId?: VesselId): StepResult => ({
-  state,
-  events: [vesselId ? { type: 'blocked', reason, vesselId } : { type: 'blocked', reason }],
-  needsTicks: needsTicks(state, null),
-});
-
-/** Граммы и миллилитры одной дозы вещества. */
-export function doseAmount(ix: ContentIndex, substanceId: string, dose: Dose): { grams: number; ml: number } {
-  const sub = ix.substances.get(substanceId);
-  const d = ix.bundle.dosing;
-  if (!sub) return { grams: 0, ml: 0 };
-  if (dose.unit === 'portion_solid') return { grams: round6(dose.count * d.portion_solid_g), ml: 0 };
-  const ml = dose.count * (dose.unit === 'drop' ? d.drop_ml : d.portion_liquid_ml);
-  return { grams: round6(ml * (sub.density ?? 1)), ml };
-}
-
-function addSubstance(v: VesselState, ix: ContentIndex, substanceId: string, g: number): void {
-  const sub = ix.substances.get(substanceId);
-  if (!sub) return;
-  for (const c of sub.composition) addGrams(v, c.species, c.phase, g * c.massFraction);
-  if (!v.origins.includes(substanceId)) v.origins.push(substanceId);
-  v.stirsSinceAdd = 0;
-  v.seen = v.seen.filter((k) => !k.startsWith('sat:'));
-}
-
-function stir(v: VesselState, ix: ContentIndex): void {
-  v.stirsSinceAdd += 1;
-  for (const sp of sortedSpecies(v)) {
-    const sol = ix.species.get(sp)?.solubility;
-    const solid = grams(v, sp, ['solid']);
-    if (!sol || solid <= EPS) continue;
-    const remaining = Math.max(1, sol.stirsToDissolve - (v.stirsSinceAdd - 1));
-    v.dissolveBudget[sp] = round6((v.dissolveBudget[sp] ?? 0) + solid / remaining);
-  }
-}
-
-function hazardFor(v: VesselState, ix: ContentIndex, action: ActionType): RuleMatch | null {
-  for (const rule of ix.hazards) {
-    if (!conditionsHold(v, ix, rule.when, action)) continue;
-    const b = findBindings(v, ix, rule.when.reactants)[0];
-    if (b) return { rule, bindings: b, variant: undefined, specificity: 0 };
-  }
-  return null;
-}
-
-/** Нужны ли интерфейсу тики времени. */
-function needsTicks(state: LabState, ix: ContentIndex | null): boolean {
-  return state.order.some((id) => {
-    const v = state.vessels[id] as VesselState;
-    if (v.heat !== 'none' || v.processes.length > 0) return true;
-    if (Object.values(v.contents).some((p) => (p.suspended ?? 0) > 1e-4)) return true;
-    return ix ? Math.abs(v.temperatureC - ix.bundle.physics.ambientC) > 0.5 : false;
-  });
-}
-
-function observedIn(events: readonly EngineEvent[], vesselId: string): boolean {
-  return events.some((e) => e.type === 'observation' && e.vesselId === vesselId);
-}
-
-function nothingEvent(v: VesselState, ix: ContentIndex, action: LabAction['type']): EngineEvent {
-  for (const nr of ix.noReactions) {
-    if (!nr.when.trigger.includes(action)) continue;
-    if (!conditionsHold(v, ix, { medium: nr.when.medium }, action)) continue;
-    if (findBindings(v, ix, nr.when.reactants).length === 0) continue;
-    return {
-      type: 'nothing_happened',
-      vesselId: v.id,
-      action,
-      reasonId: nr.id,
-      showsColor: nr.observe.some((o) => o.kind === 'color'),
-    };
-  }
-  return {
-    type: 'nothing_happened',
-    vesselId: v.id,
-    action,
-    reasonId: `generic_${action}`,
-    showsColor: false,
-  };
-}
-
-/** Время для одного сосуда: температура, растворение без перемешивания, процессы, оседание, стадии. */
-function advanceVessel(
-  state: LabState,
-  v: VesselState,
-  ix: ContentIndex,
-  dt: number,
-  action: ActionType,
-): EngineEvent[] {
-  const events: EngineEvent[] = [];
-  stepTemperature(v, ix, dt);
-  for (const sp of sortedSpecies(v)) {
-    const sol = ix.species.get(sp)?.solubility;
-    const solid = grams(v, sp, ['solid']);
-    if (sol && solid > EPS && waterGrams(v) > EPS) {
-      v.dissolveBudget[sp] = round6(
-        (v.dissolveBudget[sp] ?? 0) + (solid * sol.noStirFractionPerMin * dt) / 60,
-      );
-    }
-  }
-  for (const p of [...v.processes]) {
-    const rule = ix.rules.find((r) => r.id === p.ruleId);
-    const variant = rule?.variants?.find((x) => x.id === p.variantId);
-    const bindings = rule
-      ? findBindings(v, ix, rule.when.reactants).find(
-          (b) => variant && Object.entries(variant.bind).every(([k, s]) => b[k] === s),
-        )
-      : undefined;
-    const m: RuleMatch | null =
-      rule && variant && bindings ? { rule, bindings, variant, specificity: 0 } : null;
-    const max = m ? maxExtent(v, ix, m) : 0;
-    if (!m || max < 1e-9) {
-      v.processes = v.processes.filter((x) => x !== p);
-      events.push({ type: 'process', vesselId: v.id, ruleId: p.ruleId, phase: 'finished' });
-      continue;
-    }
-    events.push(...applyExtent(state, v, ix, m, Math.min(max, p.ratePerS * dt)).events);
-  }
-  const ctx = { action, dt };
-  for (const m of matchRules(v, ix, ix.rules, ctx))
-    if (m.rule.effect.type === 'settle') events.push(...applyMatch(state, v, ix, m, ctx).events);
-  for (const rule of ix.holdRules) {
-    const ok =
-      conditionsHold(v, ix, rule.when, action) && findBindings(v, ix, rule.when.reactants).length > 0;
-    if (ok) v.holds[rule.id] = round6((v.holds[rule.id] ?? 0) + dt);
-    else delete v.holds[rule.id];
-  }
-  return events;
-}
-
-function advanceTime(
-  state: LabState,
-  ix: ContentIndex,
-  seconds: number,
-  action: 'tick' | 'wait',
-): EngineEvent[] {
-  const events: EngineEvent[] = [];
-  const tickS = ix.bundle.physics.tickS;
-  const n = Math.max(1, Math.ceil(seconds / tickS - 1e-9));
-  const dt = seconds / n;
-  for (let i = 0; i < n; i++) {
-    for (const id of state.order) {
-      const v = state.vessels[id] as VesselState;
-      const before = events.length;
-      events.push(...advanceVessel(state, v, ix, dt, action));
-      events.push(...settle(state, v, ix, { action, dt: 0 }));
-      if (v.heat === 'burner') {
-        const hz = hazardFor(v, ix, 'tick');
-        if (hz) {
-          v.heat = 'none';
-          events.push({ type: 'safety_stop', vesselId: v.id, ruleId: hz.rule.id });
-        }
-        if (observedIn(events.slice(before), v.id)) v.heatObserved = true;
-      }
-    }
-    state.timeS = round6(state.timeS + dt);
-  }
-  return events;
-}
-
-function magnifyView(v: VesselState, ix: ContentIndex): MagnifierView | 'liquid' | 'mixed' {
-  if (liquidMl(v, ix) > 0.5) return 'liquid';
-  const views = new Set<MagnifierView>();
-  for (const sp of sortedSpecies(v)) {
-    if (grams(v, sp, ['solid', 'sediment']) < 1e-4) continue;
-    const view = ix.species.get(sp)?.magnifierView;
-    if (view) views.add(view);
-  }
-  return views.size === 1 ? ([...views][0] as MagnifierView) : 'mixed';
-}
-
-const ODOR_ORDER = ['carbon', 'caramel', 'dextrin'];
-
-function smellOf(v: VesselState, ix: ContentIndex): string | null {
-  for (const sp of ODOR_ORDER) if (grams(v, sp) > 1e-4) return sp;
-  for (const sp of sortedSpecies(v)) {
-    if (ix.species.get(sp)?.odor && grams(v, sp, ['liquid', 'dissolved']) > 1e-4) return sp;
-  }
-  return null;
-}
+export { MAX_VESSELS, createLab, doseAmount } from './lab-state.ts';
 
 /** Главная функция движка. */
 export function step(input: LabState, action: LabAction, ix: ContentIndex): StepResult {
@@ -347,7 +116,7 @@ export function step(input: LabState, action: LabAction, ix: ContentIndex): Step
     }
     case 'stir':
       if (totalGrams(v) <= EPS) return blocked(input, 'empty_vessel', v.id);
-      stir(v, ix);
+      stirVessel(v, ix);
       break;
     case 'attach_holder':
       v.inHolder = true;
@@ -400,90 +169,11 @@ export function step(input: LabState, action: LabAction, ix: ContentIndex): Step
           value: Math.round(totalGrams(v) * 100) / 100,
         },
       ]);
-    case 'filter': {
-      if (liquidMl(v, ix) < 0.5) return blocked(input, 'needs_liquid', v.id);
-      if (state.order.length >= MAX_VESSELS) return blocked(input, 'bench_full', v.id);
-      // Через фильтр проходят жидкость и растворённое (и молоко — оно коллоид); крупинки остаются на фильтре.
-      const to = newVessel(ix, 'beaker', state.nextVesselNo);
-      state.nextVesselNo += 1;
-      state.vessels[to.id] = to;
-      state.order.push(to.id);
-      to.temperatureC = v.temperatureC;
-      const kept: string[] = [];
-      for (const sp of sortedSpecies(v)) {
-        const passes = speciesHasClass(ix, sp, 'milk_protein');
-        for (const [phase, g] of Object.entries(v.contents[sp] ?? {}) as [Phase, number][]) {
-          if (phase === 'liquid' || phase === 'dissolved' || passes) {
-            addGrams(to, sp, phase, g);
-            addGrams(v, sp, phase, -g);
-          } else if (!kept.includes(sp)) kept.push(sp);
-        }
-      }
-      to.origins = [...v.origins];
-      pruneOrigins(to, ix);
-      pruneOrigins(v, ix);
-      v.processes = [];
-      return finish([
-        { type: 'separated', vesselId: v.id, method: 'filter', toVesselId: to.id, speciesIds: kept },
-      ]);
-    }
-    case 'magnet': {
-      const pulled = sortedSpecies(v).filter(
-        (sp) => speciesHasClass(ix, sp, 'magnetic') && grams(v, sp) > 1e-6,
-      );
-      if (pulled.length === 0) return finish([nothingEvent(v, ix, 'magnet')]);
-      for (const sp of pulled) delete v.contents[sp];
-      pruneOrigins(v, ix);
-      return finish([{ type: 'separated', vesselId: v.id, method: 'magnet', speciesIds: pulled }]);
-    }
-    case 'blow': {
-      if (liquidMl(v, ix) < 0.5) return blocked(input, 'needs_liquid', v.id);
-      // Выдыхаем через трубочку: немного углекислого газа растворяется, остальное уходит.
-      addGrams(v, 'carbon_dioxide', 'dissolved', 0.01);
-      events.push(...settle(state, v, ix, { action: 'blow', dt: 0 }));
-      delete v.contents['carbon_dioxide'];
-      if (!observedIn(events, v.id)) events.push(nothingEvent(v, ix, 'blow'));
-      return finish(events);
-    }
-    case 'evaporate': {
-      if (liquidMl(v, ix) < 0.5) return blocked(input, 'needs_liquid', v.id);
-      if (state.order.some((id) => id !== v.id && state.vessels[id]?.heat === 'burner'))
-        return blocked(input, 'station_busy', v.id);
-      // Макрос: перелить в выпарительную чашку (если помещается) и греть до сухого остатка.
-      let dish = v;
-      if (
-        v.equipmentId !== 'evaporating_dish' &&
-        liquidMl(v, ix) <= (ix.equipment.get('evaporating_dish')?.capacityMl ?? 30)
-      ) {
-        dish = newVessel(ix, 'evaporating_dish', v.no);
-        dish.id = v.id;
-        dish.contents = v.contents;
-        dish.origins = v.origins;
-        dish.temperatureC = v.temperatureC;
-        state.vessels[v.id] = dish;
-      }
-      dish.heat = 'burner';
-      dish.inHolder = false;
-      dish.heatSeen = [];
-      for (let t = 0; t < 3600 && waterGrams(dish) > EPS; t += 30)
-        events.push(...advanceTime(state, ix, 30, 'tick'));
-      dish.heat = 'none';
-      pruneOrigins(dish, ix);
-      const seen = new Set<string>();
-      const unique = events.filter((e) => {
-        const key = JSON.stringify(e.type === 'observation' ? [e.vesselId, e.kind, e.detail, e.ruleId] : e);
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
-      });
-      unique.push({
-        type: 'separated',
-        vesselId: dish.id,
-        method: 'evaporate',
-        speciesIds: sortedSpecies(dish),
-      });
-      return finish(unique);
-    }
+    case 'filter':
+    case 'magnet':
+    case 'blow':
+    case 'evaporate':
+      return separate(input, state, v, action, ix, finish);
     case 'clear': {
       const fresh = newVessel(ix, v.equipmentId, v.no);
       fresh.inHolder = v.inHolder;

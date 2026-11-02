@@ -422,7 +422,10 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
     const name = c.vesselName(v.id);
     const contents = c.contentsText(v.id);
     w.el.setAttribute('aria-label', `${name}${selected ? `, ${t('a11y.selected')}` : ''}: ${contents}`);
-    for (const x of w.el.querySelectorAll('.hl-ware__tag, .hl-readout, .hl-steam, .app-holder')) x.remove();
+    for (const x of w.el.querySelectorAll(
+      '.hl-ware__tag, .hl-readout, .hl-steam, .app-holder, .app-ware__temp',
+    ))
+      x.remove();
     const visual = c.visual(v.id);
     if (visual) w.view.setVisual(visual);
     if (visual?.steam)
@@ -438,7 +441,12 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
     const temp = Math.round(v.temperatureC);
     const chip =
       Math.abs(temp - 20) >= 2
-        ? h('span', { class: 'hl-ware__chip' }, icon('temperature'), t('vessel.temp', { value: temp }))
+        ? h(
+            'span',
+            { class: 'hl-ware__chip app-ware__temp' },
+            icon('temperature'),
+            t('vessel.temp', { value: temp }),
+          )
         : null;
     // Когда сосудов много, подпись — только номер (полное имя — в доке и для чтеца), иначе подписи наезжают.
     const crowded = isMission || c.state.lab.order.length >= 4;
@@ -446,7 +454,9 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
       v.equipmentId === 'evaporating_dish'
         ? t('bench.vessel', { name: t('bench.short.dish'), no: v.no })
         : name;
-    w.el.append(h('span', { class: 'hl-ware__tag' }, crowded ? String(v.no) : short, chip));
+    // Температура — над сосудом, а не в подписи: так подписи соседних сосудов не наезжают друг на друга.
+    w.el.append(h('span', { class: 'hl-ware__tag' }, crowded ? String(v.no) : short));
+    if (chip) w.el.append(chip);
     const r = c.state.readout;
     if (r?.vesselId === v.id) {
       const scale =

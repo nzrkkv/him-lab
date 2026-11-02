@@ -4,8 +4,8 @@
  */
 import type { Mission } from '../../core/content-model/types.ts';
 import { createLab, step } from '../../core/engine/step.ts';
-import { computePh, phWord } from '../../core/engine/ph.ts';
-import type { EngineEvent, LabAction, LabState } from '../../core/engine/types.ts';
+import { computePh } from '../../core/engine/ph.ts';
+import type { EngineEvent, LabAction } from '../../core/engine/types.ts';
 import { deriveVisual, type VesselVisual } from '../../core/engine/visual.ts';
 import {
   beginExperiments,
@@ -15,102 +15,30 @@ import {
   requestHint,
   startMission,
   washHands,
-  type HintView,
-  type JarCheck,
-  type MissionState,
 } from '../../core/mission/mission.ts';
-import { awardBadge, type ProgressV1, type SandboxLogLine } from '../../core/progress/progress.ts';
+import { awardBadge, type ProgressV1 } from '../../core/progress/progress.ts';
 import { availableSubstances, progress, saveProgress } from '../progress-store.ts';
 import { bundle, ix, plural, t } from '../content.ts';
+import { describeEvents } from './describe.ts';
+import { initialUiState, type LabUiState, type Mode, type Speech } from './lab-types.ts';
+import { LayerRule } from './layers.ts';
 
-export type Mode = 'sandbox' | 'mission';
-export type Pose = 'explain' | 'happy' | 'thinking' | 'warn';
-
-export interface ObsLine {
-  icon: string;
-  title: string;
-  sub?: string;
-  tone: 'change' | 'nothing' | 'success' | 'discovery' | 'caution';
-}
-export interface ResultView {
-  kicker: string;
-  title: string;
-  lines: ObsLine[];
-  why: string;
-  deeper?: string;
-  lens?: string;
-}
-export interface Speech {
-  text: string;
-  pose: Pose;
-  hint?: HintView;
-  actions?: Array<'more_hint' | 'close' | 'start' | 'wash' | 'next'>;
-  checks?: string[];
-  /** Короткая реплика: при появлении другого слоя исчезает, а не ждёт в очереди. */
-  transient?: boolean;
-  /** Шаг вступления миссии (кнопка «Дальше»). */
-  introStep?: number;
-}
-export interface Readout {
-  vesselId: string;
-  value: string;
-  note: string;
-  kind: 'temperature' | 'ph' | 'mass';
-  ph?: number;
-}
-
-export interface LabUiState {
-  mode: Mode;
-  lab: LabState;
-  history: LabState[];
-  selected: { kind: 'vessel' | 'substance'; id: string } | null;
-  qty: { substanceId: string; vesselId: string | null; count: number } | null;
-  result: ResultView | null;
-  stop: { title: string; text: string; deeper?: string } | null;
-  speech: Speech | null;
-  toast: string | null;
-  readout: Readout | null;
-  labelPicker: string | null;
-  journalOpen: boolean;
-  mission: MissionState | null;
-  checks: JarCheck[] | null;
-  heatStartedAt: number | null;
-  lastActionAt: number;
-  announce: string;
-  mixedWarned: boolean;
-}
+export type { LabUiState, Mode, ObsLine, Pose, Readout, ResultView, Speech } from './lab-types.ts';
 
 export class LabController {
   state: LabUiState;
   progress: ProgressV1;
   readonly mission: Mission;
   private listeners: Array<(full: boolean) => void> = [];
-  private save: () => void;
+  /** Сохранить прогресс (с задержкой). */
+  save: () => void;
+  private layers = new LayerRule();
 
   constructor(mode: Mode) {
     this.progress = progress();
     this.save = saveProgress;
     this.mission = bundle.missions[0] as Mission;
-    this.state = {
-      mode,
-      lab: createLab(),
-      history: [],
-      selected: null,
-      qty: null,
-      result: null,
-      stop: null,
-      speech: null,
-      toast: null,
-      readout: null,
-      labelPicker: null,
-      journalOpen: false,
-      mission: null,
-      checks: null,
-      heatStartedAt: null,
-      lastActionAt: Date.now(),
-      announce: '',
-      mixedWarned: false,
-    };
+    this.state = initialUiState(mode, createLab());
     if (mode === 'mission') this.openMission(false);
     else
       this.state.speech = {
@@ -127,63 +55,8 @@ export class LabController {
   }
 
   private emit(full = true): void {
-    this.normalizeLayers();
+    this.layers.normalize(this.state);
     for (const fn of this.listeners) fn(full);
-  }
-
-  /** Очередь реплик Пипы, которые ждут, пока закроется другой всплывающий слой. */
-  speechQueue: Speech[] = [];
-  private prevLayers: Record<string, unknown> = {};
-  private reopenJournal = false;
-
-  /**
-   * Правило слоёв: одновременно виден только один всплывающий слой
-   * (стоп, надпись, количество, выезжающий журнал, результат, реплика).
-   * Новый слой закрывает старые; реплика Пипы не теряется, а встаёт в очередь.
-   */
-  private normalizeLayers(): void {
-    const s = this.state;
-    const narrow = typeof window !== 'undefined' && window.innerWidth < 1280;
-    const layers: Record<string, unknown> = {
-      stop: s.stop,
-      labelPicker: s.labelPicker,
-      qty: s.qty,
-      journal: narrow && s.journalOpen ? true : null,
-      result: s.result,
-      speech: s.speech,
-    };
-    const order = ['stop', 'labelPicker', 'qty', 'journal', 'result', 'speech'];
-    const open = order.filter((k) => layers[k]);
-    const fresh = open.filter((k) => layers[k] !== this.prevLayers[k]);
-    const winner = fresh[0] ?? open[0];
-    // Надпись выбирают с доски в выезжающем журнале: после выбора журнал возвращается.
-    if (winner === 'labelPicker' && layers['journal']) this.reopenJournal = true;
-    if (winner !== 'labelPicker' && winner !== undefined) this.reopenJournal = false;
-    if (!winner && this.reopenJournal) {
-      this.reopenJournal = false;
-      s.journalOpen = true;
-    }
-    for (const k of open) {
-      if (k === winner) continue;
-      if (k === 'speech' && s.speech) {
-        if (!s.speech.transient && !this.speechQueue.some((q) => q.text === s.speech?.text))
-          this.speechQueue.push(s.speech);
-        s.speech = null;
-      } else if (k === 'journal') s.journalOpen = false;
-      else if (k === 'stop') s.stop = null;
-      else if (k === 'labelPicker') s.labelPicker = null;
-      else if (k === 'qty') s.qty = null;
-      else if (k === 'result') s.result = null;
-    }
-    if (!winner && !s.journalOpen && this.speechQueue.length) s.speech = this.speechQueue.shift() ?? null;
-    this.prevLayers = {
-      stop: s.stop,
-      labelPicker: s.labelPicker,
-      qty: s.qty,
-      journal: narrow && s.journalOpen ? true : null,
-      result: s.result,
-      speech: s.speech,
-    };
   }
 
   /** Вступление миссии по шагам: 2–3 коротких реплики вместо стены текста. */
@@ -226,7 +99,7 @@ export class LabController {
       m.status === 'briefing'
         ? this.introSpeech(0)
         : { text: t('mission.resume'), pose: 'happy', actions: ['close'], transient: true };
-    this.speechQueue = [];
+    this.layers.speechQueue = [];
     this.persist();
     this.emit();
   }
@@ -447,7 +320,7 @@ export class LabController {
     )
       this.state.heatStartedAt = Date.now();
     if (action.type === 'heat_stop') this.state.heatStartedAt = null;
-    this.describe(action, r.events);
+    describeEvents(this, action, r.events);
     if (this.state.mission && this.state.mission.status !== 'briefing') {
       const rec = recordEvents(this.mission, this.state.mission, r.state, action, r.events);
       this.state.mission = rec.mission;
@@ -492,191 +365,6 @@ export class LabController {
     const jar = m ? Object.entries(m.jarSubstance).find(([, s]) => s === substanceId)?.[0] : undefined;
     if (jar) return t('shelf.jar', { jar });
     return ix.substances.get(substanceId)?.shortName.toLowerCase() ?? substanceId;
-  }
-
-  // ---------- тексты результатов ----------
-
-  private describe(action: LabAction, events: readonly EngineEvent[]): void {
-    const lines: ObsLine[] = [];
-    let title = '';
-    let why = '';
-    let deeper: string | undefined;
-    let vesselId: string | null = null;
-    let lens: string | undefined;
-    const announce: string[] = [];
-    for (const e of events) {
-      switch (e.type) {
-        case 'observation': {
-          vesselId = e.vesselId;
-          const rule = ix.bundle.rules.find((r) => r.id === e.ruleId);
-          const variant = rule?.variants?.find((v) => v.id === e.variantId);
-          const effect =
-            ix.effects.find((d) => d.kind === e.kind && (d.detail ?? null) === (e.detail ?? null)) ??
-            ix.effects.find((d) => d.kind === e.kind && !d.detail);
-          let lineTitle = effect?.title ?? '';
-          if (e.colorName) lineTitle = t('result.indicator', { color: e.colorName });
-          if (e.kind === 'cold' && e.deltaC !== undefined)
-            lineTitle = `${lineTitle}: ${Math.round(e.deltaC * 10) / 10} °C`;
-          lines.push({ icon: effect?.icon ?? 'result-color', title: lineTitle, tone: 'change' });
-          if (!title && rule) {
-            title = variant?.text?.what ?? rule.text.what;
-            why = variant?.text?.why ?? rule.text.why;
-            deeper = rule.text.deeper;
-            if (rule.line && rule.id === 'acid_carbonate_gas') deeper = deeper ?? undefined;
-          }
-          break;
-        }
-        case 'nothing_happened': {
-          if (action.type === 'wait' && events.some((x) => x.type === 'observation')) break;
-          vesselId = e.vesselId || vesselId;
-          const nr = ix.noReactions.find((n) => n.id === e.reasonId);
-          title = t('result.nothing.title');
-          why = nr?.text.why ?? t(`nothing.generic.${e.action}`);
-          deeper = nr?.text.deeper;
-          lines.push({
-            icon: e.showsColor ? 'result-color' : 'result-nothing',
-            title: t('result.nothing.sub'),
-            tone: 'nothing',
-          });
-          break;
-        }
-        case 'safety_stop': {
-          const rule = ix.bundle.rules.find((r) => r.id === e.ruleId);
-          this.state.stop = {
-            title: rule?.text.why.split(/[:.]/)[0] ?? t('stop.title'),
-            text: rule?.text.why ?? '',
-            ...(rule?.text.deeper ? { deeper: rule.text.deeper } : {}),
-          };
-          this.state.heatStartedAt = null;
-          announce.push(`${t('stop.title')} ${rule?.text.why ?? ''}`);
-          this.log(e.vesselId, 'caution', rule?.text.why ?? t('stop.title'), '');
-          break;
-        }
-        case 'blocked':
-          this.state.speech = {
-            text: t(`blocked.${e.reason}`),
-            pose: 'warn',
-            actions: ['close'],
-            transient: true,
-          };
-          announce.push(t(`blocked.${e.reason}`));
-          break;
-        case 'measurement': {
-          const num = new Intl.NumberFormat('ru').format(e.value);
-          const value = t(`readout.${e.quantity}`, { value: num });
-          const note =
-            e.quantity === 'ph'
-              ? t(`result.ph.${phWord(e.value)}`)
-              : e.quantity === 'temperature'
-                ? t('act.temperature')
-                : t('act.weigh');
-          this.state.readout = {
-            vesselId: e.vesselId,
-            value,
-            note,
-            kind: e.quantity,
-            ...(e.quantity === 'ph' ? { ph: e.value } : {}),
-          };
-          announce.push(`${this.vesselName(e.vesselId)}: ${value}, ${note}`);
-          this.log(e.vesselId, 'change', `${value} — ${note}`, '');
-          break;
-        }
-        case 'magnified': {
-          lens = e.view;
-          vesselId = e.vesselId ?? null;
-          title = t('result.lens.title');
-          why = t(`result.lens.${e.view}`);
-          lines.push({ icon: 'magnify', title: why, tone: 'change' });
-          break;
-        }
-        case 'smelled': {
-          vesselId = e.vesselId;
-          const odor = e.odor ? ix.species.get(e.odor)?.odor?.text : undefined;
-          title = t('act.smell');
-          why = odor ?? t('result.smell.none');
-          deeper = t('result.smell.hint');
-          lines.push({ icon: 'result-smell', title: why, tone: odor ? 'change' : 'nothing' });
-          break;
-        }
-        case 'separated': {
-          // Разделение смеси перекрывает наблюдения по пути (кипение при выпаривании и т. п.).
-          vesselId = e.vesselId;
-          const names = e.speciesIds.map((sp) => this.speciesName(sp)).join(', ');
-          const m = e.method;
-          title = t(`result.sep.${m}.title`);
-          why =
-            m === 'filter'
-              ? names
-                ? t('result.sep.filter.kept', {
-                    names,
-                    to: this.vesselName(e.toVesselId ?? '').toLowerCase(),
-                  })
-                : t('result.sep.filter.none')
-              : m === 'magnet'
-                ? t('result.sep.magnet.why', { names })
-                : names
-                  ? t('result.sep.evaporate.why', { names })
-                  : t('result.sep.evaporate.empty');
-          deeper = t(`result.sep.${m}.deeper`);
-          lines.unshift({ icon: m, title: t(`result.sep.${m}.line`), tone: 'change' });
-          if (m === 'filter' && e.toVesselId) this.state.selected = { kind: 'vessel', id: e.toVesselId };
-          break;
-        }
-        case 'discovery': {
-          const sp = ix.species.get(e.speciesId);
-          const name = sp?.discoverable?.name ?? e.speciesId;
-          if (!this.progress.discoveries.includes(e.speciesId)) {
-            this.progress.discoveries.push(e.speciesId);
-            this.state.toast = t('result.discovery', { name });
-            this.save();
-          }
-          lines.push({
-            icon: 'star',
-            title: t('result.discovery', { name }),
-            sub: sp?.discoverable?.text ?? '',
-            tone: 'discovery',
-          });
-          break;
-        }
-        default:
-          break;
-      }
-    }
-    if (!title) return;
-    const subject =
-      action.type === 'magnify' && action.substanceId
-        ? this.originName(action.substanceId)
-        : vesselId
-          ? this.vesselName(vesselId)
-          : '';
-    const kicker = vesselId ? `${subject}: ${this.contentsText(vesselId)}` : subject;
-    this.state.result = {
-      kicker,
-      title,
-      lines,
-      why,
-      ...(deeper ? { deeper } : {}),
-      ...(lens ? { lens } : {}),
-    };
-    announce.push(`${subject}. ${title}. ${why}`);
-    this.state.announce = announce.join(' ');
-    if (vesselId && action.type !== 'tick')
-      this.log(vesselId, lines[0]?.tone === 'nothing' ? 'nothing' : 'change', title, why);
-    else if (vesselId && action.type === 'tick' && lines.length) this.log(vesselId, 'change', title, why);
-  }
-
-  private log(vesselId: string, tone: SandboxLogLine['tone'], title: string, detail: string): void {
-    const list = this.progress.sandboxLog;
-    const prefix = vesselId ? `${this.vesselName(vesselId)}: ${this.contentsText(vesselId)} — ` : '';
-    list.push({
-      id: (list[list.length - 1]?.id ?? 0) + 1,
-      icon: tone,
-      title: `${prefix}${title}`,
-      detail,
-      tone,
-    });
-    if (list.length > 50) list.splice(0, list.length - 50);
-    this.save();
   }
 
   /** Имя частицы для ребёнка: имя вещества с полки, если оно из одной частицы, иначе научное. */
