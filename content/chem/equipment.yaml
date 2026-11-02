@@ -1,0 +1,16 @@
+# Оборудование. Ассеты — design/assets/<asset>.svg. Теплоёмкость сосуда нужна модели нагрева.
+- { id: test_tube, asset: equipment/test-tube, name: { ru: "Пробирка" }, kind: vessel, capacityMl: 20, heatCapacityJPerK: 8, needsHolderForHeat: true, tip: { ru: "Пробирка — маленький сосуд для опытов." } }
+- { id: beaker, asset: equipment/beaker, name: { ru: "Стакан" }, kind: vessel, capacityMl: 200, heatCapacityJPerK: 40 }
+- { id: flask, asset: equipment/flask, name: { ru: "Колба" }, kind: vessel, capacityMl: 100, heatCapacityJPerK: 30 }
+- { id: evaporating_dish, asset: equipment/evaporating-dish, name: { ru: "Выпарительная чашка" }, kind: vessel, capacityMl: 30, heatCapacityJPerK: 30, tip: { ru: "В чашке выпаривают воду из раствора." } }
+- { id: test_tube_rack, asset: equipment/test-tube-rack, name: { ru: "Штатив" }, kind: fixture }
+- { id: tube_holder, asset: equipment/test-tube-holder, name: { ru: "Держатель" }, kind: tool, tip: { ru: "Горячую пробирку держим только держателем." } }
+- { id: burner, asset: equipment/burner, name: { ru: "Горелка" }, kind: station, tip: { ru: "Горелка нагревает сосуд." } }
+- { id: ice_bath, asset: equipment/ice-bath, name: { ru: "Ледяная баня" }, kind: station }
+- { id: stirrer, asset: equipment/stirrer, name: { ru: "Стеклянная палочка" }, kind: tool, tip: { ru: "Стеклянной палочкой перемешивают." } }
+- { id: spoon, asset: equipment/spoon, name: { ru: "Ложечка" }, kind: tool }
+- { id: pipette, asset: equipment/pipette, name: { ru: "Пипетка" }, kind: tool, tip: { ru: "Пипетка набирает жидкость и капает по капле." } }
+- { id: magnifier, asset: equipment/magnifier, name: { ru: "Лупа" }, kind: tool, tip: { ru: "Лупа увеличивает. В неё видно мелкие крупинки." } }
+- { id: thermometer, asset: equipment/thermometer, name: { ru: "Термометр" }, kind: tool }
+- { id: ph_strip, asset: equipment/ph-strip, name: { ru: "pH-полоска" }, kind: tool }
+- { id: scales, asset: equipment/scales, name: { ru: "Весы" }, kind: station }

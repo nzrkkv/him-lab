@@ -1,0 +1,28 @@
+# Наблюдение движка → эффект дизайна (docs/design/05-effects.md). Первое совпадение сверху вниз.
+# Классы fx-* должны существовать в design/components/effects.css (проверяется в CI).
+- { id: gas_strong, kind: gas, intensity: strong, fxClasses: [fx-fizz, fx-fizz--strong, fx-foam], vars: { --bubbles: 1, --foam: 0.6 }, durationMs: 3000, icon: result-gas, title: { ru: "Пузырьки газа" } }
+- { id: gas_weak, kind: gas, intensity: weak, fxClasses: [fx-fizz], vars: { --bubbles: 0.6 }, durationMs: 6000, icon: result-gas, title: { ru: "Мелкие пузырьки" } }
+- { id: gas, kind: gas, fxClasses: [fx-fizz], vars: { --bubbles: 0.8 }, durationMs: 3000, icon: result-gas, title: { ru: "Пузырьки газа" } }
+- { id: foam_overflow, kind: foam, detail: overflow, fxClasses: [fx-foam], vars: { --foam: 1 }, durationMs: 3000, icon: result-foam, title: { ru: "Пена убежала!" } }
+- { id: foam, kind: foam, fxClasses: [fx-foam], vars: { --foam: 0.6 }, durationMs: 2500, icon: result-foam, title: { ru: "Пена" } }
+- { id: saturated, kind: dissolve, detail: saturated, fxClasses: [fx-stir], durationMs: 1200, icon: result-dissolve, title: { ru: "Остаток на дне" } }
+- { id: dissolve, kind: dissolve, fxClasses: [fx-dissolve, fx-stir], durationMs: 1600, icon: result-dissolve, title: { ru: "Растворилось" } }
+- { id: settled, kind: turbid, detail: settled, fxClasses: [fx-settle], durationMs: 3200, icon: result-precipitate, title: { ru: "Муть осела" } }
+- { id: thicken, kind: turbid, detail: thicken, fxClasses: [fx-stir], durationMs: 1600, icon: result-turbid, title: { ru: "Загустело" } }
+- { id: turbid, kind: turbid, fxClasses: [fx-stir], durationMs: 1600, icon: result-turbid, title: { ru: "Стало мутным" } }
+- { id: sank, kind: precipitate, fxClasses: [fx-settle], durationMs: 1600, icon: result-precipitate, title: { ru: "Легло на дно" } }
+- { id: fade, kind: color, detail: fade, fxClasses: [], durationMs: 1600, icon: result-color, title: { ru: "Цвет пропал" } }
+- { id: caramel, kind: color, detail: caramel, fxClasses: [], durationMs: 1600, icon: result-melt, title: { ru: "Карамель" } }
+- { id: toasted, kind: color, detail: toasted, fxClasses: [], durationMs: 1600, icon: result-color, title: { ru: "Подрумянилось" } }
+- { id: char, kind: color, detail: char, fxClasses: [fx-steam], durationMs: 3200, icon: result-color, title: { ru: "Обуглилось" } }
+- { id: color, kind: color, fxClasses: [], durationMs: 1600, icon: result-color, title: { ru: "Изменился цвет" } }
+- { id: boiling, kind: steam, detail: boiling, fxClasses: [fx-steam], vars: { --bubbles: 1 }, durationMs: 3200, icon: result-steam, title: { ru: "Кипит" } }
+- { id: droplets, kind: steam, detail: droplets_on_walls, fxClasses: [fx-steam], durationMs: 3200, icon: result-steam, title: { ru: "Капельки на стенках" } }
+- { id: steam, kind: steam, fxClasses: [fx-steam], durationMs: 3200, icon: result-steam, title: { ru: "Пар" } }
+- { id: crystals, kind: crystals, fxClasses: [fx-crystals], vars: { --crystals: 1 }, durationMs: 3200, icon: result-crystals, title: { ru: "Кристаллы" } }
+- { id: melt, kind: melt, fxClasses: [], durationMs: 1600, icon: result-melt, title: { ru: "Расплавилось" } }
+- { id: smell, kind: smell, fxClasses: [], durationMs: 1600, icon: result-smell, title: { ru: "Запах" } }
+- { id: cold, kind: cold, fxClasses: [], durationMs: 1600, icon: result-cold, title: { ru: "Стало холоднее" } }
+- { id: warm, kind: warm, fxClasses: [], durationMs: 1600, icon: result-warm, title: { ru: "Стало теплее" } }
+- { id: crackle, kind: nothing, detail: crackle, fxClasses: [], durationMs: 1600, icon: result-nothing, title: { ru: "Потрескивает" } }
+- { id: nothing, kind: nothing, fxClasses: [], durationMs: 1200, icon: result-nothing, title: { ru: "Ничего не изменилось" } }

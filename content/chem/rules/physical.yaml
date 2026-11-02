@@ -1,0 +1,130 @@
+# Физические явления: растворение, взвесь, оседание, кипение, выпаривание, клейстеризация.
+- id: dissolve_soluble
+  kind: physical
+  priority: 10
+  when:
+    reactants: [{ bind: a, match: { class: soluble }, phases: [solid] }]
+    medium: aqueous
+  effect: { type: dissolve, bind: a }
+  observe: [{ kind: dissolve }]
+  text:
+    what: { ru: "Крупинки пропали, вода прозрачная" }
+    why: { ru: "Вещество растворилось. Оно не исчезло: распалось на крошечные частицы, их не видно." }
+    deeper: { ru: "Если выпарить воду, вещество вернётся. Раствор бывает цветным, но он всегда прозрачный." }
+    adult: { ru: "Растворимость при 20 °C: соль около 36 г, сахар около 200 г, сода около 9,6 г на 100 г воды." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: saturated_solution
+  kind: physical
+  priority: 9
+  when:
+    reactants: [{ bind: a, match: { class: soluble }, phases: [solid] }]
+    medium: aqueous
+  effect: { type: saturation, bind: a }
+  observe: [{ kind: dissolve, detail: saturated }]
+  text:
+    what: { ru: "Часть порошка осталась на дне" }
+    why: { ru: "Вода больше не может растворить. Добавь воды и перемешай." }
+    deeper: { ru: "У растворения есть предел. Такой раствор называют насыщенным." }
+    adult: { ru: "Предел растворимости зависит от вещества и температуры." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: suspend_insoluble
+  kind: physical
+  priority: 10
+  when:
+    trigger: [stir]
+    reactants: [{ bind: a, match: { class: insoluble, notClass: [sinks] }, phases: [solid, sediment] }]
+    medium: aqueous
+  effect: { type: suspend, bind: a }
+  observe: [{ kind: turbid }]
+  text:
+    what: { ru: "Вода белая и мутная, как молоко" }
+    why: { ru: "Порошок не растворяется. Крупинки плавают целыми — поэтому вода мутная." }
+    deeper: { ru: "Мутная вода — это целые крупинки, которые плавают в воде. Учёные называют это взвесью." }
+    adult: { ru: "Нерастворимое вещество образует взвесь (суспензию)." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: sink_insoluble
+  kind: physical
+  priority: 10
+  when:
+    trigger: [stir]
+    reactants: [{ bind: a, match: { class: sinks }, phases: [solid] }]
+    medium: aqueous
+  effect: { type: suspend, bind: a }
+  observe: [{ kind: precipitate, detail: settled }]
+  text:
+    what: { ru: "Крупинки покружились и легли на дно" }
+    why: { ru: "Песок не растворяется. Он тяжёлый и сразу ложится на дно. Вода над ним прозрачная." }
+    adult: { ru: "SiO₂ практически нерастворим и быстро оседает." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: settle_suspension
+  kind: physical
+  priority: 5
+  when:
+    trigger: [tick, wait]
+    reactants: [{ bind: a, match: {}, phases: [suspended] }]
+  effect: { type: settle, bind: a }
+  observe: [{ kind: turbid, detail: settled }]
+  text:
+    what: { ru: "Муть осела на дно, вода посветлела" }
+    why: { ru: "Крупинки не растворились. Они тяжелее воды и понемногу опускаются на дно." }
+    adult: { ru: "Седиментация взвеси." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: starch_gelatinization
+  kind: physical
+  priority: 20
+  when:
+    reactants: [{ bind: a, match: { class: starch }, phases: [suspended, sediment] }]
+    medium: aqueous
+    temperature: { minC: 60 }
+  effect: { type: phase_change, bind: a, to: gel }
+  observe: [{ kind: turbid, detail: thicken }]
+  text:
+    what: { ru: "Смесь загустела и стала полупрозрачной, как кисель" }
+    why: { ru: "Крахмал в горячей воде набух. Так и варят кисель!" }
+    deeper: { ru: "Крахмал не растворился, а набух. Учёные называют это клейстером." }
+    adult: { ru: "Клейстеризация: картофельный крахмал набухает примерно при 56–68 °C. Это не истинный раствор." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: water_boiling
+  kind: physical
+  priority: 5
+  when:
+    reactants: [{ bind: w, match: { species: water }, phases: [liquid] }]
+    heating: true
+    temperature: { minC: 99.5 }
+  effect: { type: observe_only, once: heat_session }
+  observe: [{ kind: steam, detail: boiling }]
+  text:
+    what: { ru: "Вода кипит: внутри большие пузырьки, идёт пар" }
+    why: { ru: "Пузырьки — это закипела вода. Это пар, а не новое вещество." }
+    deeper: { ru: "Белое облачко над водой — это крошечные капельки. Настоящий пар невидим!" }
+    adult: { ru: "Кипение — физическое явление, вода кипит при 100 °C." }
+  sources: [lesson01]
+  review: { status: self_checked }
+
+- id: evaporate_to_residue
+  kind: physical
+  priority: 15
+  when:
+    reactants: [{ bind: a, match: {}, phases: [dissolved] }]
+    medium: dry
+    heating: true
+  effect: { type: crystallize }
+  observe: [{ kind: crystals }]
+  text:
+    what: { ru: "Вода выкипела. На дне остались кристаллики" }
+    why: { ru: "Вещество никуда не девалось — просто пряталось в воде." }
+    adult: { ru: "Выпаривание: растворённое вещество остаётся, когда вода испаряется." }
+  sources: [lesson01]
+  review: { status: self_checked }

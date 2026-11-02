@@ -1,0 +1,19 @@
+# Параметры модели (docs/spec/04-engine-and-content.md, раздел 4.3). Черновик, калибруется на плейтесте.
+physics:
+  ambientC: 20
+  burnerPowerW: 40
+  heatTimeScale: 5        # при нагреве время опыта идёт в 5 раз быстрее реального
+  heatAutoStopS: 30       # горелка гаснет сама через 30 с реального времени
+  dryMaxC: 300
+  iceBathC: 1
+  coolingPerS: 0.01
+  iceCoolingPerS: 0.08
+  waitStepS: 60
+  tickS: 0.5
+  aqueousMinWaterG: 2
+  latentHeatWaterJPerG: 2260
+  gasMlPerMol: 24000      # объём моля газа при 20 °C, мл
+dosing:
+  portion_solid_g: 0.2
+  portion_liquid_ml: 5
+  drop_ml: 0.05

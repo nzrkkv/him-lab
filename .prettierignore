@@ -1,0 +1,7 @@
+design/
+docs/
+dist/
+src/generated/
+node_modules/
+content/
+*.md

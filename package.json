@@ -1,0 +1,43 @@
+{
+  "name": "him-lab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Хим лаба — виртуальная химическая лаборатория для детей 9–12 лет",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Edge versions",
+    "last 2 Firefox versions",
+    "last 2 Samsung versions",
+    "Safari >= 16.4",
+    "iOS >= 16.4"
+  ],
+  "scripts": {
+    "content:build": "tsx scripts/content/build.ts",
+    "content:check": "tsx scripts/content/check.ts",
+    "assets:check": "tsx scripts/assets/check.ts",
+    "build": "tsx scripts/build.ts",
+    "dev": "tsx scripts/dev.ts",
+    "preview": "tsx scripts/serve.ts dist",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "tsx scripts/lint.ts && prettier --check .",
+    "format": "prettier --write .",
+    "test": "node --import tsx --test --test-reporter=spec \"src/**/*.test.ts\"",
+    "test:coverage": "node --import tsx --test --experimental-test-coverage --test-coverage-include=\"src/core/**\" --test-coverage-exclude=\"**/*.test.ts\" \"src/**/*.test.ts\"",
+    "test:e2e": "playwright test",
+    "check": "npm run lint && npm run typecheck && npm run content:check && npm run assets:check && npm test && npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.3",
+    "esbuild": "0.28.2",
+    "playwright": "1.63.0",
+    "prettier": "3.8.1",
+    "tsx": "4.23.12",
+    "typescript": "6.0.3",
+    "yaml": "2.9.0",
+    "zod": "3.25.76"
+  }
+}

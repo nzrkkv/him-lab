@@ -1,0 +1,98 @@
+# «Почему ничего не произошло». Выбирается запись с наибольшим приоритетом.
+- id: nr_salt_acid
+  priority: 50
+  when:
+    trigger: [add, pour, stir]
+    reactants:
+      - { bind: s, match: { species: sodium_chloride } }
+      - { bind: a, match: { class: acid } }
+  text:
+    why: { ru: "Соль с уксусом не реагирует: новых веществ нет." }
+    adult: { ru: "Хлорид натрия со слабой уксусной кислотой не реагирует." }
+
+- id: nr_sugar_acid
+  priority: 50
+  when:
+    trigger: [add, pour, stir]
+    reactants:
+      - { bind: s, match: { species: sucrose } }
+      - { bind: a, match: { class: acid } }
+  text:
+    why: { ru: "Сахар с уксусом не реагирует: новых веществ нет." }
+    adult: { ru: "При комнатной температуре реакции нет." }
+
+- id: nr_starch_acid
+  priority: 50
+  when:
+    trigger: [add, pour, stir]
+    reactants:
+      - { bind: s, match: { species: starch } }
+      - { bind: a, match: { class: acid } }
+  text:
+    why: { ru: "Крахмал с уксусом не реагирует: новых веществ нет." }
+    adult: { ru: "Гидролиз крахмала кислотой требует нагрева и сильной кислоты." }
+
+- id: nr_iodine_no_starch
+  priority: 40
+  when:
+    trigger: [add, pour]
+    reactants:
+      - { bind: i, match: { class: iodine } }
+      - { bind: x, match: { class: powder, notClass: [starch] } }
+  observe: [{ kind: color }]
+  text:
+    why: { ru: "Йод просто покрасил всё своим цветом. Синего нет — значит, крахмала нет." }
+    adult: { ru: "Реакции нет, видна собственная окраска йода." }
+
+- id: nr_iodine_control
+  priority: 30
+  when:
+    trigger: [add, pour]
+    reactants:
+      - { bind: i, match: { class: iodine } }
+      - { bind: w, match: { species: water }, phases: [liquid] }
+  observe: [{ kind: color }]
+  text:
+    why: { ru: "Это цвет самого йода. Запомни его — так поймёшь, когда цвет поменялся по-настоящему." }
+    deeper: { ru: "Опыт без порошка учёные называют контрольным." }
+    adult: { ru: "Контрольный опыт." }
+
+- id: nr_heat_stable
+  priority: 20
+  when:
+    trigger: [heat_stop]
+    reactants: [{ bind: s, match: { class: heat_stable }, phases: [solid] }]
+    medium: dry
+  text:
+    why: { ru: "Ничего не изменилось. Это вещество выдерживает огонь горелки. Мел меняется только в печи, примерно при 900 градусах." }
+    adult: { ru: "CaCO₃ разлагается примерно при 840–900 °C, NaCl плавится при 801 °C — горелка в пробирке до этого не доводит." }
+
+- id: nr_powder_needs_stir
+  priority: 10
+  when:
+    trigger: [add, pour]
+    reactants:
+      - { bind: p, match: { class: powder }, phases: [solid] }
+      - { bind: w, match: { species: water }, phases: [liquid] }
+    medium: aqueous
+  text:
+    why: { ru: "Порошок лежит на дне. Перемешай палочкой — так растворение идёт быстрее." }
+    adult: { ru: "Без перемешивания растворение идёт медленно." }
+
+- id: nr_more_liquid
+  priority: 5
+  when:
+    trigger: [add, pour]
+    reactants: [{ bind: w, match: { species: water }, phases: [liquid] }]
+  text:
+    why: { ru: "Ничего нового: просто стало больше жидкости." }
+    adult: { ru: "Разбавление." }
+
+- id: nr_stir_nothing_new
+  priority: 5
+  when:
+    trigger: [stir]
+    reactants: [{ bind: w, match: {}, phases: [liquid, dissolved, suspended, gel] }]
+  text:
+    why: { ru: "Перемешали. Всё уже перемешано — нового ничего нет." }
+    adult: { ru: "Состав не изменился." }
