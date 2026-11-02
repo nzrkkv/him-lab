@@ -21,6 +21,10 @@ export default defineConfig({
       name: 'tablet-landscape',
       use: { ...devices['Desktop Chrome'], viewport: { width: 1024, height: 768 }, hasTouch: true },
     },
+    {
+      name: 'tablet-portrait',
+      use: { ...devices['Desktop Chrome'], viewport: { width: 768, height: 1024 }, hasTouch: true },
+    },
   ],
   webServer: {
     command: 'CHANNEL=test FX_INSTANT=1 npx tsx scripts/build.ts && npx tsx scripts/serve.ts dist',

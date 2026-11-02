@@ -16,6 +16,7 @@ interface WareRef {
   equipmentId: string;
 }
 
+const LENS_VIEWS = ['cubes', 'crystals', 'fine_powder', 'ultrafine_powder'];
 const NATURAL_WIDTH: Record<string, number> = {
   beaker: 120,
   test_tube: 48,
@@ -56,7 +57,7 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
   const stageMain = h('div', { class: 'hl-stage__main' }, isMission ? head : rail, scene);
   const lab = h(
     'div',
-    { class: 'hl-lab' },
+    { class: `hl-lab${isMission ? ' app-lab--mission' : ''}` },
     topbar,
     shelf,
     h('main', { class: 'hl-stage', 'aria-label': t('bench.title') }, stageMain, dock),
@@ -210,6 +211,9 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
   }
 
   function renderShelf(): void {
+    // Перерисовка не должна сбрасывать прокрутку полки.
+    const old = shelf.querySelector<HTMLElement>('.hl-shelf__body');
+    const keep = old ? { left: old.scrollLeft, top: old.scrollTop } : null;
     const body = h('div', { class: 'hl-shelf__body' });
     if (isMission) {
       const jars = c.mission.jars.map((j) => substanceButton(c.jarSubstance(j) ?? '', { jar: j }));
@@ -244,8 +248,33 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
         ),
       ),
       body,
+      more,
     );
+    if (keep) {
+      body.scrollLeft = keep.left;
+      body.scrollTop = keep.top;
+    }
+    updateMore();
   }
+  // Портрет: кнопка «листай дальше» — признак прокрутки полки (и способ листать без жеста).
+  const more = h(
+    'button',
+    {
+      class: 'app-shelf-more',
+      'aria-label': t('shelf.scroll'),
+      onclick: () => shelf.querySelector('.hl-shelf__body')?.scrollBy({ left: 240, behavior: 'smooth' }),
+    },
+    icon('forward'),
+  );
+  function updateMore(): void {
+    const body = shelf.querySelector<HTMLElement>('.hl-shelf__body');
+    if (!body) return;
+    const end = body.scrollLeft + body.clientWidth >= body.scrollWidth - 4;
+    body.classList.toggle('is-end', end);
+    more.hidden = end || body.scrollWidth <= body.clientWidth + 4;
+  }
+  shelf.addEventListener('scroll', updateMore, true);
+  window.addEventListener('resize', updateMore);
 
   // ---------- оборудование (песочница) ----------
   function renderRail(): void {
@@ -446,7 +475,8 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
         decorateWare(w, v);
         nodes.push(w.el);
       }
-      if (benchVessels.length === 0) nodes.push(h('div', { class: 'hl-slot' }, t('bench.empty')));
+      if (benchVessels.length === 0)
+        nodes.push(h('div', { class: 'hl-slot app-slot--wide' }, t('bench.empty')));
     }
     nodes.push(h('div', { class: 'hl-bench__spacer' }));
     // Горелка: сосуд над ней — внутри station__on.
@@ -510,17 +540,19 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
     iconName: string,
     key: string,
     run: () => void,
-    opts: { cls?: string; disabled?: boolean; pressed?: boolean } = {},
+    opts: { cls?: string; why?: string | null; pressed?: boolean } = {},
   ): HTMLButtonElement {
+    // Недоступная кнопка остаётся в порядке фокуса и объясняет, почему недоступна.
     return h(
       'button',
       {
         class: `hl-act ${opts.cls ?? ''}`,
-        'aria-disabled': String(Boolean(opts.disabled)),
+        'aria-disabled': String(Boolean(opts.why)),
+        title: opts.why ?? undefined,
         'aria-pressed': opts.pressed === undefined ? undefined : String(opts.pressed),
         'aria-keyshortcuts': key,
         'data-key': key.toLowerCase(),
-        onclick: () => !opts.disabled && run(),
+        onclick: () => (opts.why ? c.set('toast', opts.why) : run()),
       },
       icon(iconName),
       h('span', {}, label),
@@ -541,6 +573,10 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
     const heating = v?.heat === 'burner';
     const cooling = v?.heat === 'ice_bath';
     const isTube = v?.equipmentId === 'test_tube';
+    const whyNone = none ? t('dock.why.none') : null;
+    const whyEmpty = whyNone ?? (empty ? t('dock.why.empty') : null);
+    const whyHot = heating ? t('dock.why.heating') : null;
+    const anyContents = c.state.lab.order.some((id) => (c.state.lab.vessels[id]?.origins.length ?? 0) > 0);
     const context = v
       ? h(
           'span',
@@ -559,7 +595,7 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
       else if (jarSel) void c.act({ type: 'magnify', substanceId: c.jarSubstance(jarSel) ?? jarSel });
     };
     const doRow = [
-      act(t('act.stir'), 'stir', 'M', run({ type: 'stir', vesselId: v?.id ?? '' }), { disabled: empty }),
+      act(t('act.stir'), 'stir', 'M', run({ type: 'stir', vesselId: v?.id ?? '' }), { why: whyEmpty }),
       act(
         heating ? t('act.heat.stop') : t('act.heat'),
         'heat',
@@ -569,7 +605,7 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
             ? { type: 'heat_stop', vesselId: v?.id ?? '' }
             : { type: 'heat_start', vesselId: v?.id ?? '' },
         ),
-        { cls: 'hl-act--heat', disabled: none, pressed: heating },
+        { cls: 'hl-act--heat', why: whyNone, pressed: heating },
       ),
       ...(isMission
         ? []
@@ -583,10 +619,12 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
                   ? { type: 'cool_stop', vesselId: v?.id ?? '' }
                   : { type: 'cool_start', vesselId: v?.id ?? '' },
               ),
-              { cls: 'hl-act--cool', disabled: none || heating, pressed: cooling },
+              { cls: 'hl-act--cool', why: whyNone ?? whyHot, pressed: cooling },
             ),
           ]),
-      act(t('act.wait'), 'wait', 'W', run({ type: 'wait' })),
+      act(t('act.wait'), 'wait', 'W', run({ type: 'wait' }), {
+        why: anyContents ? null : t('dock.why.wait'),
+      }),
       act(
         t('act.holder'),
         'hand',
@@ -596,7 +634,7 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
             ? { type: 'detach_holder', vesselId: v.id }
             : { type: 'attach_holder', vesselId: v?.id ?? '' },
         ),
-        { disabled: !isTube, pressed: Boolean(v?.inHolder) },
+        { why: whyNone ?? (isTube ? null : t('dock.why.holder')), pressed: Boolean(v?.inHolder) },
       ),
       ...(isMission
         ? []
@@ -606,16 +644,19 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
               'close',
               'R',
               () => v && (c.set('selected', null), void c.act({ type: 'remove', vesselId: v.id })),
-              { cls: 'hl-act--quiet', disabled: none || heating },
+              { cls: 'hl-act--quiet', why: whyNone ?? whyHot },
             ),
           ]),
     ];
     const observeRow = [
       act(t('act.smell'), 'smell', 'S', run({ type: 'smell', vesselId: v?.id ?? '' }), {
         cls: 'hl-act--observe',
-        disabled: empty,
+        why: whyEmpty,
       }),
-      act(t('act.magnify'), 'magnify', 'L', magnify, { cls: 'hl-act--observe', disabled: empty && !jarSel }),
+      act(t('act.magnify'), 'magnify', 'L', magnify, {
+        cls: 'hl-act--observe',
+        why: empty && !jarSel ? (none ? t('dock.why.magnify') : t('dock.why.empty')) : null,
+      }),
       ...(isMission
         ? []
         : [
@@ -624,20 +665,20 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
               'temperature',
               'T',
               run({ type: 'measure_temperature', vesselId: v?.id ?? '' }),
-              { cls: 'hl-act--observe', disabled: none },
+              { cls: 'hl-act--observe', why: whyNone },
             ),
             act(t('act.ph'), 'ph', 'P', run({ type: 'measure_ph', vesselId: v?.id ?? '' }), {
               cls: 'hl-act--observe',
-              disabled: empty,
+              why: whyEmpty,
             }),
           ]),
       act(t('act.undo'), 'undo', 'Z', () => c.undo(), {
         cls: 'hl-act--quiet hl-dock__split',
-        disabled: c.state.history.length === 0,
+        why: c.state.history.length === 0 ? t('dock.why.undo') : null,
       }),
       act(t('act.clear'), 'clear', 'X', run({ type: 'clear', vesselId: v?.id ?? '' }), {
         cls: 'hl-act--quiet',
-        disabled: empty || heating,
+        why: whyEmpty ?? whyHot,
       }),
     ];
     const cols = Math.max(doRow.length, observeRow.length);
@@ -666,6 +707,13 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
             'button',
             { class: 'hl-btn hl-btn--sm hl-btn--secondary', onclick: () => c.requestHint() },
             t('mission.hint.more'),
+          );
+        if (a === 'next')
+          return h(
+            'button',
+            { class: 'hl-btn hl-btn--sm hl-btn--primary', onclick: () => c.nextIntro() },
+            t('mission.next'),
+            icon('forward'),
           );
         if (a === 'start')
           return h(
@@ -769,7 +817,9 @@ export function mountLab(root: HTMLElement, c: LabController, goHome: () => void
             ),
           ),
           h('h2', { class: 'hl-result__title', id: 'res-title' }, r.title),
-          r.lens ? h('div', { class: 'app-lens' }, asset(`lens/${r.lens}`, { label: '' })) : null,
+          r.lens && LENS_VIEWS.includes(r.lens)
+            ? h('div', { class: 'app-lens' }, asset(`lens/${r.lens}`, { label: '' }))
+            : null,
           h(
             'div',
             { class: 'hl-result__obs' },

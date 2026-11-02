@@ -301,6 +301,8 @@ export function makeSchemas<T extends z.ZodTypeAny>(Text: T) {
     .object({
       id: Id,
       label: Text,
+      /** Короткая подпись для клетки доски (слова не длиннее 9 букв). */
+      short: Text,
       icon: z.string().regex(/^result-[a-z-]+$/),
       match: z
         .array(

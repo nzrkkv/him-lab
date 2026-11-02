@@ -49,8 +49,12 @@ export interface Speech {
   text: string;
   pose: Pose;
   hint?: HintView;
-  actions?: Array<'more_hint' | 'close' | 'start' | 'wash'>;
+  actions?: Array<'more_hint' | 'close' | 'start' | 'wash' | 'next'>;
   checks?: string[];
+  /** Короткая реплика: при появлении другого слоя исчезает, а не ждёт в очереди. */
+  transient?: boolean;
+  /** Шаг вступления миссии (кнопка «Дальше»). */
+  introStep?: number;
 }
 export interface Readout {
   vesselId: string;
@@ -118,7 +122,13 @@ export class LabController {
       mixedWarned: false,
     };
     if (mode === 'mission') this.openMission(false);
-    else this.state.speech = { text: t('guide.welcome.sandbox'), pose: 'happy', actions: ['close'] };
+    else
+      this.state.speech = {
+        text: t('guide.welcome.sandbox'),
+        pose: 'happy',
+        actions: ['close'],
+        transient: true,
+      };
     document.documentElement.classList.toggle('reduce-motion', this.progress.settings.calm);
   }
 
@@ -127,7 +137,80 @@ export class LabController {
   }
 
   private emit(full = true): void {
+    this.normalizeLayers();
     for (const fn of this.listeners) fn(full);
+  }
+
+  /** Очередь реплик Пипы, которые ждут, пока закроется другой всплывающий слой. */
+  speechQueue: Speech[] = [];
+  private prevLayers: Record<string, unknown> = {};
+  private reopenJournal = false;
+
+  /**
+   * Правило слоёв: одновременно виден только один всплывающий слой
+   * (стоп, надпись, количество, выезжающий журнал, результат, реплика).
+   * Новый слой закрывает старые; реплика Пипы не теряется, а встаёт в очередь.
+   */
+  private normalizeLayers(): void {
+    const s = this.state;
+    const narrow = typeof window !== 'undefined' && window.innerWidth < 1280;
+    const layers: Record<string, unknown> = {
+      stop: s.stop,
+      labelPicker: s.labelPicker,
+      qty: s.qty,
+      journal: narrow && s.journalOpen ? true : null,
+      result: s.result,
+      speech: s.speech,
+    };
+    const order = ['stop', 'labelPicker', 'qty', 'journal', 'result', 'speech'];
+    const open = order.filter((k) => layers[k]);
+    const fresh = open.filter((k) => layers[k] !== this.prevLayers[k]);
+    const winner = fresh[0] ?? open[0];
+    // Надпись выбирают с доски в выезжающем журнале: после выбора журнал возвращается.
+    if (winner === 'labelPicker' && layers['journal']) this.reopenJournal = true;
+    if (winner !== 'labelPicker' && winner !== undefined) this.reopenJournal = false;
+    if (!winner && this.reopenJournal) {
+      this.reopenJournal = false;
+      s.journalOpen = true;
+    }
+    for (const k of open) {
+      if (k === winner) continue;
+      if (k === 'speech' && s.speech) {
+        if (!s.speech.transient && !this.speechQueue.some((q) => q.text === s.speech?.text))
+          this.speechQueue.push(s.speech);
+        s.speech = null;
+      } else if (k === 'journal') s.journalOpen = false;
+      else if (k === 'stop') s.stop = null;
+      else if (k === 'labelPicker') s.labelPicker = null;
+      else if (k === 'qty') s.qty = null;
+      else if (k === 'result') s.result = null;
+    }
+    if (!winner && !s.journalOpen && this.speechQueue.length) s.speech = this.speechQueue.shift() ?? null;
+    this.prevLayers = {
+      stop: s.stop,
+      labelPicker: s.labelPicker,
+      qty: s.qty,
+      journal: narrow && s.journalOpen ? true : null,
+      result: s.result,
+      speech: s.speech,
+    };
+  }
+
+  /** Вступление миссии по шагам: 2–3 коротких реплики вместо стены текста. */
+  private introSpeech(step: number): Speech {
+    const last = step >= this.mission.intro.length - 1;
+    return {
+      text: this.mission.intro[step] ?? '',
+      pose: 'explain',
+      actions: [last ? 'start' : 'next'],
+      introStep: step,
+    };
+  }
+
+  nextIntro(): void {
+    const step = (this.state.speech?.introStep ?? 0) + 1;
+    this.state.speech = this.introSpeech(step);
+    this.emit();
   }
 
   private persist(): void {
@@ -151,8 +234,9 @@ export class LabController {
       this.state.lab = step(this.state.lab, { type: 'place', equipmentId: 'test_tube' }, ix).state;
     this.state.speech =
       m.status === 'briefing'
-        ? { text: this.mission.intro.join(' '), pose: 'explain', actions: ['start'] }
-        : { text: t('mission.resume'), pose: 'happy', actions: ['close'] };
+        ? this.introSpeech(0)
+        : { text: t('mission.resume'), pose: 'happy', actions: ['close'], transient: true };
+    this.speechQueue = [];
     this.persist();
     this.emit();
   }
@@ -306,6 +390,7 @@ export class LabController {
 
   closeOverlays(): void {
     Object.assign(this.state, { qty: null, result: null, stop: null, labelPicker: null, readout: null });
+    if (window.innerWidth < 1280) this.state.journalOpen = false;
     if (
       this.state.speech &&
       !this.state.speech.actions?.includes('start') &&
@@ -472,7 +557,12 @@ export class LabController {
           break;
         }
         case 'blocked':
-          this.state.speech = { text: t(`blocked.${e.reason}`), pose: 'warn', actions: ['close'] };
+          this.state.speech = {
+            text: t(`blocked.${e.reason}`),
+            pose: 'warn',
+            actions: ['close'],
+            transient: true,
+          };
           announce.push(t(`blocked.${e.reason}`));
           break;
         case 'measurement': {

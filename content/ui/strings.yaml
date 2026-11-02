@@ -171,3 +171,12 @@ mission.badge: { ru: "Значок «Сыщик порошков»" }
 readout.temperature: { ru: "{value} °C" }
 readout.ph: { ru: "pH {value}" }
 readout.mass: { ru: "{value} г" }
+mission.next: { ru: "Дальше" }
+dock.why.none: { ru: "Сначала выбери сосуд на столе." }
+dock.why.empty: { ru: "Сосуд пустой. Положи в него что-нибудь." }
+dock.why.heating: { ru: "Сначала погаси горелку." }
+dock.why.wait: { ru: "Ждать пока нечего: все сосуды пустые." }
+dock.why.holder: { ru: "Держатель нужен только пробирке." }
+dock.why.magnify: { ru: "Выбери банку на полке или сосуд на столе." }
+dock.why.undo: { ru: "Пока нечего отменять." }
+shelf.scroll: { ru: "Листай полку" }

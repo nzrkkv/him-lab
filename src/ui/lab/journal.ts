@@ -90,9 +90,6 @@ function board(c: LabController): HTMLElement[] {
   const def = c.mission;
   const icons = new Map<string, string>();
   for (const test of def.tests) for (const chip of test.chips) icons.set(`${test.id}:${chip.id}`, chip.icon);
-  const legend = [...new Set(def.tests.flatMap((x) => x.chips.map((ch) => ch.icon)))].filter(
-    (i) => RESULT_CLASS[i],
-  );
   return [
     h('div', { class: 'hl-journal__head' }, icon('journal'), h('h2', {}, t('board.title'))),
     h(
@@ -132,7 +129,8 @@ function board(c: LabController): HTMLElement[] {
                     'td',
                     { class: `r ${RESULT_CLASS[ic] ?? 'r--color'}`, title: chip.label },
                     icon(ic),
-                    h('span', { class: 'app-chip' }, chip.label),
+                    h('span', { class: 'app-chip', 'aria-hidden': 'true' }, chip.short),
+                    h('span', { class: 'hl-sr' }, chip.label),
                   );
                 }),
               ),
@@ -159,18 +157,6 @@ function board(c: LabController): HTMLElement[] {
                   ),
                 );
               }),
-            ),
-          ),
-        ),
-        h(
-          'div',
-          { class: 'hl-legend' },
-          ...legend.map((i) =>
-            h(
-              'span',
-              {},
-              icon(i),
-              def.tests.flatMap((x) => x.chips).find((ch) => ch.icon === i)?.label ?? '',
             ),
           ),
         ),

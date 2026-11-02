@@ -78,14 +78,22 @@ body {
 }
 .app-chip {
   display: block;
-  font-size: 10.5px;
-  line-height: 1.1;
-  font-weight: 600;
-  overflow-wrap: anywhere;
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 1.15;
+  font-weight: 700;
+  /* без переносов внутри слова: переносим только по пробелам */
+  hyphens: manual;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 .hl-grid td.r {
   vertical-align: top;
-  padding: 3px 2px;
+  padding: 4px 1px;
+}
+.hl-grid th[scope='row'] {
+  font-size: 13px;
+  padding-right: 4px;
 }
 .app-label-row td {
   padding: 4px 2px;
@@ -229,4 +237,100 @@ body {
   .app-home__cards {
     grid-template-columns: 1fr;
   }
+}
+
+/* Пустой стол: подсказка шире обычного места под сосуд. */
+.app-slot--wide {
+  width: auto;
+  max-width: calc(320px * var(--u));
+  padding: 12px 16px;
+  line-height: 1.3;
+}
+
+/* Выезжающий журнал (< 1280): закрытый не виден и не получает фокус. */
+@media (max-width: 1279px) {
+  .hl-lab > .hl-journal-panel:not(.is-open) {
+    display: none;
+  }
+  .hl-lab > .hl-journal-panel.is-open {
+    animation: app-drawer-in var(--motion-duration-slow) var(--motion-easing-enter);
+  }
+}
+
+/* Портрет: полка листается вбок — видимый признак прокрутки. */
+.app-shelf-more {
+  display: none;
+}
+@media (max-width: 1023px) {
+  .hl-shelf {
+    position: relative;
+  }
+  .hl-shelf__body {
+    scroll-snap-type: x proximity;
+    mask-image: linear-gradient(90deg, #000 calc(100% - 56px), transparent);
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 56px), transparent);
+  }
+  .hl-shelf__body.is-end {
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+  .app-shelf-more {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: var(--border-base) solid var(--color-ink-900);
+    background: var(--color-paper);
+    box-shadow: var(--shadow-lip);
+  }
+  .app-shelf-more[hidden] {
+    display: none;
+  }
+  /* Панель цели: заголовок и буквы в одну строку, кнопки — второй строкой. */
+  .hl-goal__text {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .hl-goal__progress {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .hl-goal > .hl-btn {
+    flex: 1 1 40%;
+  }
+}
+@keyframes app-drawer-in {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+/* Миссия: детективной доске нужно место под подписи клеток. */
+.app-lab--mission {
+  --size-journal: 412px;
+}
+@media (max-width: 1279px) {
+  .app-lab--mission > .hl-journal-panel {
+    width: 412px;
+  }
+}
+.app-lab--mission .hl-grid {
+  table-layout: fixed;
+  width: 100%;
+}
+.app-lab--mission .hl-grid thead th:first-child,
+.app-lab--mission .hl-grid tbody th {
+  width: 64px;
+}
+.hl-grid td.r {
+  text-align: center;
+}
+.hl-grid td.r .hl-icon {
+  margin: 0 auto;
 }
