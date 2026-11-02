@@ -74,15 +74,15 @@ export const shelfRow = (items) => `<div class="hl-shelf__row">${items.join('')}
 // ---------- верхняя панель лабы ----------
 export function labTopbar({ mode = 'sandbox', title, hints = true, deeper = false, journalBtn = true }) {
   const modeChip = mode === 'sandbox'
-    ? `<span class="hl-mode hl-mode--sandbox">${icon('sandbox')}Песочница</span>`
-    : `<span class="hl-mode hl-mode--mission">${icon('target')}Миссия</span>`;
+    ? `<span class="hl-mode hl-mode--sandbox">${icon('sandbox')}<span class="hl-mode__text">Песочница</span></span>`
+    : `<span class="hl-mode hl-mode--mission">${icon('target')}<span class="hl-mode__text">Миссия</span></span>`;
   return `<header class="hl-topbar">
   <a class="hl-btn hl-btn--ghost hl-btn--icon" href="home.html" aria-label="К карте модуля">${icon('back')}</a>
   <div class="hl-topbar__title">${modeChip}<h1>${title}</h1></div>
   <div class="hl-topbar__spacer"></div>
   <div class="hl-topbar__group">
-    <button class="hl-switch" role="switch" aria-checked="${hints}"><span class="hl-switch__label">${icon('hint')}Подсказки</span><span class="hl-switch__track"></span></button>
-    <button class="hl-switch hl-switch--deep" role="switch" aria-checked="${deeper}"><span class="hl-switch__label">${icon('deeper')}<span class="hl-hide-compact">Копнуть глубже</span><span class="hl-show-compact">Глубже</span></span><span class="hl-switch__track"></span></button>
+    <button class="hl-switch" role="switch" aria-checked="${hints}" aria-label="Подсказки"><span class="hl-switch__label">${icon('hint')}<span class="hl-switch__text">Подсказки</span></span><span class="hl-switch__track"></span></button>
+    <button class="hl-switch hl-switch--deep" role="switch" aria-checked="${deeper}" aria-label="Копнуть глубже"><span class="hl-switch__label">${icon('deeper')}<span class="hl-switch__text"><span class="hl-hide-compact">Копнуть глубже</span><span class="hl-show-compact">Глубже</span></span></span><span class="hl-switch__track"></span></button>
     <span class="hl-topbar__divider" aria-hidden="true"></span>
     <button class="hl-btn hl-btn--ghost hl-btn--icon" aria-label="Звук включён">${icon('sound-on')}</button>
     ${journalBtn ? `<button class="hl-btn hl-btn--secondary hl-btn--sm hl-journal-toggle" aria-expanded="false" aria-controls="journal">${icon('journal')}Журнал</button>` : ''}

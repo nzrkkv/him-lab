@@ -185,7 +185,7 @@ img, svg { max-width: 100%; }
 .hl-mode .hl-icon { width: 18px; height: 18px; }
 
 /* логотип */
-.hl-logo { display: inline-flex; align-items: center; gap: 10px; color: var(--color-ink-900); text-decoration: none; }
+.hl-logo { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; color: var(--color-ink-900); text-decoration: none; }
 .hl-logo__mark { width: 34px; height: 38px; flex: none; }
 .hl-logo__word { font: 800 21px/1 var(--font-family-display); letter-spacing: -0.02em; white-space: nowrap; }
 

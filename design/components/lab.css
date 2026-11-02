@@ -77,12 +77,12 @@
 }
 .hl-rail__label { position: absolute; left: 12px; top: 2px; font-size: 14px; font-weight: 700; color: var(--color-ink-700); }
 .hl-rail__item {
-  position: relative; z-index: 1;
+  position: relative; z-index: 1; flex: none;
   display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 10px;
   min-width: 64px; height: 108px; padding: 4px 6px 0; border: 2px solid transparent; border-radius: var(--radius-sm);
   background: transparent; font-size: 14px; font-weight: 600; color: var(--color-ink-900); white-space: nowrap;
 }
-.hl-rail__item > svg { height: 58px; width: auto; margin-bottom: 0; }
+.hl-rail__item > svg { height: 58px; width: auto; max-width: 64px; margin-bottom: 0; }
 .hl-rail__item > span { height: 20px; line-height: 20px; }
 .hl-rail__item:hover, .hl-rail__item.is-hover { background: rgba(255, 255, 255, 0.6); }
 .hl-rail__item[aria-disabled='true'] { opacity: 0.45; cursor: not-allowed; }
@@ -145,14 +145,14 @@
 .hl-rack__back, .hl-rack__front { position: absolute; left: 0; top: calc(88px * var(--u)); width: 100%; height: auto; }
 .hl-rack__back [data-layer='front'], .hl-rack__front [data-layer='back'] { display: none; }
 .hl-rack__front { z-index: 3; pointer-events: none; }
-.hl-rack .hl-ware { position: absolute; top: 0; z-index: 2; }
+.hl-rack .hl-ware { position: absolute; top: 0; z-index: 2; padding: 0 6px; margin-left: -6px; }
 .hl-rack .hl-ware > svg { width: calc(48px * var(--u)); }
 .hl-rack .hl-ware:nth-of-type(1) { left: calc(16px * var(--u)); }
 .hl-rack .hl-ware:nth-of-type(2) { left: calc(76px * var(--u)); }
 .hl-rack .hl-ware:nth-of-type(3) { left: calc(136px * var(--u)); }
 .hl-rack .hl-ware:nth-of-type(4) { left: calc(196px * var(--u)); }
 .hl-rack .hl-ware:nth-of-type(5) { left: calc(256px * var(--u)); }
-.hl-rack .hl-ware__halo { inset: -10px -10px -6px; }
+.hl-rack .hl-ware__halo { inset: -10px -4px -6px; }
 .hl-rack__letter {
   position: absolute; z-index: 4; top: calc(96px * var(--u)); width: 30px; height: 30px; margin-left: -15px;
   display: grid; place-items: center; border-radius: 50%; background: var(--color-paper); border: 2px solid var(--color-ink-900);
@@ -227,7 +227,7 @@
 .hl-act:active, .hl-act.is-active { background: var(--color-copper-100); transform: translateY(2px); box-shadow: 0 1px 0 0 rgba(22, 33, 63, 0.3); }
 .hl-act[aria-pressed='true'], .hl-act.is-selected { background: var(--color-lamp-100); box-shadow: 0 0 0 4px var(--color-lamp-400), 0 3px 0 0 rgba(22, 33, 63, 0.3); }
 .hl-act.is-running { background: var(--color-lamp-100); }
-.hl-act.is-running::after { content: ''; position: absolute; left: 10px; right: 10px; bottom: 5px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--color-ink-900) var(--progress, 45%), rgba(22, 33, 63, 0.15) 0); }
+.hl-act.is-running::after { content: ''; position: absolute; left: 10px; right: 24px; top: 6px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--color-ink-900) var(--progress, 45%), rgba(22, 33, 63, 0.15) 0); }
 .hl-act:disabled, .hl-act[aria-disabled='true'] { background: var(--color-bench-top); color: var(--color-ink-700); border-color: var(--color-ink-300); border-style: dashed; box-shadow: none; transform: none; cursor: not-allowed; }
 .hl-act:disabled > .hl-icon, .hl-act[aria-disabled='true'] > .hl-icon { color: var(--color-ink-500); }
 .hl-act--heat { --act-icon: #D9480F; }
@@ -300,6 +300,8 @@
   .hl-dock__rowlabel { display: none; }
   .hl-hide-compact { display: none !important; }
   .hl-topbar__title h1 { font-size: 17px; }
+  .hl-mode { padding: 0 8px; }
+  .hl-mode__text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .hl-topbar__divider { display: none; }
   .hl-switch { gap: 6px; padding-left: 6px; }
 }
@@ -317,6 +319,15 @@
   .hl-scene { --u: 0.9; }
   .hl-dock { padding-left: 12px; padding-right: 12px; }
   .hl-hide-portrait { display: none !important; }
+  .hl-switch__text { display: none; }
+  .hl-topbar .hl-mode { display: none; }
+  .hl-shelf__head { width: 150px; }
+  .hl-shelf__count { white-space: normal; }
+  .hl-shelf__row { padding-top: 14px; }
+  .hl-goal { flex-wrap: wrap; row-gap: 8px; }
+  .hl-goal__text { flex: 1 1 calc(100% - 60px); }
+  .hl-goal__progress { margin-left: 58px; margin-right: auto; }
+  .hl-rail__item { min-width: 58px; font-size: 13px; }
 }
 
 @media (max-height: 800px) and (min-width: 1024px) {

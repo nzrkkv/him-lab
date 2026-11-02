@@ -343,21 +343,23 @@ ${stopDialog}`,
 .ls-goggles .hl-icon { width: 22px; height: 22px; }
 .ls-scene { position: relative; flex: 1; }
 .ls-table { position: absolute; left: 0; right: 0; bottom: 0; height: 84px; background: var(--color-bench-top); border-top: 2px solid var(--color-ink-900); }
-.ls-items { position: absolute; left: 0; right: 0; bottom: 60px; display: flex; align-items: flex-end; justify-content: center; gap: 72px; }
-.ls-rack { position: relative; width: 300px; height: 300px; }
-.ls-rack > svg.back, .ls-rack > svg.front { position: absolute; left: 0; bottom: 0; width: 300px; height: auto; }
+.ls-items { --s: 1.45; position: absolute; left: 0; right: 0; bottom: 60px; display: flex; align-items: flex-end; justify-content: center; gap: 64px; }
+.ls-rack { position: relative; width: calc(300px * var(--s)); height: calc(300px * var(--s)); }
+.ls-rack > svg.back, .ls-rack > svg.front { position: absolute; left: 0; bottom: 0; width: 100%; height: auto; }
 .ls-rack > svg.back [data-layer='front'], .ls-rack > svg.front [data-layer='back'] { display: none; }
 .ls-rack > svg.front { z-index: 3; }
-.ls-tube { position: absolute; bottom: 12px; width: 72px; z-index: 2; }
+.ls-tube { position: absolute; bottom: calc(12px * var(--s)); width: calc(72px * var(--s)); z-index: 2; }
 .ls-tube svg { width: 100%; height: auto; overflow: visible; }
-.ls-tube--1 { left: 42px; } .ls-tube--2 { left: 186px; }
-.ls-num { position: absolute; z-index: 4; bottom: 50px; width: 36px; height: 36px; margin-left: -18px; border-radius: 50%; display: grid; place-items: center; background: var(--color-paper); border: 2px solid var(--color-ink-900); font: 700 17px/1 var(--font-family-display); }
+.ls-tube--1 { left: calc(42px * var(--s)); } .ls-tube--2 { left: calc(186px * var(--s)); }
+.ls-num { position: absolute; z-index: 4; bottom: calc(296px * var(--s)); width: 36px; height: 36px; margin-left: -18px; border-radius: 50%; display: grid; place-items: center; background: var(--color-paper); border: 2px solid var(--color-ink-900); font: 700 17px/1 var(--font-family-display); }
 .ls-tag { position: absolute; z-index: 5; bottom: -48px; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px 5px 8px; border-radius: 12px; background: var(--color-paper); border: 2px solid var(--color-ink-900); font-weight: 700; font-size: 16px; white-space: nowrap; }
 .ls-tag .hl-icon { width: 22px; height: 22px; }
+.ls-tag__n { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: var(--color-ink-900); color: #fff; font: 700 13px/1 var(--font-family-display); margin-right: 2px; }
 .ls-tag--gas { color: var(--color-copper-700); }
 .ls-tag--nothing { color: var(--color-feedback-neutral-600); }
 .ls-tag span { color: var(--color-ink-900); }
 .ls-tools { display: flex; align-items: flex-end; gap: 22px; }
+.ls-tools figure > svg { width: calc(var(--w) * var(--s) * 1px); height: auto; }
 .ls-tools figure { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; }
 .ls-panel { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
 .ls-guide { display: grid; grid-template-columns: 112px 1fr; gap: 6px; align-items: start; }
@@ -381,25 +383,36 @@ ${stopDialog}`,
 .ls-next p { font-size: 16px; color: var(--color-ink-700); }
 @media (max-width: 1279px) {
   .ls-main { grid-template-columns: minmax(0, 1fr) minmax(340px, 400px); gap: 16px; padding: 16px; }
-  .ls-step span { display: none; }
-  .ls-step.current span { display: block; }
+  .ls-step span, .ls-step.current span { display: none; }
+  .ls-steps { max-width: 280px; }
+  .ls-sci span { font-size: 14px; padding: 4px 8px; }
+  .ls-card { padding: 12px 14px; }
+  .ls-card h3 { margin-bottom: 8px; }
+  .ls-verdict { margin-top: 10px; padding: 8px 10px; font-size: 15px; }
   .ls-bench { min-height: 0; }
   .ls-bench__head h2 { font-size: 24px; }
-  .ls-items { gap: 28px; bottom: 66px; }
-  .ls-rack, .ls-rack > svg.back, .ls-rack > svg.front { width: 250px; }
-  .ls-rack { height: 250px; }
-  .ls-tube { width: 60px; } .ls-tube--1 { left: 35px; } .ls-tube--2 { left: 155px; }
+  .ls-items { --s: 1.05; gap: 28px; bottom: 66px; }
   .ls-guide { grid-template-columns: 84px 1fr; }
   .ls-guide > svg { width: 84px; }
   .ls-guide .hl-speech__text { font-size: 18px; line-height: 26px; }
   .ls-tools { display: none; }
   .ls-next p { display: none; }
   .ls-panel { gap: 12px; }
+}
+@media (max-width: 1023px) {
+  .ls-top { gap: 12px; padding: 0 16px; }
+  .ls-steps { max-width: 200px; }
+  .ls-step span, .ls-step.current span { display: none; }
+  .ls-main { grid-template-columns: minmax(0, 1fr); }
+  .ls-bench { min-height: 500px; }
+  .ls-items { --s: 1.15; gap: 48px; }
+  .ls-tools { display: flex; }
+  .ls-next p { display: block; }
 }`,
     body: `<div class="ls">
 <header class="ls-top">
   <a class="hl-btn hl-btn--ghost hl-btn--icon" href="home.html" aria-label="К карте модуля">${icon('close')}</a>
-  <div class="ls-top__title"><small>Урок 1 · Вещества вокруг нас</small><b>Добро пожаловать в лабораторию</b></div>
+  <div class="ls-top__title"><small>Урок 1 · шаг 2 из 7: попробуй сам</small><b>Добро пожаловать в лабораторию</b></div>
   <ol class="ls-steps" aria-label="Шаги урока">
     ${steps.map(([t, st]) => `<li class="ls-step ${st}"${st === 'current' ? ' aria-current="step"' : ''}><span>${t}</span><i></i></li>`).join('')}
   </ol>
@@ -415,16 +428,15 @@ ${stopDialog}`,
       <div class="ls-items">
         <div class="ls-rack">
           ${svg('equipment/test-tube-rack.svg', { cls: 'back', label: '' })}
-          <div class="ls-tube ls-tube--1">${svg('equipment/test-tube.svg', { style: '--level:.18;--liquid-color:#EEF6E8;--powder:1;--powder-color:#FFFFFF', label: 'Пробирка 1: порошок намок, пузырьков нет' })}</div>
-          <div class="ls-tube ls-tube--2">${svg('equipment/test-tube.svg', { cls: 'fx-fizz fx-fizz--strong', style: '--level:.52;--liquid-color:#EEF6E8;--bubbles:1;--foam:1', label: 'Пробирка 2: бурное шипение и пена' })}</div>
+          <div class="ls-tube ls-tube--1">${svg('equipment/test-tube.svg', { style: '--level:.12;--liquid-color:#E2EEDA;--powder:1;--powder-color:#FFFFFF', label: 'Пробирка 1: порошок намок, пузырьков нет' })}</div>
+          <div class="ls-tube ls-tube--2">${svg('equipment/test-tube.svg', { cls: 'fx-fizz fx-fizz--strong', style: '--level:.52;--liquid-color:#E2EEDA;--bubbles:1;--foam:1', label: 'Пробирка 2: бурное шипение и пена' })}</div>
           ${svg('equipment/test-tube-rack.svg', { cls: 'front', label: '' })}
-          <span class="ls-num" style="left:78px">1</span><span class="ls-num" style="left:222px">2</span>
-          <span class="ls-tag ls-tag--nothing" style="left:78px">${icon('result-nothing')}<span>Ничего</span></span>
-          <span class="ls-tag ls-tag--gas" style="left:222px">${icon('result-gas')}<span>Шипит!</span></span>
+          <span class="ls-tag ls-tag--nothing" style="left:calc(78px * var(--s))"><b class="ls-tag__n">1</b>${icon('result-nothing')}<span>Ничего</span></span>
+          <span class="ls-tag ls-tag--gas" style="left:calc(222px * var(--s))"><b class="ls-tag__n">2</b>${icon('result-gas')}<span>Шипит!</span></span>
         </div>
         <div class="ls-tools">
-          <figure>${svg('containers/bottle.svg', { style: '--liquid-color:#EEF6E8;--cap-color:#E0A100;--level:.55;width:66px', label: 'Флакон с уксусом' })}<figcaption>Уксус</figcaption></figure>
-          <figure>${svg('equipment/pipette.svg', { style: '--level:.3;--liquid-color:#EEF6E8;width:34px', label: 'Пипетка' })}<figcaption>Пипетка</figcaption></figure>
+          <figure>${svg('containers/bottle.svg', { style: '--liquid-color:#EEF6E8;--cap-color:#E0A100;--level:.55;--w:64', label: 'Флакон с уксусом' })}<figcaption>Уксус</figcaption></figure>
+          <figure>${svg('equipment/pipette.svg', { style: '--level:.3;--liquid-color:#EEF6E8;--w:32', label: 'Пипетка' })}<figcaption>Пипетка</figcaption></figure>
         </div>
       </div>
     </div>
@@ -471,15 +483,16 @@ ${stopDialog}`,
 // ======================================================================
 {
   const lessons = [
-    { n: 1, t: 'Добро пожаловать в лабораторию', st: 'current', color: '#8A6CF0', sub: 'Загадка белых порошков' },
+    { n: 1, t: 'Добро пожаловать в лабораторию', st: 'current', color: '#8A6CF0', sub: 'Миссия: загадка белых порошков' },
     { n: 2, t: 'Мерим в лаборатории', st: 'locked', sub: 'Объём, масса, температура' },
     { n: 3, t: 'Тонет, плавает, притягивается', st: 'locked', sub: 'Ещё свойства веществ' },
     { n: 4, t: 'Правила настоящей лаборатории', st: 'locked', sub: 'Безопасность дома и в школе' },
   ];
-  const node = (l, i) => {
+  const node = (l) => {
     const filled = l.st === 'done' ? 0.75 : l.st === 'current' ? 0.4 : 0;
-    return `<li class="mp-node mp-node--${l.st}" style="--x:${[6, 30, 54, 78][i]}%;--y:${[58, 22, 58, 22][i]}%">
-  <a class="mp-flask" href="${l.st === 'locked' ? '#' : 'lesson.html'}" ${l.st === 'locked' ? 'aria-disabled="true"' : ''} aria-label="Урок ${l.n}: ${l.t}. ${l.st === 'current' ? 'Сейчас здесь' : l.st === 'done' ? 'Пройден' : 'Откроется после урока ' + (l.n - 1)}">
+    const status = l.st === 'current' ? 'Сейчас здесь' : l.st === 'done' ? 'Пройден' : 'Откроется после урока ' + (l.n - 1);
+    return `<li class="mp-node mp-node--${l.st}">
+  <a class="mp-flask" href="${l.st === 'locked' ? '#' : 'lesson.html'}" ${l.st === 'locked' ? 'aria-disabled="true"' : ''} aria-label="Урок ${l.n}: ${l.t}. ${status}">
     ${svg('equipment/flask.svg', { style: `--level:${filled};--liquid-color:${l.color || '#CDE9FB'}`, label: '' })}
     <span class="mp-num">${l.st === 'locked' ? icon('lock') : l.n}</span>
   </a>
@@ -506,30 +519,35 @@ body { background: var(--color-tile-100); }
 .hm-module__head p { font-size: 18px; color: var(--color-ink-700); margin-top: 6px; }
 .hm-progress { width: 220px; flex: none; }
 .hm-progress span { display: block; font-size: 15px; font-weight: 700; margin-bottom: 6px; text-align: right; }
-.mp { position: relative; height: 420px; border: 2px solid var(--color-ink-900); border-radius: var(--radius-xl); background: var(--color-wood-100); overflow: hidden; }
-.mp::before { content: ''; position: absolute; inset: auto 0 0 0; height: 64px; background: var(--color-wood-200); border-top: 2px solid var(--color-ink-900); }
-.mp-pipe { position: absolute; inset: 0; width: 100%; height: 100%; }
-.mp-list { position: absolute; inset: 0; }
-.mp-node { position: absolute; left: var(--x); top: var(--y); width: 200px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
-.mp-flask { position: relative; display: block; width: 104px; border-radius: 20px; padding: 6px; text-decoration: none; color: inherit; }
+.mp { position: relative; padding: 22px 16px 22px; border: 2px solid var(--color-ink-900); border-radius: var(--radius-xl); background: var(--color-wood-100); }
+.mp::before { content: ''; position: absolute; left: 0; right: 0; top: 196px; height: 16px; background: var(--color-wood-200); border-block: 2px solid var(--color-ink-900); border-bottom-width: 4px; border-bottom-color: var(--color-wood-400); }
+.mp-pipe { position: absolute; left: 12.5%; right: 12.5%; top: 140px; height: 16px; border: 2px solid var(--color-ink-900); border-radius: 8px; background: var(--color-lab-glass); overflow: hidden; }
+.mp-pipe i { display: block; width: 14%; height: 100%; background: var(--color-guide-body); }
+.mp-list { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.mp-node { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 22px; }
+.mp-flask { position: relative; display: block; width: 128px; height: 172px; border-radius: 20px; padding: 2px 8px 0; text-decoration: none; color: inherit; }
 .mp-flask > svg { width: 100%; height: auto; }
-.mp-num { position: absolute; left: 50%; top: 62%; transform: translate(-50%, -50%); width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--color-paper); border: 2px solid var(--color-ink-900); font: 700 18px/1 var(--font-family-display); }
+.mp-num { position: absolute; left: 50%; top: 64%; transform: translate(-50%, -50%); width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: var(--color-paper); border: 2px solid var(--color-ink-900); font: 700 19px/1 var(--font-family-display); }
 .mp-num .hl-icon { width: 22px; height: 22px; color: var(--color-ink-500); }
 .mp-node--current .mp-flask { background: rgba(255, 201, 60, 0.35); box-shadow: 0 0 0 3px var(--color-lamp-400); }
-.mp-node--locked .mp-flask > svg { opacity: 0.6; }
+.mp-node--locked .mp-flask > svg { opacity: 0.55; }
+.mp-text { max-width: 220px; }
 .mp-text b { display: block; font-size: 18px; line-height: 1.25; }
-.mp-text span { display: block; font-size: 15px; color: var(--color-ink-700); margin-top: 2px; }
+.mp-text span { display: block; font-size: 15px; color: var(--color-ink-700); margin-top: 4px; line-height: 1.3; }
 .mp-node--locked .mp-text b { color: var(--color-ink-700); }
-.mp-text .mp-here { display: inline-block; margin-top: 8px; padding: 3px 10px; border-radius: 99px; background: var(--color-ink-900); color: #fff; font-size: 13px; font-weight: 700; }
-.mp-sand { position: absolute; right: 22px; bottom: 76px; display: flex; align-items: center; gap: 12px; padding: 10px 16px 10px 10px; border-radius: 16px; background: var(--color-paper); border: 2px solid var(--color-ink-900); box-shadow: 0 3px 0 0 rgba(22,33,63,.2); font-weight: 700; text-decoration: none; color: inherit; }
-.mp-sand .hl-icon { width: 36px; height: 36px; padding: 6px; border-radius: 10px; background: var(--color-lamp-100); color: var(--color-lamp-800); }
-.mp-sand small { display: block; font-size: 14px; font-weight: 600; color: var(--color-ink-500); }
+.mp-text .mp-here { display: inline-block; margin-top: 10px; padding: 4px 12px; border-radius: 99px; background: var(--color-ink-900); color: #fff; font-size: 14px; font-weight: 700; }
+.hm-sand { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: var(--radius-xl); background: var(--color-paper); border: 2px solid var(--color-ink-900); box-shadow: 0 3px 0 0 rgba(22,33,63,.2); text-decoration: none; color: inherit; }
+.hm-sand > .hl-icon:first-child { width: 48px; height: 48px; padding: 8px; border-radius: 14px; background: var(--color-lamp-100); color: var(--color-lamp-800); }
+.hm-sand b { display: block; font: 600 19px/1.2 var(--font-family-display); }
+.hm-sand small { display: block; font-size: 15px; font-weight: 600; color: var(--color-ink-700); margin-top: 2px; }
+.hm-sand > .hl-icon:last-child { margin-left: auto; width: 24px; height: 24px; flex: none; }
 .hm-side { display: flex; flex-direction: column; gap: 16px; }
 .hm-cont { position: relative; padding: 20px; border: 2px solid var(--color-ink-900); border-radius: var(--radius-xl); background: var(--color-paper); }
 .hm-cont__art { position: absolute; right: 12px; top: -26px; width: 104px; }
 .hm-cont small { font-size: 15px; font-weight: 700; color: var(--color-ink-500); }
 .hm-cont h2 { font: 700 22px/1.25 var(--font-family-display); margin: 6px 0 4px; max-width: 200px; }
 .hm-cont p { font-size: 16px; color: var(--color-ink-700); }
+.hm-cont .hm-cont__name { font-size: 18px; font-weight: 700; color: var(--color-ink-900); max-width: 190px; margin-bottom: 4px; }
 .hm-cont .hl-progress-bar { margin: 14px 0 16px; }
 .hm-badges { padding: 16px; border: 2px solid var(--color-ink-200); border-radius: var(--radius-xl); background: var(--color-paper); }
 .hm-badges h2, .hm-modules h2 { font: 600 18px/1.2 var(--font-family-display); margin-bottom: 12px; }
@@ -553,13 +571,12 @@ body { background: var(--color-tile-100); }
   .hm-module__head h1 { font-size: 30px; }
   .hm-module__head p { display: none; }
   .hm-progress { width: 160px; }
-  .mp { height: 380px; }
-  .mp-node { width: 150px; }
-  .mp-flask { width: 84px; }
+  .mp::before { top: 166px; }
+  .mp-pipe { top: 118px; }
+  .mp-flask { width: 104px; height: 142px; }
+  .mp-node { gap: 20px; }
   .mp-text b { font-size: 16px; }
-  .mp-text span { display: none; }
-  .mp-text .mp-here { display: inline-block; }
-  .mp-sand small { display: none; }
+  .mp-text span { font-size: 14px; }
   .hm-cont h2 { font-size: 19px; max-width: 160px; }
   .hm-cont__art { width: 84px; }
   .hm-modules ol { grid-template-columns: repeat(2, 1fr); }
@@ -580,24 +597,19 @@ body { background: var(--color-tile-100); }
       <div class="hm-progress"><span>Пройдено 0 из 4</span><div class="hl-progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="4" style="--value:4%"><i></i></div></div>
     </div>
     <div class="mp">
-      <svg class="mp-pipe" viewBox="0 0 1000 420" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M110 300 C 200 300, 220 150, 350 150 S 520 300, 590 300 S 760 150, 830 150" fill="none" stroke="#16213F" stroke-width="16" stroke-linecap="round"/>
-        <path d="M110 300 C 200 300, 220 150, 350 150 S 520 300, 590 300 S 760 150, 830 150" fill="none" stroke="#EAF6FF" stroke-width="10" stroke-linecap="round"/>
-        <path d="M110 300 C 160 300, 190 270, 215 230" fill="none" stroke="#8A6CF0" stroke-width="10" stroke-linecap="round"/>
-      </svg>
       <ol class="mp-list">${lessons.map(node).join('')}</ol>
-      <a class="mp-sand" href="lab-sandbox.html">${icon('sandbox')}<span>Песочница<small>12 веществ открыто</small></span></a>
     </div>
   </section>
   <aside class="hm-side">
     <div class="hm-cont">
       ${svg('character/guide-explain.svg', { cls: 'hm-cont__art', label: '' })}
       <small>Продолжить</small>
-      <h2>Урок 1. Добро пожаловать в лабораторию</h2>
+      <h2>Урок 1</h2><p class="hm-cont__name">Добро пожаловать в лабораторию</p>
       <p>Шаг 2 из 7: разминка</p>
       <div class="hl-progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="7" style="--value:28%"><i></i></div>
       <a class="hl-btn hl-btn--primary hl-btn--lg hl-btn--block" href="lesson.html">Продолжить${icon('forward')}</a>
     </div>
+    <a class="hm-sand" href="lab-sandbox.html">${icon('sandbox')}<span><b>Песочница</b><small>Открыто 12 веществ</small></span>${icon('forward')}</a>
     <div class="hm-badges">
       <h2>Значки</h2>
       <ul>

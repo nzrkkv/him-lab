@@ -79,3 +79,8 @@
   .fx-dissolve .hl-turbidity { animation: none; opacity: 0; }
   .hl-fx .hl-wisp, .hl-fx .hl-wave, .hl-fx .hl-heatwave { opacity: 0.9; }
 }
+
+/* Тот же режим по собственному переключателю «Спокойные эффекты» (класс на <html>) */
+html.reduce-motion .fx-fizz .hl-bubble,html.reduce-motion .fx-foam .hl-foam circle,html.reduce-motion .fx-stir [data-layer='liquid-surface'],html.reduce-motion .hl-flame,html.reduce-motion .fx-steam .hl-wisp,html.reduce-motion .hl-fx .hl-wisp,html.reduce-motion .hl-fx .hl-wave,html.reduce-motion .hl-fx .hl-heatwave,html.reduce-motion .hl-fx .hl-grain,html.reduce-motion .fx-settle .hl-sediment circle,html.reduce-motion .fx-crystals .hl-crystals rect,html.reduce-motion .fx-pop-in,html.reduce-motion .fx-pour-stream { animation: none !important; }
+html.reduce-motion .fx-dissolve .hl-turbidity { animation: none; opacity: 0; }
+html.reduce-motion .hl-fx .hl-wisp,html.reduce-motion .hl-fx .hl-wave,html.reduce-motion .hl-fx .hl-heatwave { opacity: 0.9; }
